@@ -1,0 +1,7 @@
+## Interface: 100200
+## Version: 1.0.0
+## Title: Nekometer
+## Notes: Nekometer
+## Author: garric
+
+main.lua
