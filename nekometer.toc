@@ -6,5 +6,4 @@
 
 main.lua
 slash.lua
-utils.lua
 parser.lua

@@ -1,35 +1,37 @@
 local _, nekometer = ...
 
+nekometer.damage = {}
+
 local parser = {}
 local playerId = UnitGUID("player") or ""
 
-function nekometer:ParseCombatLogEvent()
+function nekometer:RecordCombatLogEvent()
     local event = {CombatLogGetCurrentEventInfo()}
-    if not parser:relevant(event) then
-        return
+    if parser:isEntityTracked(event) then
+        parser:record(event)
     end
-
-    local sourceName = event[5]
-    local destName = event[9]
-    local spellName = event[13] or "Unknown"
-    local amount = event[15] or 0
-    local msg = string.format("%s (%s) -> %s (%s)", sourceName, spellName, destName, amount)
-    print(msg)
-end
-
-function parser:relevant(event)
-    return self:isDamageEvent(event) and self:isEntityTracked(event)
-end
-
-function parser:isDamageEvent(event)
-    local subevent = event[2]
-    return subevent == "SWING_DAMAGE"
-        or subevent == "RANGE_DAMAGE"
-        or subevent == "SPELL_DAMAGE"
-        or subevent == "SPELL_PERIODIC_DAMAGE"
 end
 
 function parser:isEntityTracked(event)
     local sourceId = event[4]
-    return sourceId == playerId or UnitIsEnemy(playerId, sourceId)
+    return sourceId == playerId
+end
+
+function parser:record(event)
+    local subevent = event[2]
+    local fn = self[subevent]
+    if fn then
+        fn(self, event)
+    end
+end
+
+function parser:SPELL_DAMAGE(event)
+    local sourceName = event[5]
+    local amount = event[15] or 0
+    local current = nekometer.damage[sourceName] or 0
+    nekometer.damage[sourceName] = current + amount
+end
+
+function parser:SPELL_PERIODIC_DAMAGE(event)
+    self:SPELL_DAMAGE(event)
 end
