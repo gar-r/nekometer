@@ -1,5 +1,11 @@
 {
     "Lua.diagnostics.globals": [
-        "SlashCmdList"
+        "SlashCmdList",
+        "CreateFrame",
+        "print",
+        "pairs",
+        "hooksecurefunc",
+        "format",
+        "CombatLog"
     ]
 }
