@@ -8,6 +8,7 @@ core/parser.lua
 core/slash.lua
 
 meters/printer.lua
+meters/dps.lua
 meters/total.lua
 
 main.lua

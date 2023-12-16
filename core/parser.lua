@@ -5,6 +5,9 @@ local parser = {
 }
 
 function parser:AddMeter(meter)
+    if meter.Init then
+        meter:Init()
+    end
     table.insert(self.meters, meter)
 end
 

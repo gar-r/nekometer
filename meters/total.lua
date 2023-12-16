@@ -1,22 +1,25 @@
 local _, nekometer = ...
 
-local total = {}
+local total = {
+    data = {},
+}
 
-function total:Accept(data)
-    if total[data.sourceId] then
-        total[data.sourceId].total = total[data.sourceId].total + data.amount
+function total:Accept(e)
+    local data = self.data
+    if data[e.sourceId] then
+        data[e.sourceId].value = data[e.sourceId].value + e.amount
     else
-        total[data.sourceId] = {
-            name = data.sourceName,
-            total = 0
+        data[e.sourceId] = {
+            name = e.sourceName,
+            value = e.amount
         }
     end
 end
 
 function total:PrintAll()
     print("Damage Totals:")
-    for _, v in pairs(total) do
-        print(v.name .. ": " .. v.total)
+    for _, v in pairs(self.data) do
+        print(v.name .. ": " .. v.value)
     end
 end
 

@@ -2,12 +2,12 @@ local _, nekometer = ...
 
 local printer = {}
 
-function printer:Accept(data)
+function printer:Accept(e)
     local msg = string.format("%s damages %s with %s for %s",
-        data.sourceName,
-        data.destName,
-        data.ability,
-        data.amount)
+        e.sourceName,
+        e.destName,
+        e.ability,
+        e.amount)
     print(msg)
 end
 
