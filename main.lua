@@ -1,5 +1,7 @@
 local addonName, nekometer = ...
 
+local parser = nekometer.parser
+
 ---@class frame
 local frame = CreateFrame("Frame", "NekometerMain")
 
@@ -9,12 +11,12 @@ end
 
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
-        nekometer.version = C_AddOns.GetAddOnMetadata(addonName, "Version")
+        parser:AddMeter(nekometer.printer)
     end
 end
 
 function frame:COMBAT_LOG_EVENT_UNFILTERED()
-    nekometer:RecordCombatLogEvent()
+    parser:HandleCombatEvent()
 end
 
 frame:RegisterEvent("ADDON_LOADED")
