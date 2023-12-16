@@ -2,7 +2,7 @@ local addonName, nekometer = ...
 
 local parser = nekometer.parser
 
----@class frame
+---@class Frame
 local frame = CreateFrame("Frame", "NekometerMain")
 
 function frame:OnEvent(event, ...)

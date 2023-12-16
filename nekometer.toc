@@ -4,9 +4,9 @@
 ## Notes: Nekometer
 ## Author: garric
 
-meters/printer.lua
-
 core/parser.lua
 core/slash.lua
+
+meters/printer.lua
 
 main.lua
