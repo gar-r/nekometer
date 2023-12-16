@@ -4,11 +4,8 @@ SLASH_NEKOMETER2 = "/nekometer"
 local _, nekometer = ...
 
 local function SlashCommandHandler(_, _)
-    local damage = nekometer.damage
-    if damage then
-        for k, v in pairs(damage) do
-            print(k .. ": " .. v)
-        end
+    if nekometer.total then
+        nekometer.total:PrintAll()
     end
 end
 

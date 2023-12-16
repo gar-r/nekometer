@@ -12,6 +12,7 @@ end
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
         parser:AddMeter(nekometer.printer)
+        parser:AddMeter(nekometer.total)
     end
 end
 
