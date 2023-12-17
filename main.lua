@@ -1,5 +1,6 @@
 local addonName, nekometer = ...
 
+local config = nekometer.config
 local parser = nekometer.parser
 
 ---@class Frame
@@ -11,6 +12,7 @@ end
 
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
+        config:Init()
         -- parser:AddMeter(nekometer.printer)
         parser:AddMeter(nekometer.total)
         parser:AddMeter(nekometer.dps)

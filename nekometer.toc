@@ -1,14 +1,21 @@
 ## Interface: 100200
 ## Version: 0.1.0
+## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
 ## Author: garric
 
+core/config.lua
+core/frames.lua
 core/parser.lua
 core/slash.lua
 
 meters/printer.lua
 meters/dps.lua
 meters/total.lua
+
+ui/config.lua
+ui/chart.lua
+ui/reset.lua
 
 main.lua

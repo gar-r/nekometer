@@ -2,8 +2,8 @@ local _, nekometer = ...
 
 local dps = {
     enabled = false,
-    refresh = 1,
-    smoothing = 0.7,
+    default_refresh = 1,
+    default_smoothing = 0.7,
     data = {},
     dps = {},
 }
@@ -39,7 +39,6 @@ end
 
 function dps:Ticker()
     self:Refresh()
-    self:PrintAll()
     if self.enabled then
         C_Timer.After(self.refresh, function()
             self:Ticker()
@@ -49,6 +48,8 @@ end
 
 function dps:Init()
     self.enabled = true
+    self.refresh = NekometerConfig.dps_refresh or self.default_refresh
+    self.smoothing = NekometerConfig.dps_smoothing or self.default_smoothing
     self:Ticker()
 end
 

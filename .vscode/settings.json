@@ -78,6 +78,13 @@
         "CALENDAR_STATUS_NOT_SIGNEDUP",
         "GRAY_FONT_COLOR",
         "CALENDAR_STATUS_TENTATIVE",
-        "enabled"
+        "enabled",
+        "BACK",
+        "BACKDROP_TUTORIAL_16_16",
+        "InterfaceOptions_AddCategory",
+        "InterfaceOptionsFrame_OpenToCategory",
+        "StaticPopupDialogs",
+        "StaticPopup_Show",
+        "NekometerConfig"
     ]
 }
