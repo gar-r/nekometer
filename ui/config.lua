@@ -22,12 +22,12 @@ end
 
 function frame:CreateCheckbox(text)
     local checkbox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    checkbox.text:SetText(text)
+    checkbox["text"]:SetText(text)
     return checkbox
 end
 
 local dpsRefreshSlider = frame:CreateSlider(1, 30, 1)
-dpsRefreshSlider:SetPoint("TOPLEFT", frame, 0, -20)
+dpsRefreshSlider:SetPoint("TOP", frame, 0, -20)
 dpsRefreshSlider:SetValue(2)
 
 local dpsSmoothingSlider = frame:CreateSlider(0.1, 0.9, 0.1)
