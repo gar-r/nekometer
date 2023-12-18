@@ -55,11 +55,8 @@ function meter:Init(cfg)
     self:ticker()
 end
 
-function meter:PrintAll()
-    print("Dps:")
-    for _, v in pairs(self.dps) do
-        print(v.name .. ": " .. v.value)
-    end
+function meter:Report()
+    return nekometer.SortMeterData(self.dps)
 end
 
 nekometer.dps = meter

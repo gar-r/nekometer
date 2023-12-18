@@ -18,11 +18,8 @@ function meter:Accept(e)
     end
 end
 
-function meter:PrintAll()
-    print("Damage Totals:")
-    for _, v in pairs(self.data) do
-        print(v.name .. ": " .. v.value)
-    end
+function meter:Report()
+    return nekometer.SortMeterData(self.data)
 end
 
 nekometer.damage = meter

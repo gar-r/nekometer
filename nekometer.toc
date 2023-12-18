@@ -9,6 +9,7 @@ core/config.lua
 core/event.lua
 core/parser.lua
 core/dispatcher.lua
+core/util.lua
 core/slash.lua
 
 meters/printer.lua

@@ -9,7 +9,8 @@ local function SlashCommandHandler(msg, _)
     elseif msg == "reset" then
         StaticPopup_Show("NEKOMETER_RESET")
     elseif msg == "report" then
-        nekometer.damage:PrintAll()
+        local m = nekometer.damage
+        nekometer.PrintReport(m:Report())
     end
 end
 
