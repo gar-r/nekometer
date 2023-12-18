@@ -45,4 +45,5 @@ checkbox:SetPoint("CENTER", resetButton, 0, -40)
 
 InterfaceOptions_AddCategory(frame)
 
+nekometer.frames = nekometer.frames or {}
 nekometer.frames.config = frame

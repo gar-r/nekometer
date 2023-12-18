@@ -8,6 +8,8 @@ local function SlashCommandHandler(msg, _)
         InterfaceOptionsFrame_OpenToCategory(nekometer.frames.config)
     elseif msg == "reset" then
         StaticPopup_Show("NEKOMETER_RESET")
+    elseif msg == "report" then
+        nekometer.damage:PrintAll()
     end
 end
 

@@ -1,6 +1,6 @@
 local _, nekometer = ...
 
-local dps = {
+local meter = {
     enabled = false,
     default_refresh = 1,
     default_smoothing = 0.7,
@@ -8,19 +8,21 @@ local dps = {
     dps = {},
 }
 
-function dps:Accept(e)
-    local data = self.data
-    if data[e.sourceId] then
-        data[e.sourceId].value = data[e.sourceId].value + e.amount
-    else
-        data[e.sourceId] = {
-            name = e.sourceName,
-            value = e.amount,
-        }
+function meter:Accept(e)
+    if e:isDamage() then
+        local data = self.data
+        if data[e.sourceId] then
+            data[e.sourceId].value = data[e.sourceId].value + e.amount
+        else
+            data[e.sourceId] = {
+                name = e.sourceName,
+                value = e.amount,
+            }
+        end
     end
 end
 
-function dps:Refresh()
+function meter:Refresh()
     for id, d in pairs(self.data) do
         -- also apply exponential smoothing while recording the data
         local next = math.floor(self.smoothing * d.value / self.refresh)
@@ -37,27 +39,27 @@ function dps:Refresh()
     end
 end
 
-function dps:Ticker()
+function meter:ticker()
     self:Refresh()
     if self.enabled then
         C_Timer.After(self.refresh, function()
-            self:Ticker()
+            self:ticker()
         end)
     end
 end
 
-function dps:Init()
+function meter:Init(cfg)
     self.enabled = true
-    self.refresh = NekometerConfig.dps_refresh or self.default_refresh
-    self.smoothing = NekometerConfig.dps_smoothing or self.default_smoothing
-    self:Ticker()
+    self.refresh = cfg.dps_refresh or self.default_refresh
+    self.smoothing = cfg.dps_smoothing or self.default_smoothing
+    self:ticker()
 end
 
-function dps:PrintAll()
+function meter:PrintAll()
     print("Dps:")
     for _, v in pairs(self.dps) do
         print(v.name .. ": " .. v.value)
     end
 end
 
-nekometer.dps = dps
+nekometer.dps = meter

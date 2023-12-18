@@ -6,13 +6,14 @@
 ## Author: garric
 
 core/config.lua
-core/frames.lua
+core/event.lua
 core/parser.lua
+core/dispatcher.lua
 core/slash.lua
 
 meters/printer.lua
 meters/dps.lua
-meters/total.lua
+meters/damage.lua
 
 ui/config.lua
 ui/chart.lua

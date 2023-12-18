@@ -30,4 +30,5 @@ bar3:SetPoint("TOP", 0, -60)
 
 frame:Show()
 
+nekometer.frames = nekometer.frames or {}
 nekometer.frames.chart = frame

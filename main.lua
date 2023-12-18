@@ -1,7 +1,7 @@
 local addonName, nekometer = ...
 
 local config = nekometer.config
-local parser = nekometer.parser
+local dispatcher = nekometer.dispatcher
 
 ---@class Frame
 local frame = CreateFrame("Frame", "NekometerMain")
@@ -13,14 +13,14 @@ end
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
         config:Init()
-        -- parser:AddMeter(nekometer.printer)
-        parser:AddMeter(nekometer.total)
-        parser:AddMeter(nekometer.dps)
+        dispatcher:AddMeter(nekometer.printer)
+        dispatcher:AddMeter(nekometer.damage)
+        dispatcher:AddMeter(nekometer.dps)
     end
 end
 
 function frame:COMBAT_LOG_EVENT_UNFILTERED()
-    parser:HandleCombatEvent()
+    dispatcher:HandleCombatEvent()
 end
 
 frame:RegisterEvent("ADDON_LOADED")
