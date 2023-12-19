@@ -20,12 +20,12 @@ function meter:Accept(e)
 end
 
 function meter:CombatEntered()
-    self.combatStart = GetTime()
+    self.combatStart = GetTimePreciseSec()
     self.combatEnd = nil
 end
 
 function meter:CombatExited()
-    self.combatEnd = GetTime()
+    self.combatEnd = GetTimePreciseSec()
 end
 
 function meter:Report()
@@ -38,7 +38,7 @@ function meter:Report()
         duration = self.combatEnd - self.combatStart
     else
         -- still in combat, so we use the current time
-        duration = GetTime() - self.combatStart
+        duration = GetTimePreciseSec() - self.combatStart
     end
     for k, v in pairs(self.data) do
         dps[k] = {
