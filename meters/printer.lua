@@ -1,5 +1,6 @@
 local _, nekometer = ...
 
+-- This meter is mainly used for debugging.
 local meter = {}
 
 function meter:Accept(e)

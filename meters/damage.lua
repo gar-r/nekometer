@@ -22,4 +22,8 @@ function meter:Report()
     return nekometer.SortMeterData(self.data)
 end
 
+function meter:Reset()
+    self.data = {}
+end
+
 nekometer.damage = meter

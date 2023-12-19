@@ -16,8 +16,10 @@ meters/printer.lua
 meters/dps.lua
 meters/damage.lua
 
+ui/main.lua
+ui/bars.lua
+ui/titlebar.lua
 ui/config.lua
-ui/chart.lua
 ui/reset.lua
 
 main.lua

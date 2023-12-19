@@ -59,4 +59,9 @@ function meter:Report()
     return nekometer.SortMeterData(self.dps)
 end
 
+function meter:Reset()
+    self.data = {}
+    self.dps = {}
+end
+
 nekometer.dps = meter
