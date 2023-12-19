@@ -19,6 +19,14 @@ function frame:GetCurrentMeter()
     return nekometer.enabledMeters[self.currentMeterIndex]
 end
 
+function frame:ResetCurrentMeter()
+    local meter = self:GetCurrentMeter()
+    if meter.Reset then
+        meter:Reset()
+    end
+    self:Update()
+end
+
 function frame:NextMeter()
     if self.currentMeterIndex == #nekometer.enabledMeters then
         self.currentMeterIndex = 1

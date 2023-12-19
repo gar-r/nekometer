@@ -60,5 +60,7 @@ closeButton:SetPoint("RIGHT", titleBar, "RIGHT", -3, 0)
 local settingsButton = CreateTitleBarButton("Interface\\Buttons\\UI-OptionsButton")
 settingsButton:SetPoint("RIGHT", closeButton, "LEFT", -3, 0)
 
-local resetButton = CreateTitleBarButton("Interface\\Buttons\\UI-RefreshButton")
+local resetButton = CreateTitleBarButton("Interface\\Buttons\\UI-RefreshButton", function ()
+    StaticPopup_Show("NEKOMETER_RESET")
+end)
 resetButton:SetPoint("RIGHT", settingsButton, "LEFT", -3, 0)

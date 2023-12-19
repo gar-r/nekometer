@@ -31,17 +31,20 @@ function bars:setData(index, text, value, maxValue)
 end
 
 function bars:setCount(count)
-    if count < self.count then
-        for i = count + 1, self.count do
-            self[i]:Hide()
-        end
+    -- create the required amount of bars
+    for i = self.count + 1, count do
+        self[i] = self:create(i)
     end
-    if count > self.count then
-        for i = self.count + 1, count do
-            self[i] = self:create(i)
-        end
-        self.count = count
+    -- bars 1..count should be visible
+    for i = 1, count do
+        self[i]:Show()
     end
+    -- bars after count should be hidden
+    for i = count + 1, self.count do
+        self[i]:Hide()
+    end
+    -- finally commit the count
+    self.count = count
 end
 
 function bars:create(index)

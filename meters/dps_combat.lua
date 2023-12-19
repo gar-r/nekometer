@@ -51,6 +51,10 @@ end
 
 function meter:Reset()
     self.data = {}
+    if self.combatStart and self.combatEnd == nil then
+        self.combatStart = GetTime()
+    end
+    self.combatEnd = nil
 end
 
 nekometer.dps_combat = meter

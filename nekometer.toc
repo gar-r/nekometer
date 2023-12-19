@@ -20,7 +20,7 @@ meters/damage.lua
 ui/main.lua
 ui/bars.lua
 ui/titlebar.lua
-ui/config.lua
 ui/reset.lua
+ui/config.lua
 
 main.lua
