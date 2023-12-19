@@ -13,9 +13,14 @@ end
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
         config:Init()
-        dispatcher:AddMeter(nekometer.printer)
-        dispatcher:AddMeter(nekometer.damage)
-        dispatcher:AddMeter(nekometer.dps)
+        -- TODO: get from config
+        nekometer.enabledMeters = {
+            nekometer.damage,
+            nekometer.dps,
+        }
+        for _, meter in ipairs(nekometer.enabledMeters) do
+            dispatcher:AddMeter(meter)
+        end
     end
 end
 

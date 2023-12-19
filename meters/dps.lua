@@ -2,7 +2,7 @@ local _, nekometer = ...
 
 local meter = {
     enabled = false,
-    default_refresh = 1,
+    default_window = 1,
     default_smoothing = 0.7,
     data = {},
     dps = {},
@@ -25,7 +25,7 @@ end
 function meter:Refresh()
     for id, d in pairs(self.data) do
         -- also apply exponential smoothing while recording the data
-        local next = math.floor(self.smoothing * d.value / self.refresh)
+        local next = math.floor(self.smoothing * d.value / self.window)
         if self.dps[id] then
             local rec = self.dps[id]
             rec.value = next + math.floor((1 - self.smoothing) * rec.value)
@@ -42,7 +42,7 @@ end
 function meter:ticker()
     self:Refresh()
     if self.enabled then
-        C_Timer.After(self.refresh, function()
+        C_Timer.After(self.window, function()
             self:ticker()
         end)
     end
@@ -50,7 +50,7 @@ end
 
 function meter:Init(cfg)
     self.enabled = true
-    self.refresh = cfg.dps_refresh or self.default_refresh
+    self.window = cfg.dps_window or self.default_window
     self.smoothing = cfg.dps_smoothing or self.default_smoothing
     self:ticker()
 end
