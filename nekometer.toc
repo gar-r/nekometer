@@ -13,7 +13,8 @@ core/util.lua
 core/slash.lua
 
 meters/printer.lua
-meters/dps.lua
+meters/dps_current.lua
+meters/dps_combat.lua
 meters/damage.lua
 
 ui/main.lua

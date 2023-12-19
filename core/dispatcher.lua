@@ -23,7 +23,7 @@ function dispatcher:HandleCombatEvent()
     if self:isRelevant(event) then
         local e = parser:Parse(event)
         if e then
-            self:notifyMeters(e)
+            self:notifyMeters("Accept", e)
         end
     end
 end
@@ -37,9 +37,20 @@ function dispatcher:isRelevant(event)
     return CombatLog_Object_IsA(sourceFlags, relevant)
 end
 
-function dispatcher:notifyMeters(e)
+function dispatcher:CombatEntered()
+    self:notifyMeters("CombatEntered")
+end
+
+function dispatcher:CombatExited()
+    self:notifyMeters("CombatExited")
+end
+
+function dispatcher:notifyMeters(fname, e)
     for _, meter in ipairs(self.meters) do
-        meter:Accept(e)
+        local fn = meter[fname]
+        if fn then
+            fn(meter, e)
+        end
     end
 end
 

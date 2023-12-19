@@ -24,6 +24,7 @@ function frame:NextMeter()
         self.currentMeterIndex = 1
     else self.currentMeterIndex = self.currentMeterIndex + 1
     end
+    self:Update()
 end
 
 function frame:PrevMeter()
@@ -31,6 +32,7 @@ function frame:PrevMeter()
         self.currentMeterIndex = #nekometer.enabledMeters
     else self.currentMeterIndex = self.currentMeterIndex - 1
     end
+    self:Update()
 end
 
 function frame:Update()

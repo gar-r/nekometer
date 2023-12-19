@@ -1,7 +1,7 @@
 local _, nekometer = ...
 
 local meter = {
-    title = "Dps",
+    title = "Dps (current)",
     enabled = false,
     default_window = 3,
     default_smoothing = 0.7,
@@ -65,4 +65,4 @@ function meter:Reset()
     self.dps = {}
 end
 
-nekometer.dps = meter
+nekometer.dps_current = meter
