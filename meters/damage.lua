@@ -1,6 +1,7 @@
 local _, nekometer = ...
 
 local meter = {
+    title = "Damage",
     data = {},
 }
 

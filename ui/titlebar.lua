@@ -25,6 +25,8 @@ titleBar:SetScript("OnMouseUp", function(_, button)
     end
 end)
 
+local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+
 local function CreateTitleBarButton(texture, onClick)
     local button = CreateFrame("Button", nil, titleBar)
     button:SetSize(12, 12)
@@ -35,15 +37,20 @@ local function CreateTitleBarButton(texture, onClick)
     return button
 end
 
-local prevButton = CreateTitleBarButton("Interface\\MINIMAP\\UI-Minimap-MinimizeButtonDown-Up")
+local prevButton = CreateTitleBarButton("Interface\\MINIMAP\\UI-Minimap-MinimizeButtonDown-Up", function ()
+    mainFrame:PrevMeter()
+    titleText:SetText(mainFrame:GetCurrentMeter().title)
+end)
 prevButton:SetSize(18, 18)
 prevButton:SetPoint("LEFT", titleBar, "LEFT", 0, 0)
 
-local nextButton = CreateTitleBarButton("Interface\\MINIMAP\\UI-Minimap-MinimizeButtonUp-Up")
+local nextButton = CreateTitleBarButton("Interface\\MINIMAP\\UI-Minimap-MinimizeButtonUp-Up", function ()
+    mainFrame:NextMeter()
+    titleText:SetText(mainFrame:GetCurrentMeter().title)
+end)
 nextButton:SetSize(18, 18)
 nextButton:SetPoint("LEFT", prevButton, "RIGHT", -5, 0)
 
-local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 titleText:SetPoint("LEFT", nextButton, "RIGHT", 5, 0)
 titleText:SetText("Damage")
 

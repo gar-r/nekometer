@@ -13,10 +13,30 @@ frame:SetBackdropColor(0, 0, 0, 0.3)
 frame:EnableMouse(true)
 frame:SetMovable(true)
 
+frame.currentMeterIndex = 1
+
+function frame:GetCurrentMeter()
+    return nekometer.enabledMeters[self.currentMeterIndex]
+end
+
+function frame:NextMeter()
+    if self.currentMeterIndex == #nekometer.enabledMeters then
+        self.currentMeterIndex = 1
+    else self.currentMeterIndex = self.currentMeterIndex + 1
+    end
+end
+
+function frame:PrevMeter()
+    if self.currentMeterIndex == 1 then
+        self.currentMeterIndex = #nekometer.enabledMeters
+    else self.currentMeterIndex = self.currentMeterIndex - 1
+    end
+end
+
 function frame:Update()
     if nekometer.enabledMeters then
-        local meter = self.selectedMeter or nekometer.enabledMeters[1]
         local bars = nekometer.frames.bars
+        local meter = self:GetCurrentMeter()
         bars:Display(meter:Report())
     end
 end

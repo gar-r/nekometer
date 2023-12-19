@@ -1,8 +1,9 @@
 local _, nekometer = ...
 
 local meter = {
+    title = "Dps",
     enabled = false,
-    default_window = 1,
+    default_window = 3,
     default_smoothing = 0.7,
     data = {},
     dps = {},
