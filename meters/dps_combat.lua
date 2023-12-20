@@ -20,17 +20,16 @@ function meter:Accept(e)
 end
 
 function meter:CombatEntered()
-    self.combatStart = GetTimePreciseSec()
-    self.combatEnd = nil
+    self:Reset()
+    self.combatStart = GetTime()
 end
 
 function meter:CombatExited()
-    self.combatEnd = GetTimePreciseSec()
+    self.combatEnd = GetTime()
 end
 
 function meter:Report()
-    local dps = {}
-    if self.combatStart == nil then
+    if not self.combatStart then
         return {}   -- no combat since start 
     end
     local duration
@@ -38,8 +37,12 @@ function meter:Report()
         duration = self.combatEnd - self.combatStart
     else
         -- still in combat, so we use the current time
-        duration = GetTimePreciseSec() - self.combatStart
+        duration = GetTime() - self.combatStart
     end
+    if duration < 0 then
+        print("duration", duration)
+    end
+    local dps = {}
     for k, v in pairs(self.data) do
         dps[k] = {
             name = v.name,
@@ -51,8 +54,10 @@ end
 
 function meter:Reset()
     self.data = {}
-    if self.combatStart and self.combatEnd == nil then
+    if self.combatStart and not self.combatEnd then
         self.combatStart = GetTime()
+    else
+        self.combatStart = nil
     end
     self.combatEnd = nil
 end
