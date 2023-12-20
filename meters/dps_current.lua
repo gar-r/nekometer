@@ -2,8 +2,7 @@ local _, nekometer = ...
 
 local meter = {
     title = "Dps (current)",
-    enabled = false,
-    default_window = 1,
+    default_window = 3,
     default_smoothing = 0.7,
     data = {},
     dps = {},
@@ -21,6 +20,10 @@ function meter:Accept(e)
             }
         end
     end
+end
+
+function meter:CombatExited()
+    self:Reset()
 end
 
 function meter:Refresh()
@@ -42,15 +45,12 @@ end
 
 function meter:ticker()
     self:Refresh()
-    if self.enabled then
-        C_Timer.After(self.window, function()
-            self:ticker()
-        end)
-    end
+    C_Timer.After(self.window, function()
+        self:ticker()
+    end)
 end
 
 function meter:Init(cfg)
-    self.enabled = true
     self.window = cfg.dps_window or self.default_window
     self.smoothing = cfg.dps_smoothing or self.default_smoothing
     self:ticker()
