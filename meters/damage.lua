@@ -27,4 +27,5 @@ function meter:Reset()
     self.data = {}
 end
 
-nekometer.damage = meter
+nekometer.meters = nekometer.meters or {}
+nekometer.meters.damage = meter

@@ -2,11 +2,11 @@ local _, nekometer = ...
 
 local meter = {
     title = "Dps (current)",
-    default_window = 3,
-    default_smoothing = 0.7,
     data = {},
     dps = {},
 }
+
+local config = nekometer.config
 
 function meter:Accept(e)
     if e:isDamage() then
@@ -50,9 +50,9 @@ function meter:ticker()
     end)
 end
 
-function meter:Init(cfg)
-    self.window = cfg.dps_window or self.default_window
-    self.smoothing = cfg.dps_smoothing or self.default_smoothing
+function meter:Init()
+    self.window = config.dps_current.window
+    self.smoothing = config.dps_current.smoothing
     self:ticker()
 end
 
@@ -65,4 +65,5 @@ function meter:Reset()
     self.dps = {}
 end
 
-nekometer.dps_current = meter
+nekometer.meters = nekometer.meters or {}
+nekometer.meters.dps_current = meter

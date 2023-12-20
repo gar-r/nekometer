@@ -13,7 +13,7 @@ local parser = nekometer.parser
 
 function dispatcher:AddMeter(meter)
     if meter.Init then
-        meter:Init(NekometerConfig)
+        meter:Init()
     end
     table.insert(self.meters, meter)
 end

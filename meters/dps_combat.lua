@@ -57,4 +57,5 @@ function meter:Reset()
     self.combatEnd = nil
 end
 
-nekometer.dps_combat = meter
+nekometer.meters = nekometer.meters or {}
+nekometer.meters.dps_combat = meter

@@ -13,4 +13,5 @@ function meter:Accept(e)
     print(msg)
 end
 
-nekometer.printer = meter
+nekometer.meters = nekometer.meters or {}
+nekometer.meters.printer = meter

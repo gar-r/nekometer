@@ -9,6 +9,10 @@ function commands:config(_)
     InterfaceOptionsFrame_OpenToCategory(nekometer.frames.config)
 end
 
+function commands:init(_)
+    nekometer.config:Reset()
+end
+
 function commands:reset(_)
     StaticPopup_Show("NEKOMETER_RESET")
 end
