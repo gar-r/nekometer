@@ -57,7 +57,7 @@ function meter:Init(cfg)
 end
 
 function meter:Report()
-    return nekometer.SortMeterData(self.dps)
+    return nekometer.CreateReport(self.dps)
 end
 
 function meter:Reset()

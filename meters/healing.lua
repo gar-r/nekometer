@@ -20,7 +20,7 @@ function meter:Accept(e)
 end
 
 function meter:Report()
-    return nekometer.SortMeterData(self.data)
+    return nekometer.CreateReport(self.data)
 end
 
 function meter:Reset()

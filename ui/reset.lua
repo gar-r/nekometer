@@ -1,6 +1,7 @@
 local _, nekometer = ...
 
 local mainFrame = nekometer.frames.main
+local pets = nekometer.pets
 
 local resetDialog = {
     text = "Reset Nekometer data?",
@@ -8,6 +9,7 @@ local resetDialog = {
     button2 = "No",
     OnAccept = function ()
         mainFrame:ResetCurrentMeter()
+        pets:ClearCache()
     end,
     timeout = 0,
     whileDead = true,

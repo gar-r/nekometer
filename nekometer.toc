@@ -7,9 +7,10 @@
 
 core/config.lua
 core/event.lua
+core/pets.lua
 core/parser.lua
 core/dispatcher.lua
-core/util.lua
+core/report.lua
 core/slash.lua
 
 meters/printer.lua

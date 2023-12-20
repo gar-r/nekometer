@@ -46,7 +46,7 @@ function meter:Report()
             value = math.floor(v.value / duration)
         }
     end
-    return nekometer.SortMeterData(dps)
+    return nekometer.CreateReport(dps)
 end
 
 function meter:Reset()

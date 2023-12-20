@@ -83,6 +83,10 @@
         "GRAY_FONT_COLOR",
         "CALENDAR_STATUS_TENTATIVE",
         "NekometerConfig",
-        "enabled"
+        "enabled",
+        "COMBAT",
+        "COMBATLOG",
+        "TooltipUtil",
+        "UNITNAME_SUMMON_TITLE1"
     ]
 }

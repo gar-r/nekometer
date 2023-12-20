@@ -2,13 +2,17 @@ local _, nekometer = ...
 
 local parser = {}
 
+local config = nekometer.config
+local pets = nekometer.pets
+
 --[[
-    Parse the combat event into a standard data packet.
+    Parse the WoW combat event into a custom event packet.
     Users of the packet don't need to be aware of the  
-    actual indices in the event.
-       data = { 
+    actual indices in the WoW event.
+       event = { 
             sourceId, sourceName,
-            destId, destName,
+            destId, destName,      
+            ownerId, ownerName,      
             ability, amount,
             type
         }
@@ -58,13 +62,57 @@ function parser:SWING_DAMAGE(event)
 end
 
 function parser:parseActors(event)
+    local sourceId = event[4]
+    local sourceName = event[5]
+    if self:hasOwner(event) then
+        local isPet = self:isPet(event)
+        if not isPet or isPet and config.mergePets then
+            local owner = pets:GetOwner(sourceId)
+            if owner then
+                sourceId = owner.id
+                sourceName = owner.name
+            end
+        end
+    end
     return nekometer.event:new({
-        sourceId = event[4],
-        sourceName = event[5],
+        sourceId = sourceId,
+        sourceName = sourceName,
         destId = event[8],
         destName = event[9],
     })
 end
 
-nekometer.parser = parser
+local filterOwned = bit.bor(
+    COMBATLOG_OBJECT_AFFILIATION_MINE,
+    COMBATLOG_OBJECT_AFFILIATION_PARTY,
+    COMBATLOG_OBJECT_AFFILIATION_RAID,
+    COMBATLOG_OBJECT_REACTION_FRIENDLY,
+    COMBATLOG_OBJECT_CONTROL_PLAYER,
+    COMBATLOG_OBJECT_TYPE_PLAYER,
+    COMBATLOG_OBJECT_TYPE_GUARDIAN,
+    COMBATLOG_OBJECT_TYPE_PET,
+    COMBATLOG_OBJECT_TYPE_OBJECT
+)
 
+function parser:hasOwner(event)
+    local sourceFlags = event[6]
+    return CombatLog_Object_IsA(sourceFlags, filterOwned)
+end
+
+local filterPet = bit.bor(
+    COMBATLOG_OBJECT_AFFILIATION_MINE,
+    COMBATLOG_OBJECT_AFFILIATION_PARTY,
+    COMBATLOG_OBJECT_AFFILIATION_RAID,
+    COMBATLOG_OBJECT_REACTION_FRIENDLY,
+    COMBATLOG_OBJECT_CONTROL_PLAYER,
+    COMBATLOG_OBJECT_TYPE_PLAYER,
+    COMBATLOG_OBJECT_TYPE_PET
+)
+
+
+function parser:isPet(event)
+    local sourceFlags = event[6]
+    return CombatLog_Object_IsA(sourceFlags, filterPet)
+end
+
+nekometer.parser = parser
