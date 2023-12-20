@@ -1,25 +1,11 @@
 local _, nekometer = ...
 
-local pets = {
-    cache = {}
-}
+local pets = {}
 
-function pets:GetOwner(id)
-    local owner = self:cacheLookup(id)
-    if owner == nil then
-        owner = self:queryOwner(id)
-        self.cache[id] = owner
-    end
-    return owner
-end
+nekometer.pets = nekometer.cache:new(3600, function (key)
+    return pets:queryOwner(key)
+end)
 
-function pets:ClearCache()
-    self.cache = {}
-end
-
-function pets:cacheLookup(id)
-    return self.cache[id]
-end
 
 function pets:queryOwner(id)
     local playerPetId = UnitGUID("playerpet")
@@ -56,7 +42,7 @@ function pets:matchTooltipText(s)
             local pattern = string.gsub(g, "%%s's", "(%%a+)'s")
             local _, _, name = string.find(s, pattern)
             if name then
-               return { 
+               return {
                 id = UnitGUID(name),
                 name = name,
             }
@@ -65,6 +51,3 @@ function pets:matchTooltipText(s)
         index = index + 1
     until g == nil
 end
-
-nekometer.pets = pets
-

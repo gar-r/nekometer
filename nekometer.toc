@@ -6,6 +6,7 @@
 ## Author: garric
 
 core/config.lua
+core/cache.lua
 core/event.lua
 core/pets.lua
 core/parser.lua

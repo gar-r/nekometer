@@ -84,9 +84,7 @@
         "CALENDAR_STATUS_TENTATIVE",
         "NekometerConfig",
         "enabled",
-        "COMBAT",
-        "COMBATLOG",
-        "TooltipUtil",
-        "UNITNAME_SUMMON_TITLE1"
+        "class",
+        "TooltipUtil"
     ]
 }

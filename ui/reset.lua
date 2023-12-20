@@ -9,7 +9,6 @@ local resetDialog = {
     button2 = "No",
     OnAccept = function ()
         mainFrame:ResetCurrentMeter()
-        pets:ClearCache()
     end,
     timeout = 0,
     whileDead = true,

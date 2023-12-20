@@ -1,5 +1,10 @@
 local _, nekometer = ...
 
+nekometer.classes = nekometer.cache:new(3600, function (key)
+    local _, className = GetPlayerInfoByGUID(key)
+    return className
+end)
+
 --[[
     Transforms the meter data into a report that the UI can
     interpret and display as bars.
@@ -14,7 +19,12 @@ local _, nekometer = ...
     }
 
     Elements in the resulting indexed table are sorted 
-    by value in descending order.
+    by value in descending order, and have the following schema:
+    {
+        name: "foo",
+        value: 12345,
+        class: "Shaman",
+    }
 ]]
 nekometer.CreateReport = function (meterData)
     local sortedIds = {}
@@ -26,7 +36,9 @@ nekometer.CreateReport = function (meterData)
     end)
     local sortedValues = {}
     for _, id in ipairs(sortedIds) do
-        table.insert(sortedValues, meterData[id])
+        local data = meterData[id]
+        data.class = nekometer.classes:Lookup(id)
+        table.insert(sortedValues, data)
     end
     return sortedValues
 end

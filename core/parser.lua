@@ -67,7 +67,7 @@ function parser:parseActors(event)
     if self:hasOwner(event) then
         local isPet = self:isPet(event)
         if not isPet or isPet and config.mergePets then
-            local owner = pets:GetOwner(sourceId)
+            local owner = pets:Lookup(sourceId)
             if owner then
                 sourceId = owner.id
                 sourceName = owner.name

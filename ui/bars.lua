@@ -17,17 +17,23 @@ function bars:Display(report)
     if size > 0 then
         local maxValue = report[1].value
         for i, item in ipairs(report) do
-            self:setData(i, item.name, item.value, maxValue)
+            self:setData(i, item, maxValue)
         end
     end
 end
 
-function bars:setData(index, text, value, maxValue)
+function bars:setData(index, item, maxValue)
     local bar = self[index]
     bar:SetMinMaxValues(0, maxValue)
-    bar:SetValue(value)
-    bar.text:SetText(text)    
-    bar.value:SetText(AbbreviateNumbers(value))
+    bar:SetValue(item.value)
+    bar.text:SetText(item.name)
+    bar.value:SetText(AbbreviateNumbers(item.value))
+    if item.class then
+        local color = C_ClassColor.GetClassColor(item.class)
+        bar:SetColorFill(color.r, color.g, color.b, 0.7)
+    else
+        bar:SetColorFill(0.3, 0.3, 0.3, 0.7)
+    end
 end
 
 function bars:setCount(count)
