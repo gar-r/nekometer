@@ -26,8 +26,8 @@ function bars:setData(index, text, value, maxValue)
     local bar = self[index]
     bar:SetMinMaxValues(0, maxValue)
     bar:SetValue(value)
-    bar.text:SetText(text)
-    bar.value:SetText(value)
+    bar.text:SetText(text)    
+    bar.value:SetText(AbbreviateNumbers(value))
 end
 
 function bars:setCount(count)
