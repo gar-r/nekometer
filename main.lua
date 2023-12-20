@@ -18,6 +18,7 @@ function frame:ADDON_LOADED(_, name)
             nekometer.damage,
             nekometer.dps_current,
             nekometer.dps_combat,
+            nekometer.healing,
         }
         for _, meter in ipairs(nekometer.enabledMeters) do
             dispatcher:AddMeter(meter)

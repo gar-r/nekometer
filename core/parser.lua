@@ -43,6 +43,12 @@ function parser:SPELL_HEAL(event)
     return data
 end
 
+function parser:SPELL_PERIODIC_HEAL(event)
+    local data = self:SPELL_DAMAGE(event)
+    data.type = nekometer.EVENT_TYPE_HEAL
+    return data
+end
+
 function parser:SWING_DAMAGE(event)
     local data = self:parseActors(event)
     data.amount = event[12] or 0
