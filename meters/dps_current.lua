@@ -6,8 +6,6 @@ local meter = {
     dps = {},
 }
 
-local config = nekometer.config
-
 function meter:Accept(e)
     if e:isDamage() then
         local data = self.data
@@ -50,9 +48,9 @@ function meter:ticker()
     end)
 end
 
-function meter:Init()
-    self.window = config.dps_current.window
-    self.smoothing = config.dps_current.smoothing
+function meter:Init(cfg)
+    self.window = cfg.window
+    self.smoothing = cfg.smoothing
     self:ticker()
 end
 

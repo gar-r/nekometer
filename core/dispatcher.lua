@@ -11,9 +11,9 @@ local dispatcher = {
 
 local parser = nekometer.parser
 
-function dispatcher:AddMeter(meter)
+function dispatcher:AddMeter(meter, cfg)
     if meter.Init then
-        meter:Init()
+        meter:Init(cfg)
     end
     table.insert(self.meters, meter)
 end

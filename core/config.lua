@@ -5,20 +5,26 @@ local config = {}
 local defaults = {
     mergePets = true,
     classColors = true,
-    meterOrder = { "damage", "dps_current", "dps_combat", "healing" },
-    damage = {
-        enabled = true,
-    },
-    dps_current = {
-        enabled = true,
-        window = 3,
-        smoothing = 0.7,
-    },
-    dps_combat = {
-        enabled = true,
-    },
-    healing = {
-        enabled = true,
+    meters = {
+        {
+            key = "damage",
+            enabled = true,
+        },
+        {
+            key = "dps_current",
+            enabled = true,
+            window = 3,
+            smoothing = 0.7,
+        },
+        {
+            key = "dps_combat",
+            enabled = true,
+        },
+        {
+            key = "healing",
+            enabled = true,
+        }
+
     },
 }
 

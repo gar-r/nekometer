@@ -14,10 +14,10 @@ function frame:ADDON_LOADED(_, name)
     if name == addonName then
         config:Init()
         nekometer.enabledMeters = {}
-        for _, meterName in ipairs(config.meterOrder) do
-            if config[meterName] and config[meterName].enabled then
-                local meter = nekometer.meters[meterName]
-                dispatcher:AddMeter(meter)
+        for _, cfg in ipairs(config.meters) do
+            if cfg.enabled then
+                local meter = nekometer.meters[cfg.key]
+                dispatcher:AddMeter(meter, cfg)
                 table.insert(nekometer.enabledMeters, meter)
             end
         end
