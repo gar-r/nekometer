@@ -13,7 +13,7 @@ function meter:Accept(e)
         else
             data[e.sourceId] = {
                 name = e.sourceName,
-                value = e.amount
+                value = e.amount,
             }
         end
     end

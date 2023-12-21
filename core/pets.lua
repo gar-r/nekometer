@@ -3,7 +3,9 @@ local _, nekometer = ...
 local pets = {}
 
 nekometer.pets = nekometer.cache:new(3600, function (key)
-    return pets:queryOwner(key)
+    if key and key ~= "" then
+        return pets:queryOwner(key)
+    end
 end)
 
 
@@ -39,7 +41,7 @@ function pets:matchTooltipText(s)
     repeat
         local g = _G[format("UNITNAME_SUMMON_TITLE%i", index)]
         if g then
-            local pattern = string.gsub(g, "%%s's", "(%%a+)'s")
+            local pattern = string.gsub(g, "%%s", "(%%a+)")
             local _, _, name = string.find(s, pattern)
             if name then
                return {

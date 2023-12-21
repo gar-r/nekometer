@@ -1,8 +1,10 @@
 local _, nekometer = ...
 
 nekometer.classes = nekometer.cache:new(3600, function (key)
-    local _, className = GetPlayerInfoByGUID(key)
-    return className
+    if key and key ~= "" then
+        local _, className = GetPlayerInfoByGUID(key)
+        return className
+    end
 end)
 
 --[[

@@ -31,8 +31,12 @@ end
 function dispatcher:isRelevant(event)
     local sourceFlags = event[6]
     local relevant = bit.bor(
-        COMBATLOG_FILTER_ME,
-        COMBATLOG_FILTER_MY_PET
+        COMBATLOG_OBJECT_AFFILIATION_MINE,
+        COMBATLOG_OBJECT_AFFILIATION_PARTY,
+		COMBATLOG_OBJECT_AFFILIATION_RAID,
+        COMBATLOG_OBJECT_REACTION_FRIENDLY,
+		COMBATLOG_OBJECT_CONTROL_MASK,
+        COMBATLOG_OBJECT_TYPE_MASK
     )
     return CombatLog_Object_IsA(sourceFlags, relevant)
 end

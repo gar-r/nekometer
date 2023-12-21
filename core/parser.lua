@@ -68,7 +68,7 @@ function parser:parseActors(event)
         local isPet = self:isPet(event)
         if not isPet or isPet and config.mergePets then
             local owner = pets:Lookup(sourceId)
-            if owner then
+            if owner and owner.id and owner.name then
                 sourceId = owner.id
                 sourceName = owner.name
             end
