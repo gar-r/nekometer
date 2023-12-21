@@ -20,9 +20,10 @@ function frame:GetCurrentMeter()
 end
 
 function frame:ResetCurrentMeter()
-    local meter = self:GetCurrentMeter()
-    if meter.Reset then
-        meter:Reset()
+    for _, meter in ipairs(nekometer.enabledMeters) do
+        if meter.Reset then
+            meter:Reset()
+        end
     end
     self:Update()
 end

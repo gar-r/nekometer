@@ -4,6 +4,7 @@ local parser = {}
 
 local config = nekometer.config
 local pets = nekometer.pets
+local util = nekometer.util
 
 --[[
     Parse the WoW combat event into a custom event packet.
@@ -68,15 +69,18 @@ function parser:parseActors(event)
         local isPet = self:isPet(event)
         if not isPet or isPet and config.mergePets then
             local owner = pets:Lookup(sourceId)
-            if owner and owner.id and owner.name then
+            if owner then
                 sourceId = owner.id
                 sourceName = owner.name
+            else
+                -- unable to determine owner
+                sourceId = sourceName
             end
         end
     end
     return nekometer.event:new({
         sourceId = sourceId,
-        sourceName = sourceName,
+        sourceName = util:RemoveRealmInfo(sourceName),
         destId = event[8],
         destName = event[9],
     })
@@ -87,8 +91,7 @@ local filterOwned = bit.bor(
     COMBATLOG_OBJECT_AFFILIATION_PARTY,
     COMBATLOG_OBJECT_AFFILIATION_RAID,
     COMBATLOG_OBJECT_REACTION_FRIENDLY,
-    COMBATLOG_OBJECT_CONTROL_PLAYER,
-    COMBATLOG_OBJECT_TYPE_PLAYER,
+    COMBATLOG_OBJECT_CONTROL_MASK,
     COMBATLOG_OBJECT_TYPE_GUARDIAN,
     COMBATLOG_OBJECT_TYPE_PET,
     COMBATLOG_OBJECT_TYPE_OBJECT
@@ -105,7 +108,6 @@ local filterPet = bit.bor(
     COMBATLOG_OBJECT_AFFILIATION_RAID,
     COMBATLOG_OBJECT_REACTION_FRIENDLY,
     COMBATLOG_OBJECT_CONTROL_PLAYER,
-    COMBATLOG_OBJECT_TYPE_PLAYER,
     COMBATLOG_OBJECT_TYPE_PET
 )
 

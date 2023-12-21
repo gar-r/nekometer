@@ -1,9 +1,12 @@
 local _, nekometer = ...
 
-nekometer.classes = nekometer.cache:new(3600, function (key)
-    if key and key ~= "" then
+nekometer.classes = nekometer.cache:new(21600, function (key)
+    local success, class = pcall(function ()
         local _, className = GetPlayerInfoByGUID(key)
         return className
+    end)
+    if success then
+        return class
     end
 end)
 

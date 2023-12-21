@@ -5,6 +5,7 @@
 ## Notes: Nekometer
 ## Author: garric
 
+core/util.lua
 core/commands.lua
 core/config.lua
 core/cache.lua

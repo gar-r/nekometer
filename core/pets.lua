@@ -2,7 +2,7 @@ local _, nekometer = ...
 
 local pets = {}
 
-nekometer.pets = nekometer.cache:new(3600, function (key)
+nekometer.pets = nekometer.cache:new(21600, function (key)
     if key and key ~= "" then
         return pets:queryOwner(key)
     end
@@ -10,7 +10,7 @@ end)
 
 
 function pets:queryOwner(id)
-    local playerPetId = UnitGUID("playerpet")
+    local playerPetId = UnitGUID("pet")
     if id == playerPetId then
         return {
             id = UnitGUID("player"),
@@ -43,11 +43,14 @@ function pets:matchTooltipText(s)
         if g then
             local pattern = string.gsub(g, "%%s", "(%%a+)")
             local _, _, name = string.find(s, pattern)
-            if name then
-               return {
-                id = UnitGUID(name),
-                name = name,
-            }
+            if name and name ~= "" then
+                local id = UnitGUID(name)
+                if id then
+                    return {
+                        id = id,
+                        name = name,
+                    }
+                end
             end
         end
         index = index + 1
