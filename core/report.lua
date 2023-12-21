@@ -30,6 +30,7 @@ end)
         value: 12345,
         class: "Shaman",
     }
+    Note: the "class" attribute is only populated when enabled in the config.
 ]]
 nekometer.CreateReport = function (meterData)
     local sortedIds = {}
@@ -42,7 +43,9 @@ nekometer.CreateReport = function (meterData)
     local sortedValues = {}
     for _, id in ipairs(sortedIds) do
         local data = meterData[id]
-        data.class = nekometer.classes:Lookup(id)
+        if NekometerConfig.classColors then
+            data.class = nekometer.classes:Lookup(id)
+        end
         table.insert(sortedValues, data)
     end
     return sortedValues

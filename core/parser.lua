@@ -2,7 +2,6 @@ local _, nekometer = ...
 
 local parser = {}
 
-local config = nekometer.config
 local pets = nekometer.pets
 local util = nekometer.util
 
@@ -67,7 +66,7 @@ function parser:parseActors(event)
     local sourceName = event[5]
     if self:hasOwner(event) then
         local isPet = self:isPet(event)
-        if not isPet or isPet and config.mergePets then
+        if not isPet or isPet and NekometerConfig.mergePets then
             local owner = pets:Lookup(sourceId)
             if owner then
                 sourceId = owner.id

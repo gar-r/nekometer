@@ -24,7 +24,7 @@ meters/healing.lua
 ui/main.lua
 ui/bars.lua
 ui/titlebar.lua
-ui/reset.lua
 ui/config.lua
+ui/dialogs.lua
 
 main.lua

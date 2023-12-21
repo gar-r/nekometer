@@ -1,6 +1,5 @@
 local addonName, nekometer = ...
 
-local config = nekometer.config
 local dispatcher = nekometer.dispatcher
 
 ---@class Frame
@@ -12,9 +11,9 @@ end
 
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
-        config:Init()
+        nekometer.init()
         nekometer.enabledMeters = {}
-        for _, cfg in ipairs(config.meters) do
+        for _, cfg in ipairs(NekometerConfig.meters) do
             if cfg.enabled then
                 local meter = nekometer.meters[cfg.key]
                 dispatcher:AddMeter(meter, cfg)

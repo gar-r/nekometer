@@ -1,10 +1,14 @@
 local _, nekometer = ...
 
-local config = {}
-
 local defaults = {
     mergePets = true,
     classColors = true,
+    neutralColor = {
+        r = 0.3,
+        g = 0.3,
+        b = 0.3,
+        a = 0.7
+    },
     meters = {
         {
             key = "damage",
@@ -24,27 +28,16 @@ local defaults = {
             key = "healing",
             enabled = true,
         }
-
     },
 }
 
-function config:Init()
-    if NekometerConfig.initialized then
-        self:import(NekometerConfig)
-    else
-        self:import(defaults)
-        self.initialized = true
+nekometer.init = function ()
+    if not NekometerConfig.initialized then
+        nekometer.reset()
+        NekometerConfig.initialized = true
     end
 end
 
-function config:Reset()
-    self:import(defaults)
+nekometer.reset = function ()
+    NekometerConfig = CopyTable(defaults)
 end
-
-function config:import(src)
-    for k, v in pairs(src) do
-        self[k] = v
-    end
-end
-
-nekometer.config = config

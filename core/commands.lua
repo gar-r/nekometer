@@ -6,7 +6,7 @@ local _, nekometer = ...
 local commands = {}
 
 function commands:config(_)
-    InterfaceOptionsFrame_OpenToCategory(nekometer.frames.config)
+    Settings.OpenToCategory("Nekometer")
 end
 
 function commands:init(_)

@@ -32,7 +32,8 @@ function bars:setData(index, item, maxValue)
         local color = C_ClassColor.GetClassColor(item.class)
         bar:SetColorFill(color.r, color.g, color.b, 0.7)
     else
-        bar:SetColorFill(0.3, 0.3, 0.3, 0.7)
+        local color = NekometerConfig.neutralColor
+        bar:SetColorFill(color.r, color.g, color.b, color.a)
     end
 end
 

@@ -1,11 +1,7 @@
 local _, nekometer = ...
 
-local config = nekometer.config
-
 ---@class frame
 local frame = CreateFrame("Frame", "NekometerConfig")
-frame.name = "Nekometer"
-InterfaceOptions_AddCategory(frame)
 
 function frame:CreateSlider(min, max, step)
     local slider = CreateFrame("Slider", nil, self, "OptionsSliderTemplate")
@@ -27,6 +23,14 @@ function frame:CreateCheckbox(text)
     local checkbox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
     checkbox["text"]:SetText(text)
     return checkbox
+end
+
+function frame:GetMeterConfig(key)
+    for _, cfg in ipairs(NekometerConfig.meters) do
+        if cfg.key == key then
+            return cfg
+        end
+    end
 end
 
 local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
@@ -65,11 +69,10 @@ catAdvanced:SetText("Advanced options")
 
 local windowSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 windowSliderText:SetPoint("TOPLEFT", catAdvanced, "BOTTOMLEFT", 0, -16)
-windowSliderText:SetText("Window size")
+windowSliderText:SetText("Data window size")
 
 local windowSlider = frame:CreateSlider(1, 10, 1)
 windowSlider:SetPoint("TOPLEFT", windowSliderText, "BOTTOMLEFT", 0, -8)
-windowSlider:SetValue(3)
 
 local smoothingSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 smoothingSliderText:SetPoint("TOPLEFT", windowSlider, "BOTTOMLEFT", 0, -16)
@@ -77,13 +80,70 @@ smoothingSliderText:SetText("Smoothing factor")
 
 local smoothingSlider = frame:CreateSlider(0.1, 0.9, 0.1)
 smoothingSlider:SetPoint("TOPLEFT", smoothingSliderText, "BOTTOMLEFT", 0, -8)
-smoothingSlider:SetValue(0.7)
 
-local saveButton = frame:CreateButton("Save")
-saveButton:SetPoint("BOTTOM", frame, 70, 10)
+local resetButton = frame:CreateButton("Defaults")
+resetButton:SetPoint("BOTTOM", 0, 10)
+resetButton:SetScript("OnClick", function ()
+    StaticPopup_Show("NEKOMETER_RESET_SETTINGS")
+end)
 
-local resetButton = frame:CreateButton("Reset")
-resetButton:SetPoint("BOTTOM", frame, -70, 10)
+function frame:OnRefresh()
+    mergePetsCheckbox:SetChecked(NekometerConfig.mergePets)
+    classColorsCheckbox:SetChecked(NekometerConfig.classColors)
+    damageCheckbox:SetChecked(frame:GetMeterConfig("damage").enabled)
+    dpsCurrentCheckbox:SetChecked(frame:GetMeterConfig("dps_current").enabled)
+    dpsCombatCheckbox:SetChecked(frame:GetMeterConfig("dps_combat").enabled)
+    healingCheckbox:SetChecked(frame:GetMeterConfig("healing").enabled)
+    windowSlider:SetValue(frame:GetMeterConfig("dps_current").window)
+    smoothingSlider:SetValue(frame:GetMeterConfig("dps_current").smoothing)
+end
+
+function frame:OnCommit()
+    -- reload might be required
+    self:commitMeter("damage", dpsCurrentCheckbox:GetChecked())
+    self:commitMeter("dps_current", damageCheckbox:GetChecked())
+    self:commitMeter("dps_combat", dpsCombatCheckbox:GetChecked())
+    self:commitMeter("healing", healingCheckbox:GetChecked())
+
+    -- reset might be required
+    local mergePets = mergePetsCheckbox:GetChecked()
+    if NekometerConfig.mergePets ~= mergePets then
+        NekometerConfig.mergePets = mergePets
+        nekometer.resetRequired = true
+    end
+    local classColors = classColorsCheckbox:GetChecked()
+    if NekometerConfig.classColors ~= classColors then
+        NekometerConfig.classColors = classColors
+        nekometer.resetRequired = true
+    end
+
+    -- no reload or reset required
+    local dpsCurrentCfg = frame:GetMeterConfig("dps_current")
+    dpsCurrentCfg.window = windowSlider:GetValue()
+    dpsCurrentCfg.smoothing = smoothingSlider:GetValue()
+end
+
+function frame:commitMeter(key, newVal)
+    local cfg = frame:GetMeterConfig(key)
+    if cfg.enabled ~= newVal then
+        cfg.enabled = newVal
+        nekometer.reloadRequired = true
+    end
+end
+
+
+function frame:OnDefault()
+    self:ResetSettings()
+end
+
+function frame:ResetSettings()
+    nekometer.reset()
+    self:OnRefresh()
+end
+
+local settings = Settings.RegisterCanvasLayoutCategory(frame, "Nekometer")
+settings.ID = "Nekometer"
+Settings.RegisterAddOnCategory(settings)
 
 nekometer.frames = nekometer.frames or {}
 nekometer.frames.config = frame

@@ -52,7 +52,20 @@ function frame:Update()
     end
 end
 
+function frame:CheckState()
+    if nekometer.reloadRequired then
+        nekometer.reloadRequired = false
+        nekometer.resetRequired = false
+        StaticPopup_Show("NEKOMETER_RELOAD")
+    end
+    if nekometer.resetRequired then
+        nekometer.resetRequired = false
+        StaticPopup_Show("NEKOMETER_RESET")
+    end
+end
+
 frame:SetScript("OnUpdate", function (self, elapsed)
+    self.CheckState()
     self.elapsed = (self.elapsed or 0) + elapsed
     if self.elapsed >= 1 then
         self.elapsed = 0
