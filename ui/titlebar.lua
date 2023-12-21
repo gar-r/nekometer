@@ -1,6 +1,7 @@
 local _, nekometer = ...
 
 local mainFrame = nekometer.frames.main
+local commands = nekometer.commands
 
 ---@class BackdropTemplate:Frame
 local titleBar = CreateFrame("Frame", nil, mainFrame, "BackdropTemplate")
@@ -54,13 +55,17 @@ nextButton:SetPoint("LEFT", prevButton, "RIGHT", -5, 0)
 titleText:SetPoint("LEFT", nextButton, "RIGHT", 5, 0)
 titleText:SetText("Damage")
 
-local closeButton = CreateTitleBarButton("Interface\\Buttons\\UI-StopButton")
+local closeButton = CreateTitleBarButton("Interface\\Buttons\\UI-StopButton", function ()
+    commands:toggle()
+end)
 closeButton:SetPoint("RIGHT", titleBar, "RIGHT", -3, 0)
 
-local settingsButton = CreateTitleBarButton("Interface\\Buttons\\UI-OptionsButton")
+local settingsButton = CreateTitleBarButton("Interface\\Buttons\\UI-OptionsButton", function ()
+    commands:config()
+end)
 settingsButton:SetPoint("RIGHT", closeButton, "LEFT", -3, 0)
 
 local resetButton = CreateTitleBarButton("Interface\\Buttons\\UI-RefreshButton", function ()
-    StaticPopup_Show("NEKOMETER_RESET")
+    commands:reset()
 end)
 resetButton:SetPoint("RIGHT", settingsButton, "LEFT", -3, 0)

@@ -5,6 +5,7 @@
 ## Notes: Nekometer
 ## Author: garric
 
+core/commands.lua
 core/config.lua
 core/cache.lua
 core/event.lua
@@ -12,7 +13,6 @@ core/pets.lua
 core/parser.lua
 core/dispatcher.lua
 core/report.lua
-core/slash.lua
 
 meters/printer.lua
 meters/dps_current.lua
