@@ -3,7 +3,7 @@ local _, nekometer = ...
 local defaults = {
     version = 3,
     window = {
-        color = { r = 0.3, g = 0.3, b = 0.3, a = 0.7 },
+        color = { r = 0, g = 0, b = 0, a = 0.3 },
         width = 215,
         bars = 8,
     },

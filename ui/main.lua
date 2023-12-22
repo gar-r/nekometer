@@ -5,6 +5,7 @@ local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemp
 
 function frame:Init()
     self.currentMeterIndex = 1
+    self.currentPage = 1
     self:SetPoint("CENTER")
     self:SetWidth(NekometerConfig.window.width)
     self:SetHeight(NekometerConfig.titleBar.height + NekometerConfig.window.bars * 20)
@@ -13,7 +14,8 @@ function frame:Init()
         tile = true,
         tileSize = 16,
     })
-    self:SetBackdropColor(0, 0, 0, 0.3)
+    local c = NekometerConfig.window.color
+    self:SetBackdropColor(c.r, c.g, c.b, c.a)
     self:EnableMouse(true)
     self:SetMovable(true)
     self:SetScript("OnUpdate", self.UpdateBars)
@@ -54,7 +56,7 @@ function frame:UpdateBars()
     if nekometer.enabledMeters then
         local bars = nekometer.frames.bars
         local meter = self:GetCurrentMeter()
-        bars:Display(meter:Report())
+        bars:Display(meter:Report(), self.currentPage)
     end
 end
 
