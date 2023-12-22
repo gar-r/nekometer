@@ -4,7 +4,7 @@ local defaults = {
     version = 3,
     window = {
         color = { r = 0.3, g = 0.3, b = 0.3, a = 0.7 },
-        width = 250,
+        width = 215,
         bars = 8,
     },
     titleBar = {

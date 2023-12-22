@@ -2,28 +2,36 @@ local _, nekometer = ...
 
 local mainFrame = nekometer.frames.main
 
---[[
-    We manage bar frames through this interface, because it is
-    not possible to dispose a Frame once it has been created.
-]]
-local bars = {
-    count = 0,
-}
+local bars = {}
 
--- Display a report, creating new bars if neccessary.
-function bars:Display(report)
-    local size = #report
-    self:setCount(size)
-    if size > 0 then
-        local maxValue = report[1].value
-        for i, item in ipairs(report) do
-            self:setData(i, item, maxValue)
+function bars:Init()
+    for i=1, NekometerConfig.window.bars do
+        local bar = self:createBar(i)
+        table.insert(self, bar)
+    end
+end
+
+function bars:Display(report, page)
+    page = page or 1
+    local from = (page-1) * #self + 1
+    local to = page * #self
+    local maxValue = 0
+    if #report > 0 then
+        maxValue = report[1].value
+    end
+    for i, bar in ipairs(self) do
+        local idx = (page-1) * #self + i
+        local item = report[idx]
+        if item then
+            self:setData(bar, report[idx], maxValue)
+            bar:Show()
+        else
+            bar:Hide()
         end
     end
 end
 
-function bars:setData(index, item, maxValue)
-    local bar = self[index]
+function bars:setData(bar, item, maxValue)
     bar:SetMinMaxValues(0, maxValue)
     bar:SetValue(item.value)
     bar.text:SetText(item.name)
@@ -33,29 +41,12 @@ function bars:setData(index, item, maxValue)
         c = C_ClassColor.GetClassColor(item.class)
         c.a = 0.7
     else
-        c = NekometerConfig.neutralColor
+        c = NekometerConfig.bars.neutralColor
     end
     bar:SetColorFill(c.r, c.g, c.b, c.a)
 end
 
-function bars:setCount(count)
-    -- create the required amount of bars
-    for i = self.count + 1, count do
-        self[i] = self:create(i)
-    end
-    -- bars 1..count should be visible
-    for i = 1, count do
-        self[i]:Show()
-    end
-    -- bars after count should be hidden
-    for i = count + 1, self.count do
-        self[i]:Hide()
-    end
-    -- finally commit the count
-    self.count = count
-end
-
-function bars:create(index)
+function bars:createBar(index)
     local bar = CreateFrame("StatusBar", nil, mainFrame)
     local offset = NekometerConfig.titleBar.height
     local height = NekometerConfig.bars.height
