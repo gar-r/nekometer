@@ -5,10 +5,10 @@ local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemp
 
 function frame:Init()
     self.currentMeterIndex = 1
-    self.currentPage = 1
+    self.scrollOffset = 0
     self:SetPoint("CENTER")
     self:SetWidth(NekometerConfig.window.width)
-    self:SetHeight(NekometerConfig.titleBar.height + NekometerConfig.window.bars * 20)
+    self:SetHeight(NekometerConfig.titleBar.height + NekometerConfig.window.bars * NekometerConfig.bars.height)
     self:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
         tile = true,
@@ -18,7 +18,8 @@ function frame:Init()
     self:SetBackdropColor(c.r, c.g, c.b, c.a)
     self:EnableMouse(true)
     self:SetMovable(true)
-    self:SetScript("OnUpdate", self.UpdateBars)
+    self:SetScript("OnUpdate", self.OnUpdate)
+    self:SetScript("OnMouseWheel", self.OnMouseWheel)
 end
 
 function frame:GetCurrentMeter()
@@ -56,16 +57,26 @@ function frame:UpdateBars()
     if nekometer.enabledMeters then
         local bars = nekometer.frames.bars
         local meter = self:GetCurrentMeter()
-        bars:Display(meter:Report(), self.currentPage)
+        bars:Display(meter:Report(), self.scrollOffset)
     end
 end
 
 function frame:OnUpdate(elapsed)
     self:CheckState()
     self.elapsed = (self.elapsed or 0) + elapsed
-    if self.elapsed >= 1 then
+    if self.elapsed >= NekometerConfig.updateRate then
         self.elapsed = 0
         self:UpdateBars()
+    end
+end
+
+function frame:OnMouseWheel(delta)
+    if delta > 0 then
+        if self.scrollOffset > 0 then
+            self.scrollOffset = self.scrollOffset - 1
+        end
+    else
+        self.scrollOffset = self.scrollOffset + 1
     end
 end
 

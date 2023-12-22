@@ -2,10 +2,11 @@ local _, nekometer = ...
 
 local defaults = {
     version = 3,
+    updateRate = 0.5,
     window = {
         color = { r = 0, g = 0, b = 0, a = 0.3 },
         width = 215,
-        bars = 8,
+        bars = 6,
     },
     titleBar = {
         height = 20,

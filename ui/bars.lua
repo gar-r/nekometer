@@ -11,24 +11,37 @@ function bars:Init()
     end
 end
 
-function bars:Display(report, page)
-    page = page or 1
-    local from = (page-1) * #self + 1
-    local to = page * #self
-    local maxValue = 0
-    if #report > 0 then
-        maxValue = report[1].value
-    end
+function bars:Display(report, offset)
+    offset = self:boundOffset(report, offset)
+    local maxValue = self:calcMaxValue(report)
     for i, bar in ipairs(self) do
-        local idx = (page-1) * #self + i
-        local item = report[idx]
+        local item = report[i + offset]
         if item then
-            self:setData(bar, report[idx], maxValue)
+            self:setData(bar, item, maxValue)
             bar:Show()
         else
             bar:Hide()
         end
     end
+end
+
+function bars:boundOffset(report, offset)
+    local maxOffset = #report - #self
+    if maxOffset < 0 then
+        maxOffset = 0
+    end
+    if offset > maxOffset then
+        offset = maxOffset
+    end
+    return offset
+end
+
+function bars:calcMaxValue(report)
+    local maxValue = 0
+    if #report > 0 then
+        maxValue = report[1].value
+    end
+    return maxValue
 end
 
 function bars:setData(bar, item, maxValue)
