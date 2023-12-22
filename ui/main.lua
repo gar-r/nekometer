@@ -4,8 +4,10 @@ local _, nekometer = ...
 local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemplate")
 
 function frame:Init()
+    self.currentMeterIndex = 1
     self:SetPoint("CENTER")
-    self:SetSize(200, 120)
+    self:SetWidth(NekometerConfig.window.width)
+    self:SetHeight(NekometerConfig.titleBar.height + NekometerConfig.window.bars * 20)
     self:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
         tile = true,
@@ -14,7 +16,7 @@ function frame:Init()
     self:SetBackdropColor(0, 0, 0, 0.3)
     self:EnableMouse(true)
     self:SetMovable(true)
-    self.currentMeterIndex = 1
+    self:SetScript("OnUpdate", self.UpdateBars)
 end
 
 function frame:GetCurrentMeter()
@@ -27,7 +29,7 @@ function frame:ResetCurrentMeter()
             meter:Reset()
         end
     end
-    self:Update()
+    self:UpdateBars()
 end
 
 function frame:NextMeter()
@@ -36,7 +38,7 @@ function frame:NextMeter()
     else
         self.currentMeterIndex = self.currentMeterIndex + 1
     end
-    self:Update()
+    self:UpdateBars()
 end
 
 function frame:PrevMeter()
@@ -45,14 +47,23 @@ function frame:PrevMeter()
     else
         self.currentMeterIndex = self.currentMeterIndex - 1
     end
-    self:Update()
+    self:UpdateBars()
 end
 
-function frame:Update()
+function frame:UpdateBars()
     if nekometer.enabledMeters then
         local bars = nekometer.frames.bars
         local meter = self:GetCurrentMeter()
         bars:Display(meter:Report())
+    end
+end
+
+function frame:OnUpdate(elapsed)
+    self:CheckState()
+    self.elapsed = (self.elapsed or 0) + elapsed
+    if self.elapsed >= 1 then
+        self.elapsed = 0
+        self:UpdateBars()
     end
 end
 
@@ -67,16 +78,6 @@ function frame:CheckState()
         StaticPopup_Show("NEKOMETER_RESET")
     end
 end
-
-frame:SetScript("OnUpdate", function(self, elapsed)
-    self.CheckState()
-    self.elapsed = (self.elapsed or 0) + elapsed
-    if self.elapsed >= 1 then
-        self.elapsed = 0
-        self:Update()
-    end
-end)
-
 
 nekometer.frames = nekometer.frames or {}
 nekometer.frames.main = frame

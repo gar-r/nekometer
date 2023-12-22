@@ -28,13 +28,14 @@ function bars:setData(index, item, maxValue)
     bar:SetValue(item.value)
     bar.text:SetText(item.name)
     bar.value:SetText(AbbreviateNumbers(item.value))
+    local c
     if item.class then
-        local color = C_ClassColor.GetClassColor(item.class)
-        bar:SetColorFill(color.r, color.g, color.b, 0.7)
+        c = C_ClassColor.GetClassColor(item.class)
+        c.a = 0.7
     else
-        local color = NekometerConfig.neutralColor
-        bar:SetColorFill(color.r, color.g, color.b, color.a)
+        c = NekometerConfig.neutralColor
     end
+    bar:SetColorFill(c.r, c.g, c.b, c.a)
 end
 
 function bars:setCount(count)
@@ -56,15 +57,17 @@ end
 
 function bars:create(index)
     local bar = CreateFrame("StatusBar", nil, mainFrame)
-    bar:SetSize(200, 20)
+    local offset = NekometerConfig.titleBar.height
+    local height = NekometerConfig.bars.height
+    bar:SetWidth(NekometerConfig.window.width)
+    bar:SetHeight(height)
     bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-    bar:SetPoint("TOPLEFT", 0, index * -20)
-    bar:SetColorFill(0.3, 0.3, 0.3, 0.7)
+    bar:SetPoint("TOPLEFT", 0, -offset - (index-1) * height)
     local text = bar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    text:SetPoint("LEFT", bar, "LEFT", 0, 0)
+    text:SetPoint("LEFT", bar, "LEFT", 5, 0)
     bar["text"] = text
     local val = bar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    val:SetPoint("RIGHT", bar, "RIGHT", 0, 0)
+    val:SetPoint("RIGHT", bar, "RIGHT", -5, 0)
     bar["value"] = val
     return bar
 end

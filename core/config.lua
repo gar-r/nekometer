@@ -1,15 +1,22 @@
 local _, nekometer = ...
 
 local defaults = {
-    version = 1,
+    version = 3,
+    window = {
+        color = { r = 0.3, g = 0.3, b = 0.3, a = 0.7 },
+        width = 250,
+        bars = 8,
+    },
+    titleBar = {
+        height = 20,
+        color = { r = 0.1, g = 0.1, b = 0.1, a = 1 },
+    },
+    bars = {
+        height = 20,
+        neutralColor = { r = 0.3, g = 0.3, b = 0.3, a = 0.7 },
+    },
     mergePets = true,
     classColors = true,
-    neutralColor = {
-        r = 0.3,
-        g = 0.3,
-        b = 0.3,
-        a = 0.7
-    },
     meters = {
         {
             key = "damage",
