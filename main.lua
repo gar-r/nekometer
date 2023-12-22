@@ -5,21 +5,38 @@ local dispatcher = nekometer.dispatcher
 ---@class Frame
 local frame = CreateFrame("Frame", "NekometerMain")
 
+function frame:initConfig()
+    nekometer.init()
+end
+
+function frame:initMeters()
+    nekometer.enabledMeters = {}
+    for _, cfg in ipairs(NekometerConfig.meters) do
+        if cfg.enabled then
+            local meter = nekometer.meters[cfg.key]
+            dispatcher:AddMeter(meter, cfg)
+            table.insert(nekometer.enabledMeters, meter)
+        end
+    end
+end
+
+function frame:initFrames()
+    for _, f in pairs(nekometer.frames) do
+        if f.Init then
+            f:Init()
+        end
+    end
+end
+
 function frame:OnEvent(event, ...)
     self[event](self, event, ...)
 end
 
 function frame:ADDON_LOADED(_, name)
     if name == addonName then
-        nekometer.init()
-        nekometer.enabledMeters = {}
-        for _, cfg in ipairs(NekometerConfig.meters) do
-            if cfg.enabled then
-                local meter = nekometer.meters[cfg.key]
-                dispatcher:AddMeter(meter, cfg)
-                table.insert(nekometer.enabledMeters, meter)
-            end
-        end
+        self:initConfig()
+        self:initMeters()
+        self:initFrames()
     end
 end
 
