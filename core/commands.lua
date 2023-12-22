@@ -9,8 +9,8 @@ function commands:config(_)
     Settings.OpenToCategory("Nekometer")
 end
 
-function commands:init(_)
-    nekometer.config:Reset()
+function commands:wipe(_)
+    nekometer.reset()
 end
 
 function commands:reset(_)
