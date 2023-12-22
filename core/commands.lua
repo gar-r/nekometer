@@ -10,7 +10,7 @@ function commands:config(_)
 end
 
 function commands:wipe(_)
-    nekometer.reset()
+    nekometer.wipe()
 end
 
 function commands:reset(_)

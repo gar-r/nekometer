@@ -137,7 +137,7 @@ function frame:OnDefault()
 end
 
 function frame:ResetSettings()
-    nekometer.reset()
+    nekometer.wipe()
     self:OnRefresh()
 end
 

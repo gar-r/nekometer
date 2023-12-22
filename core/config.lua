@@ -1,6 +1,7 @@
 local _, nekometer = ...
 
 local defaults = {
+    version = 1,
     mergePets = true,
     classColors = true,
     neutralColor = {
@@ -31,13 +32,16 @@ local defaults = {
     },
 }
 
+local function needsWipe()
+    return not NekometerConfig.version or NekometerConfig.version < defaults.version
+end
+
 nekometer.init = function ()
-    if not NekometerConfig.initialized then
-        nekometer.reset()
-        NekometerConfig.initialized = true
+    if needsWipe() then
+        nekometer.wipe()
     end
 end
 
-nekometer.reset = function ()
+nekometer.wipe = function ()
     NekometerConfig = CopyTable(defaults)
 end
