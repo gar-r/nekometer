@@ -20,7 +20,9 @@ end
 function commands:toggle(_)
     local main = nekometer.frames.main
     if main then
-        main:SetShown(not main:IsShown())
+        local state = not NekometerConfig.window.shown
+        NekometerConfig.window.shown = state
+        main:SetShown(state)
     end
 end
 

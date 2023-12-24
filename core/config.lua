@@ -4,6 +4,7 @@ local defaults = {
     version = 3,
     updateRate = 0.5,
     window = {
+        shown = true,
         color = { r = 0, g = 0, b = 0, a = 0.3 },
         width = 215,
         bars = 6,
