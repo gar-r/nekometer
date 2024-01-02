@@ -18,11 +18,11 @@ function commands:reset(_)
 end
 
 function commands:toggle(_)
+    local shown = not NekometerConfig.window.shown
+    NekometerConfig.window.shown = shown
     local main = nekometer.frames.main
     if main then
-        local state = not NekometerConfig.window.shown
-        NekometerConfig.window.shown = state
-        main:SetShown(state)
+        main:SetShown(shown)
     end
 end
 

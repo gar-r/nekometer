@@ -20,9 +20,7 @@ function frame:Init()
     self:SetMovable(true)
     self:SetScript("OnUpdate", self.OnUpdate)
     self:SetScript("OnMouseWheel", self.OnMouseWheel)
-    if NekometerConfig.window.shown then
-        self:Show()
-    end
+    self:SetShown(NekometerConfig.window.shown)
 end
 
 function frame:GetCurrentMeter()
