@@ -99,9 +99,13 @@ function frame:OnRefresh()
 end
 
 function frame:OnCommit()
+    if self:allMetersDisabled() then
+        damageCheckbox:SetChecked(true)
+    end
+
     -- reload might be required
-    self:commitMeter("damage", dpsCurrentCheckbox:GetChecked())
-    self:commitMeter("dps_current", damageCheckbox:GetChecked())
+    self:commitMeter("damage", damageCheckbox:GetChecked())
+    self:commitMeter("dps_current", dpsCurrentCheckbox:GetChecked())
     self:commitMeter("dps_combat", dpsCombatCheckbox:GetChecked())
     self:commitMeter("healing", healingCheckbox:GetChecked())
 
@@ -123,10 +127,18 @@ function frame:OnCommit()
     dpsCurrentCfg.smoothing = smoothingSlider:GetValue()
 end
 
+function frame:allMetersDisabled()
+    return not damageCheckbox:GetChecked() and
+           not dpsCurrentCheckbox:GetChecked() and
+           not dpsCombatCheckbox:GetChecked() and
+           not healingCheckbox:GetChecked()
+end
+
 function frame:commitMeter(key, newVal)
     local cfg = frame:GetMeterConfig(key)
     if cfg.enabled ~= newVal then
         cfg.enabled = newVal
+        NekometerConfig.currentMeterIndex = 1
         nekometer.reloadRequired = true
     end
 end

@@ -6,6 +6,8 @@ local commands = nekometer.commands
 ---@class BackdropTemplate:Frame
 local frame = CreateFrame("Frame", nil, mainFrame, "BackdropTemplate")
 
+local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+
 function frame:Init()
     self:SetWidth(NekometerConfig.window.width)
     self:SetHeight(NekometerConfig.titleBar.height)
@@ -17,6 +19,7 @@ function frame:Init()
     })
     local c = NekometerConfig.titleBar.color
     frame:SetBackdropColor(c.r, c.g, c.b, c.a)
+    titleText:SetText(mainFrame:GetCurrentMeter().title)
 end
 
 frame:SetScript("OnMouseDown", function(_, button)
@@ -30,8 +33,6 @@ frame:SetScript("OnMouseUp", function(_, button)
         mainFrame:StopMovingOrSizing()
     end
 end)
-
-local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
 local function CreateTitleBarButton(texture, onClick)
     local button = CreateFrame("Button", nil, frame)

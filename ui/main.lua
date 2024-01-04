@@ -4,7 +4,6 @@ local _, nekometer = ...
 local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemplate")
 
 function frame:Init()
-    self.currentMeterIndex = 1
     self.scrollOffset = 0
     self:SetPoint("CENTER")
     self:SetWidth(NekometerConfig.window.width)
@@ -24,10 +23,10 @@ function frame:Init()
 end
 
 function frame:GetCurrentMeter()
-    return nekometer.enabledMeters[self.currentMeterIndex]
+    return nekometer.enabledMeters[NekometerConfig.currentMeterIndex]
 end
 
-function frame:ResetCurrentMeter()
+function frame:ResetEnabledMeters()
     for _, meter in ipairs(nekometer.enabledMeters) do
         if meter.Reset then
             meter:Reset()
@@ -37,19 +36,19 @@ function frame:ResetCurrentMeter()
 end
 
 function frame:NextMeter()
-    if self.currentMeterIndex == #nekometer.enabledMeters then
-        self.currentMeterIndex = 1
+    if NekometerConfig.currentMeterIndex == #nekometer.enabledMeters then
+        NekometerConfig.currentMeterIndex = 1
     else
-        self.currentMeterIndex = self.currentMeterIndex + 1
+        NekometerConfig.currentMeterIndex = NekometerConfig.currentMeterIndex + 1
     end
     self:UpdateBars()
 end
 
 function frame:PrevMeter()
-    if self.currentMeterIndex == 1 then
-        self.currentMeterIndex = #nekometer.enabledMeters
+    if NekometerConfig.currentMeterIndex == 1 then
+        NekometerConfig.currentMeterIndex = #nekometer.enabledMeters
     else
-        self.currentMeterIndex = self.currentMeterIndex - 1
+        NekometerConfig.currentMeterIndex = NekometerConfig.currentMeterIndex - 1
     end
     self:UpdateBars()
 end
