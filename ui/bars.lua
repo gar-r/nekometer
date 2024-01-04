@@ -37,11 +37,11 @@ function bars:boundOffset(report, offset)
 end
 
 function bars:calcMaxValue(report)
-    local maxValue
-    if #report > 0 then
+    local maxValue = 0
+    if #report > 0 and report[1].value < math.huge then
         maxValue = report[1].value
     end
-    return maxValue or 0
+    return maxValue
 end
 
 function bars:setData(bar, item, maxValue)
