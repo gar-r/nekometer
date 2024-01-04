@@ -3,12 +3,21 @@ local _, nekometer = ...
 ---@class frame
 local frame = CreateFrame("Frame", "NekometerConfig")
 
-function frame:CreateSlider(min, max, step)
+function frame:CreateSlider(min, max, step, format)
     local slider = CreateFrame("Slider", nil, self, "OptionsSliderTemplate")
     slider:SetWidth(350)
     slider:SetMinMaxValues(min, max)
     slider:SetValueStep(step)
     slider:SetObeyStepOnDrag(true)
+    slider.tooltipText = slider:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    slider.tooltipText:SetPoint("BOTTOM", slider, "BOTTOM", 0, -8)
+    slider:SetScript("OnValueChanged", function(s, value)
+        local v = value
+        if format then
+            v = string.format(format, v)
+        end
+        s.tooltipText:SetText(v)
+    end)
     return slider
 end
 
@@ -41,8 +50,15 @@ local catGlobal = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 catGlobal:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -16)
 catGlobal:SetText("Global options")
 
+local barCountSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+barCountSliderText:SetPoint("TOPLEFT", catGlobal, "BOTTOMLEFT", 0, -16)
+barCountSliderText:SetText("Number of bars displayed")
+
+local barCountSlider = frame:CreateSlider(1, 40, 1)
+barCountSlider:SetPoint("TOPLEFT", barCountSliderText, "BOTTOMLEFT", 0, -8)
+
 local mergePetsCheckbox = frame:CreateCheckbox("Merge Pets with their owners")
-mergePetsCheckbox:SetPoint("TOPLEFT", catGlobal, "BOTTOMLEFT", 0, -8)
+mergePetsCheckbox:SetPoint("TOPLEFT", barCountSlider, "BOTTOMLEFT", 0, -16)
 
 local classColorsCheckbox = frame:CreateCheckbox("Use class colors for bars")
 classColorsCheckbox:SetPoint("TOPLEFT", mergePetsCheckbox, "BOTTOMLEFT", 0, -8)
@@ -78,16 +94,17 @@ local smoothingSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNorm
 smoothingSliderText:SetPoint("TOPLEFT", windowSlider, "BOTTOMLEFT", 0, -16)
 smoothingSliderText:SetText("Smoothing factor")
 
-local smoothingSlider = frame:CreateSlider(0.1, 0.9, 0.1)
+local smoothingSlider = frame:CreateSlider(0.1, 0.9, 0.1, "%.1f")
 smoothingSlider:SetPoint("TOPLEFT", smoothingSliderText, "BOTTOMLEFT", 0, -8)
 
 local resetButton = frame:CreateButton("Defaults")
 resetButton:SetPoint("BOTTOM", 0, 10)
-resetButton:SetScript("OnClick", function ()
+resetButton:SetScript("OnClick", function()
     StaticPopup_Show("NEKOMETER_RESET_SETTINGS")
 end)
 
 function frame:OnRefresh()
+    barCountSlider:SetValue(NekometerConfig.window.bars)
     mergePetsCheckbox:SetChecked(NekometerConfig.mergePets)
     classColorsCheckbox:SetChecked(NekometerConfig.classColors)
     damageCheckbox:SetChecked(frame:GetMeterConfig("damage").enabled)
@@ -104,6 +121,11 @@ function frame:OnCommit()
     end
 
     -- reload might be required
+    local barCount = barCountSlider:GetValue()
+    if barCount ~= NekometerConfig.window.bars then
+        NekometerConfig.window.bars = barCount
+        nekometer.reloadRequired = true
+    end
     self:commitMeter("damage", damageCheckbox:GetChecked())
     self:commitMeter("dps_current", dpsCurrentCheckbox:GetChecked())
     self:commitMeter("dps_combat", dpsCombatCheckbox:GetChecked())
@@ -129,9 +151,9 @@ end
 
 function frame:allMetersDisabled()
     return not damageCheckbox:GetChecked() and
-           not dpsCurrentCheckbox:GetChecked() and
-           not dpsCombatCheckbox:GetChecked() and
-           not healingCheckbox:GetChecked()
+        not dpsCurrentCheckbox:GetChecked() and
+        not dpsCombatCheckbox:GetChecked() and
+        not healingCheckbox:GetChecked()
 end
 
 function frame:commitMeter(key, newVal)
@@ -142,7 +164,6 @@ function frame:commitMeter(key, newVal)
         nekometer.reloadRequired = true
     end
 end
-
 
 function frame:OnDefault()
     self:ResetSettings()
