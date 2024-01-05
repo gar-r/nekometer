@@ -8,7 +8,7 @@ local resetDialog = {
     button1 = "Yes",
     button2 = "No",
     OnAccept = function ()
-        mainFrame:ResetCurrentMeter()
+        mainFrame:ResetEnabledMeters()
     end,
     timeout = 0,
     whileDead = true,
