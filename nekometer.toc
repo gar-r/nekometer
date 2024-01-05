@@ -3,6 +3,7 @@
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
+## IconTexture: Interface/ICONS/Ability_Druid_Cower.PNG
 ## Author: garric
 
 core/util.lua
