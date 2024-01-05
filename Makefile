@@ -7,3 +7,6 @@ install: uninstall
 
 uninstall:
 	rm -rf "$(ADDON_DIR)/$(ADDON_NAME)"
+
+release:
+	zip -r nekometer.zip ../nekometer/*
