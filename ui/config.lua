@@ -79,6 +79,12 @@ dpsCombatCheckbox:SetPoint("TOPLEFT", dpsCurrentCheckbox, "BOTTOMLEFT", 0, -8)
 local healingCheckbox = frame:CreateCheckbox("Healing")
 healingCheckbox:SetPoint("TOPLEFT", dpsCombatCheckbox, "BOTTOMLEFT", 0, -8)
 
+local damageBreakdownCheckbox = frame:CreateCheckbox("Damage Breakdown")
+damageBreakdownCheckbox:SetPoint("TOPLEFT", damageCheckbox, "TOPRIGHT", 100, 0)
+
+local healingBreakdownCheckbox = frame:CreateCheckbox("Healing Breakdown")
+healingBreakdownCheckbox:SetPoint("TOPLEFT", dpsCurrentCheckbox, "TOPRIGHT", 100, 0)
+
 local catAdvanced = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 catAdvanced:SetPoint("TOPLEFT", healingCheckbox, "BOTTOMLEFT", 0, -16)
 catAdvanced:SetText("Advanced options")
@@ -107,12 +113,14 @@ function frame:OnRefresh()
     barCountSlider:SetValue(NekometerConfig.window.bars)
     mergePetsCheckbox:SetChecked(NekometerConfig.mergePets)
     classColorsCheckbox:SetChecked(NekometerConfig.classColors)
-    damageCheckbox:SetChecked(frame:GetMeterConfig("damage").enabled)
-    dpsCurrentCheckbox:SetChecked(frame:GetMeterConfig("dps_current").enabled)
-    dpsCombatCheckbox:SetChecked(frame:GetMeterConfig("dps_combat").enabled)
-    healingCheckbox:SetChecked(frame:GetMeterConfig("healing").enabled)
-    windowSlider:SetValue(frame:GetMeterConfig("dps_current").window)
-    smoothingSlider:SetValue(frame:GetMeterConfig("dps_current").smoothing)
+    damageCheckbox:SetChecked(self:GetMeterConfig("damage").enabled)
+    dpsCurrentCheckbox:SetChecked(self:GetMeterConfig("dps_current").enabled)
+    dpsCombatCheckbox:SetChecked(self:GetMeterConfig("dps_combat").enabled)
+    healingCheckbox:SetChecked(self:GetMeterConfig("healing").enabled)
+    damageBreakdownCheckbox:SetChecked(self:GetMeterConfig("damage_breakdown"))
+    healingBreakdownCheckbox:SetChecked(self:GetMeterConfig("healing_breakdown"))
+    windowSlider:SetValue(self:GetMeterConfig("dps_current").window)
+    smoothingSlider:SetValue(self:GetMeterConfig("dps_current").smoothing)
 end
 
 function frame:OnCommit()
@@ -130,6 +138,8 @@ function frame:OnCommit()
     self:commitMeter("dps_current", dpsCurrentCheckbox:GetChecked())
     self:commitMeter("dps_combat", dpsCombatCheckbox:GetChecked())
     self:commitMeter("healing", healingCheckbox:GetChecked())
+    self:commitMeter("damage_breakdown", damageBreakdownCheckbox:GetChecked())
+    self:commitMeter("healing_breakdown", healingBreakdownCheckbox:GetChecked())
 
     -- reset might be required
     local mergePets = mergePetsCheckbox:GetChecked()
@@ -153,7 +163,9 @@ function frame:allMetersDisabled()
     return not damageCheckbox:GetChecked() and
         not dpsCurrentCheckbox:GetChecked() and
         not dpsCombatCheckbox:GetChecked() and
-        not healingCheckbox:GetChecked()
+        not healingCheckbox:GetChecked() and
+        not damageBreakdownCheckbox:GetChecked() and
+        not healingBreakdownCheckbox:GetChecked()
 end
 
 function frame:commitMeter(key, newVal)

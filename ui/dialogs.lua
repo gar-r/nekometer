@@ -24,6 +24,7 @@ local resetSettingsDialog = {
     button2 = "No",
     OnAccept = function ()
         configFrame:ResetSettings()
+        ReloadUI()
     end,
     timeout = 0,
     whileDead = true,

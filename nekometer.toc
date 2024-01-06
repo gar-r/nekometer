@@ -20,7 +20,9 @@ meters/printer.lua
 meters/dps_current.lua
 meters/dps_combat.lua
 meters/damage.lua
+meters/damage_breakdown.lua
 meters/healing.lua
+meters/healing_breakdown.lua
 
 ui/main.lua
 ui/bars.lua

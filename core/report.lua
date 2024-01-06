@@ -17,7 +17,7 @@ end)
     The "meterData" argument is expected to be an associative table 
     in the following format:
     { 
-        unitId: {
+        key: {
             name": "foo",
             value: 12345,
         }, 
@@ -30,9 +30,10 @@ end)
         value: 12345,
         class: "Shaman",
     }
-    Note: the "class" attribute is only populated when enabled in the config.
+    Note: the "class" attribute is only populated when lookupClass is true
 ]]
-nekometer.CreateReport = function (meterData)
+nekometer.CreateReport = function (meterData, lookupClass)
+    lookupClass = lookupClass or NekometerConfig.classColors
     local sortedIds = {}
     for id in pairs(meterData) do
         table.insert(sortedIds, id)
@@ -43,7 +44,7 @@ nekometer.CreateReport = function (meterData)
     local sortedValues = {}
     for _, id in ipairs(sortedIds) do
         local data = meterData[id]
-        if NekometerConfig.classColors then
+        if lookupClass then
             data.class = nekometer.classes:Lookup(id)
         end
         table.insert(sortedValues, data)
