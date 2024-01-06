@@ -27,11 +27,13 @@ function commands:toggle(_)
 end
 
 function commands:report(msg)
-    local meter = nekometer.damage
-    if msg and nekometer[msg] and nekometer[msg].Report then
-        meter = nekometer[msg]
+    local frame = nekometer.frames.main
+    if frame then
+        local meter = frame:GetCurrentMeter()
+        if meter.Report then
+            nekometer.PrintReport(meter:Report())
+        end
     end
-    nekometer.PrintReport(meter:Report())
 end
 
 local function SlashCommandHandler(msg, _)
