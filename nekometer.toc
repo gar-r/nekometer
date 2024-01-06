@@ -10,8 +10,8 @@ core/util.lua
 core/commands.lua
 core/config.lua
 core/cache.lua
-core/event.lua
 core/pets.lua
+core/event.lua
 core/parser.lua
 core/dispatcher.lua
 core/report.lua

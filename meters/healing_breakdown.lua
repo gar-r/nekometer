@@ -5,11 +5,8 @@ local meter = {
     data = {},
 }
 
-local pets = nekometer.pets
-local playerId = UnitGUID("player")
-
 function meter:Accept(e)
-    if e:isHeal() and self:isPlayerOrPet(e) then
+    if e:isHeal() and e:isDoneByPlayer(e) then
         local data = self.data
         if data[e.ability] then
             data[e.ability].value = data[e.ability].value + e.amount
@@ -22,9 +19,6 @@ function meter:Accept(e)
     end
 end
 
-function meter:isPlayerOrPet(e)
-    return e.sourceId == playerId or pets:Lookup(e.sourceId).id == playerId
-end
 
 function meter:Report()
     return nekometer.CreateReport(self.data, false)
