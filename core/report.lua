@@ -55,6 +55,8 @@ end
 -- Mostly used for debugging.
 nekometer.PrintReport = function (report)
     for i, data in ipairs(report) do
-        print(string.format("%2d: %s (%s)", i, data.name, data.value))
+        if data.name and data.value then
+            print(string.format("%2d: %s (%s)", i, data.name, data.value))
+        end
     end
 end
