@@ -9,4 +9,9 @@ uninstall:
 	rm -rf "$(ADDON_DIR)/$(ADDON_NAME)"
 
 release:
-	zip -r nekometer.zip ../nekometer/*
+	mkdir -p dist/$(ADDON_NAME)
+	rsync -av --exclude=".*" . dist/$(ADDON_NAME)
+	cd dist && zip -r $(ADDON_NAME).zip $(ADDON_NAME)/*
+	
+clean:
+	rm -rf dist/*
