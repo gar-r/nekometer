@@ -9,7 +9,7 @@ install: uninstall
 uninstall:
 	rm -rf "$(ADDON_DIR)/$(ADDON_NAME)"
 
-release:
+release: clean
 	mkdir -p dist/$(ADDON_NAME)
 	rsync -av --exclude=".*" . dist/$(ADDON_NAME)
 	cd dist && zip -r $(ADDON_NAME)_v$(ADDON_VERSION).zip $(ADDON_NAME)/*
