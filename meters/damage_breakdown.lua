@@ -5,9 +5,6 @@ local meter = {
     data = {},
 }
 
-local pets = nekometer.pets
-local playerId = UnitGUID("player")
-
 function meter:Accept(e)
     if e:isDamage() and e:isDoneByPlayer(e) then
         local data = self.data

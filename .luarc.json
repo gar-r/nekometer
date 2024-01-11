@@ -1,0 +1,13 @@
+{
+    "diagnostics.globals": [
+        "UnitGUID",
+        "GetTime",
+        "C_Timer",
+        "CreateFrame",
+        "AbbreviateNumbers",
+        "C_ClassColor",
+        "StaticPopup_Show",
+        "StaticPopupDialogs",
+        "ReloadUI"
+    ]
+}
