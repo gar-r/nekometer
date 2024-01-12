@@ -11,7 +11,7 @@ uninstall:
 
 release: clean
 	mkdir -p dist/$(ADDON_NAME)
-	rsync -av --exclude=".*" . dist/$(ADDON_NAME)
+	rsync -av --exclude=".*" --exclude="assets/" . dist/$(ADDON_NAME)
 	cd dist && zip -r $(ADDON_NAME)_v$(ADDON_VERSION).zip $(ADDON_NAME)/*
 	
 clean:
