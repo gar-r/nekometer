@@ -7,12 +7,11 @@ local util = nekometer.util
 
 --[[
     Parse the WoW combat event into a custom event packet.
-    Users of the packet don't need to be aware of the  
+    Users of the packet don't need to be aware of the
     actual indices in the WoW event.
-       event = { 
+       event = {
             sourceId, sourceName,
-            destId, destName,      
-            ownerId, ownerName,      
+            destId, destName,
             ability, amount,
             type
         }
@@ -23,6 +22,22 @@ function parser:Parse(event)
     if handler then
         return handler(self, event)
     end
+end
+
+function parser:ParseReflect(event, prevSelfHarm)
+    -- This is a reflect event, so source and dest entities are swapped.
+    -- We also need to use the preceding self-harm event to determine the damage.
+    DevTools_Dump(event)
+    DevTools_Dump(prevSelfHarm)
+    return nekometer.event:new({
+        sourceId = event[8],
+        sourceName = event[9],
+        destId = event[4],
+        destName = event[5],
+        ability = "Spell Reflect",
+        amount = prevSelfHarm[15] or 0,
+        type = nekometer.EVENT_TYPE_DAMAGE,
+    })
 end
 
 function parser:SPELL_DAMAGE(event)
@@ -110,10 +125,17 @@ local filterPet = bit.bor(
     COMBATLOG_OBJECT_TYPE_PET
 )
 
-
 function parser:isPet(event)
     local sourceFlags = event[6]
     return CombatLog_Object_IsA(sourceFlags, filterPet)
+end
+
+function parser:isSelfHarm(event)
+    return event[2] == "SPELL_DAMAGE" and event[4] == event[8]
+end
+
+function parser:isSpellReflect(event)
+    return event[2] == "SPELL_MISSED" and event[15] == "REFLECT"
 end
 
 nekometer.parser = parser

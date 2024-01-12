@@ -26,7 +26,7 @@ function commands:toggle(_)
     end
 end
 
-function commands:report(msg)
+function commands:report(_)
     local frame = nekometer.frames.main
     if frame then
         local meter = frame:GetCurrentMeter()
