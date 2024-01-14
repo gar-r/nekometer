@@ -128,12 +128,37 @@ function parser:isPet(event)
     return CombatLog_Object_IsA(sourceFlags, filterPet)
 end
 
+local filterRelevant = bit.bor(
+    COMBATLOG_OBJECT_AFFILIATION_MINE,
+    COMBATLOG_OBJECT_AFFILIATION_PARTY,
+    COMBATLOG_OBJECT_AFFILIATION_RAID,
+    COMBATLOG_OBJECT_REACTION_FRIENDLY,
+    COMBATLOG_OBJECT_CONTROL_MASK,
+    COMBATLOG_OBJECT_TYPE_MASK
+)
+
+function parser:isRelevant(event)
+    local sourceFlags = event[6]
+	return CombatLog_Object_IsA(sourceFlags, filterRelevant)
+end
+
 function parser:isSelfHarm(event)
     return event[2] == "SPELL_DAMAGE" and event[4] == event[8]
 end
 
+local filterEnemy = bit.bor(
+    COMBATLOG_OBJECT_AFFILIATION_OUTSIDER,
+    COMBATLOG_OBJECT_REACTION_NEUTRAL,
+    COMBATLOG_OBJECT_REACTION_HOSTILE,
+    COMBATLOG_OBJECT_CONTROL_MASK,
+    COMBATLOG_OBJECT_TYPE_MASK
+)
+
 function parser:isSpellReflect(event)
-    return event[2] == "SPELL_MISSED" and event[15] == "REFLECT"
+    local sourceFlags = event[6]
+    return CombatLog_Object_IsA(sourceFlags, filterEnemy) and
+        event[2] == "SPELL_MISSED" and
+        event[15] == "REFLECT"
 end
 
 nekometer.parser = parser

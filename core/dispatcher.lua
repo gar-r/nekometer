@@ -24,7 +24,7 @@ function dispatcher:HandleCombatEvent()
 	if parser:isSpellReflect(event) and self.previousSelfHarm then
 		e = parser:ParseReflect(event, self.previousSelfHarm)
         self.previousSelfHarm = nil
-	elseif self:isRelevant(event) then
+	elseif parser:isRelevant(event) then
 		e = parser:Parse(event)
 	end
 	if e then
@@ -33,19 +33,6 @@ function dispatcher:HandleCombatEvent()
     if parser:isSelfHarm(event) then
         self.previousSelfHarm = event
     end
-end
-
-function dispatcher:isRelevant(event)
-	local sourceFlags = event[6]
-	local relevant = bit.bor(
-		COMBATLOG_OBJECT_AFFILIATION_MINE,
-		COMBATLOG_OBJECT_AFFILIATION_PARTY,
-		COMBATLOG_OBJECT_AFFILIATION_RAID,
-		COMBATLOG_OBJECT_REACTION_FRIENDLY,
-		COMBATLOG_OBJECT_CONTROL_MASK,
-		COMBATLOG_OBJECT_TYPE_MASK
-	)
-	return CombatLog_Object_IsA(sourceFlags, relevant)
 end
 
 function dispatcher:CombatEntered()
