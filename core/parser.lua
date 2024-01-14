@@ -27,8 +27,6 @@ end
 function parser:ParseReflect(event, prevSelfHarm)
     -- This is a reflect event, so source and dest entities are swapped.
     -- We also need to use the preceding self-harm event to determine the damage.
-    DevTools_Dump(event)
-    DevTools_Dump(prevSelfHarm)
     return nekometer.event:new({
         sourceId = event[8],
         sourceName = event[9],
