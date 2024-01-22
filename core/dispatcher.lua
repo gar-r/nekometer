@@ -27,7 +27,7 @@ function dispatcher:HandleCombatEvent()
 	elseif parser:isRelevant(event) then
 		e = parser:Parse(event)
 	end
-	if e then
+	if e and e.sourceId then
 		self:notifyMeters("Accept", e)
 	end
     if parser:isSelfHarm(event) then
