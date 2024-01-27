@@ -16,7 +16,8 @@ function bars:Display(report, offset)
     local maxValue = self:calcMaxValue(report)
     for i, bar in ipairs(self) do
         local item = report[i + offset]
-        if item then
+        -- value very rarely comes as inf, causing the bar to error
+        if item and item.value and item.value < math.huge then
             self:setData(bar, item, maxValue)
             bar:Show()
         else
