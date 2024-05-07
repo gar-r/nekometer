@@ -1,5 +1,5 @@
 ADDON_NAME := nekometer
-ADDON_DIR := $(shell find ~ -path '*/World of Warcraft/_retail_/Interface/AddOns' 2>/dev/null | head -1)
+ADDON_DIR := $(shell find ~ -path '*/World of Warcraft/_retail_' 2>/dev/null | head -1)/Interface/AddOns
 ADDON_VERSION := $(shell grep '## Version' nekometer.toc | cut -d ' ' -f 3)
 
 install: uninstall
