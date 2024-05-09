@@ -5,15 +5,17 @@ local meter = {
     data = {},
 }
 
-function meter:Accept(e)
-    if e:isHeal() and e:isDoneByPlayer(e) then
+function meter:CombatEvent(e)
+    if e:IsHeal() and e:IsDoneByPlayer() then
+        local ability = e[13]
+        local amount = e:GetAmount()
         local data = self.data
-        if data[e.ability] then
-            data[e.ability].value = data[e.ability].value + e.amount
+        if data[ability] then
+            data[ability].value = data[ability].value + amount
         else
-            data[e.ability] = {
-                name = e.ability,
-                value = e.amount,
+            data[ability] = {
+                name = ability,
+                value = amount,
             }
         end
     end

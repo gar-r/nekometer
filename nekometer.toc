@@ -11,12 +11,11 @@ core/commands.lua
 core/config.lua
 core/cache.lua
 core/pets.lua
+core/filter.lua
 core/event.lua
-core/parser.lua
 core/dispatcher.lua
 core/report.lua
 
-meters/printer.lua
 meters/dps_current.lua
 meters/dps_combat.lua
 meters/damage.lua

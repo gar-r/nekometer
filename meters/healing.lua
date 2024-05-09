@@ -5,17 +5,20 @@ local meter = {
     data = {},
 }
 
-function meter:Accept(e)
-    if e:isHeal() then
-        local data = self.data
-        if data[e.sourceId] then
-            data[e.sourceId].value = data[e.sourceId].value + e.amount
-        else
-            data[e.sourceId] = {
-                name = e.sourceName,
-                value = e.amount
-            }
-        end
+function meter:CombatEvent(e)
+    if not e:IsHeal() then
+        return
+    end
+    local source = e:GetSource()
+    local amount = e:GetAmount()
+    local data = self.data
+    if data[source.id] then
+        data[source.id].value = data[source.id].value + amount
+    else
+        data[source.id] = {
+            name = source.name,
+            value = amount,
+        }
     end
 end
 

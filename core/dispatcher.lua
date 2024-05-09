@@ -7,9 +7,10 @@ local _, nekometer = ...
 ]]
 local dispatcher = {
 	meters = {},
+	prevSelfHarm = 0,
 }
 
-local parser = nekometer.parser
+local event = nekometer.event
 
 function dispatcher:AddMeter(meter, cfg)
 	if meter.Init then
@@ -19,28 +20,37 @@ function dispatcher:AddMeter(meter, cfg)
 end
 
 function dispatcher:HandleCombatEvent()
-	local event = { CombatLogGetCurrentEventInfo() }
-	local e = nil
-	if parser:isSpellReflect(event) and self.previousSelfHarm then
-		e = parser:ParseReflect(event, self.previousSelfHarm)
-        self.previousSelfHarm = nil
-	elseif parser:isRelevant(event) then
-		e = parser:Parse(event)
+	local raw = { CombatLogGetCurrentEventInfo() }
+	local e = event:new(raw)
+	if e:IsSourceFriendly() then
+		self:notifyMeters("CombatEvent", e)
+	else
+		self:handleIfSpellReflect(e)
+		self:recordSelfHarm(e)
 	end
-	if e and e.sourceId then
-		self:notifyMeters("Accept", e)
-	end
-    if parser:isSelfHarm(event) then
-        self.previousSelfHarm = event
-    end
+
 end
 
-function dispatcher:CombatEntered()
+function dispatcher:HandleCombatEntered()
 	self:notifyMeters("CombatEntered")
 end
 
-function dispatcher:CombatExited()
+function dispatcher:HandleCombatExited()
 	self:notifyMeters("CombatExited")
+end
+
+function dispatcher:handleIfSpellReflect(e)
+	if e:IsSpellReflect() then
+		e:SwapActors()
+		e[15] = self.prevSelfHarm
+		self:notifyMeters("CombatEvent", e)
+	end
+end
+
+function dispatcher:recordSelfHarm(e)
+	if e:IsSelfHarm() then
+		self.prevSelfHarm = 0
+	end
 end
 
 function dispatcher:notifyMeters(fname, e)

@@ -5,17 +5,29 @@ local meter = {
     data = {},
 }
 
-function meter:Accept(e)
-    if e:isDamage() and e:isDoneByPlayer(e) then
+function meter:CombatEvent(e)
+    if e:IsDamage() and e:IsDoneByPlayer() then
+        local ability = self:getAbilityName(e)
+        local amount = e:GetAmount()
         local data = self.data
-        if data[e.ability] then
-            data[e.ability].value = data[e.ability].value + e.amount
+        if data[ability] then
+            data[ability].value = data[ability].value + amount
         else
-            data[e.ability] = {
-                name = e.ability,
-                value = e.amount,
+            data[ability] = {
+                name = ability,
+                value = amount,
             }
         end
+    end
+end
+
+-- Return the ability name associated with the event.
+function meter:getAbilityName(e)
+    local type = e:GetType()
+    if type == "SWING_DAMAGE" then
+        return "Melee"
+    else
+        return e[13]
     end
 end
 

@@ -45,11 +45,11 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function frame:PLAYER_REGEN_DISABLED()
-    dispatcher:CombatEntered()
+    dispatcher:HandleCombatEntered()
 end
 
 function frame:PLAYER_REGEN_ENABLED()
-    dispatcher:CombatExited()
+    dispatcher:HandleCombatExited()
 end
 
 frame:RegisterEvent("ADDON_LOADED")
