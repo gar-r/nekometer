@@ -6,8 +6,8 @@ local meter = {
 }
 
 function meter:CombatEvent(e)
-    if e:IsHeal() and e:IsDoneByPlayer() then
-        local ability = e[13]
+    if e:IsDoneByPlayer() and (e:IsHeal() or e:IsAbsorb()) then
+        local ability = e:GetAbilityName()
         local amount = e:GetAmount()
         local data = self.data
         if data[ability] then

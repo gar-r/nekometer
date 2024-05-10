@@ -21,14 +21,18 @@ end
 
 function dispatcher:HandleCombatEvent()
 	local raw = { CombatLogGetCurrentEventInfo() }
-	local e = event:new(raw)
-	if e:IsSourceFriendly() then
+	local e = event:new(raw, self.prevSelfHarm)
+	if self:shouldDispatch(e) then
 		self:notifyMeters("CombatEvent", e)
-	else
-		self:handleIfSpellReflect(e)
-		self:recordSelfHarm(e)
+	elseif e:IsSelfHarm() then
+		self.prevSelfHarm = 0
 	end
+end
 
+function dispatcher:shouldDispatch(e)
+	return e:IsSourceFriendly()
+		or e:IsAbsorb()
+		or e:IsSpellReflect()
 end
 
 function dispatcher:HandleCombatEntered()
@@ -37,20 +41,6 @@ end
 
 function dispatcher:HandleCombatExited()
 	self:notifyMeters("CombatExited")
-end
-
-function dispatcher:handleIfSpellReflect(e)
-	if e:IsSpellReflect() then
-		e:SwapActors()
-		e[15] = self.prevSelfHarm
-		self:notifyMeters("CombatEvent", e)
-	end
-end
-
-function dispatcher:recordSelfHarm(e)
-	if e:IsSelfHarm() then
-		self.prevSelfHarm = 0
-	end
 end
 
 function dispatcher:notifyMeters(fname, e)
