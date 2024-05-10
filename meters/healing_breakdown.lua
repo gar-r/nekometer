@@ -21,7 +21,6 @@ function meter:CombatEvent(e)
     end
 end
 
-
 function meter:Report()
     return nekometer.CreateReport(self.data, false)
 end

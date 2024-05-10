@@ -35,13 +35,22 @@ function event:IsHeal()
     return string.match(self:GetType(), "_HEAL$")
 end
 
--- gets the amount, which can be located at different indices
--- based on the type of the event
+--[[
+    gets the amount:
+        * for damage: amount is stored under different indices for swing
+          damage and other types of damage
+        * for healing: the effective healing amount is calculated 
+]]
 function event:GetAmount()
     if self:GetType() == swingDamage then
         return self[12] or 0
-    elseif self:IsDamage() or self:IsHeal() then
+    elseif self:IsDamage() then
         return self[15] or 0
+    elseif self:IsHeal() then
+        DevTools_Dump(self)
+        local total = self[15] or 0
+        local overheal = self[16] or 0
+        return total - overheal
     else
         return 0
     end
