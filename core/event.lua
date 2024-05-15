@@ -68,15 +68,12 @@ function event:GetSource()
     }
 end
 
+-- Gets the amount encapsulated in the event, adjusted with overkill,  overheal, etc.
 function event:GetAmount()
     if self:GetType() == swingDamage then
-        return self[12] or 0
-    elseif self:IsDamage() then
-        return self[15] or 0
-    elseif self:IsHeal() then
-        local total = self[15] or 0
-        local overheal = self[16] or 0
-        return total - overheal
+        return self:calcEffectiveAmount(12, 13)
+    elseif self:IsDamage() or self:IsHeal() then
+        return self:calcEffectiveAmount(15, 16)
     elseif self:IsAbsorb() then
         -- the absorb event arr has a variable size, but the amount
         -- will always be at position len-1
@@ -86,6 +83,12 @@ function event:GetAmount()
     else
         return 0
     end
+end
+
+function event:calcEffectiveAmount(totalIdx, overkillIdx)
+    local total = self[totalIdx] or 0
+    local overkill = self[overkillIdx] or 0
+    return total - overkill
 end
 
 function event:GetAbilityName()
