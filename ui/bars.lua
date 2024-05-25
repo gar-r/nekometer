@@ -68,20 +68,29 @@ function bars:createBar(index)
     bar:SetHeight(height)
     bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
     bar:SetPoint("TOPLEFT", 0, -offset - (index-1) * height)
-    bar["text"] = self:createFontString(bar, "LEFT")
-    bar["value"] = self:createFontString(bar, "RIGHT")
+    bar["icon"] = self:createSpecIcon(bar)
+    bar["text"] = self:createFontString(bar)
+    bar["value"] = self:createFontString(bar)
+    bar["icon"]:SetPoint("LEFT", bar, "LEFT", 5, 0)
+    bar["text"]:SetPoint("LEFT", bar["icon"], "RIGHT", 5, 0)
+    bar["value"]:SetPoint("RIGHT", bar, "RIGHT", -5, 0)
     return bar
 end
 
-function bars:createFontString(frame, align)
-    local fontString = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+function bars:createSpecIcon(bar)
+    local _, _, _, specIcon = GetSpecializationInfoByID(256)
+    local icon = CreateFrame("Frame", nil, bar)
+    local texture = icon:CreateTexture()
+    texture:SetTexture(specIcon)
+    texture:SetAllPoints()
+    icon:SetSize(16, 16)
+    return icon
+end
+
+function bars:createFontString(parent)
+    local fontString = parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     local color = NekometerConfig.bars.textColor
     fontString:SetTextColor(color.r, color.g, color.b)
-    local offset = 5
-    if align == "RIGHT" then
-        offset = -5
-    end
-    fontString:SetPoint(align, frame, align, offset, 0)
     return fontString
 end
 
