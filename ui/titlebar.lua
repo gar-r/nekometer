@@ -34,9 +34,12 @@ frame:SetScript("OnMouseUp", function(_, button)
     end
 end)
 
-local function CreateTitleBarButton(texture, onClick)
+local function CreateTitleBarButton(texturePath, onClick)
     local button = CreateFrame("Button", nil, frame)
-    button:SetSize(13, 13)
+    local texture = button:CreateTexture(nil, "BACKGROUND")
+    texture:SetTexture(texturePath)
+    button["texture"] = texture
+    button:SetSize(14, 14)
     button:SetNormalTexture(texture)
     button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
     button:GetHighlightTexture():SetBlendMode("ADD")
@@ -44,19 +47,18 @@ local function CreateTitleBarButton(texture, onClick)
     return button
 end
 
-local prevButton = CreateTitleBarButton("Interface\\MINIMAP\\UI-Minimap-MinimizeButtonDown-Up", function ()
+local prevButton = CreateTitleBarButton("Interface\\CHATFRAME\\ChatFrameExpandArrow", function ()
     mainFrame:PrevMeter()
     titleText:SetText(mainFrame:GetCurrentMeter().title)
 end)
-prevButton:SetSize(18, 18)
-prevButton:SetPoint("LEFT", frame, "LEFT", 0, 0)
+prevButton["texture"]:SetTexCoord(1, 0, 0, 1)
+prevButton:SetPoint("LEFT", frame, "LEFT", 5, 0)
 
-local nextButton = CreateTitleBarButton("Interface\\MINIMAP\\UI-Minimap-MinimizeButtonUp-Up", function ()
+local nextButton = CreateTitleBarButton("Interface\\CHATFRAME\\ChatFrameExpandArrow", function ()
     mainFrame:NextMeter()
     titleText:SetText(mainFrame:GetCurrentMeter().title)
 end)
-nextButton:SetSize(18, 18)
-nextButton:SetPoint("LEFT", prevButton, "RIGHT", -5, 0)
+nextButton:SetPoint("LEFT", prevButton, "RIGHT", -3, 0)
 
 titleText:SetPoint("LEFT", nextButton, "RIGHT", 5, 0)
 titleText:SetText("Damage")
