@@ -1,7 +1,7 @@
 local _, nekometer = ...
 
 local defaults = {
-    version = 4,
+    version = 5,
     updateRate = 0.5,
     currentMeterIndex = 1,
     window = {
@@ -17,6 +17,7 @@ local defaults = {
     bars = {
         height = 20,
         neutralColor = { r = 0.3, g = 0.3, b = 0.3, a = 0.7 },
+        textColor = { r = 1, g = 1, b = 0.85 },
     },
     mergePets = true,
     classColors = true,
