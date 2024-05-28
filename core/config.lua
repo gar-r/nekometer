@@ -1,7 +1,7 @@
 local _, nekometer = ...
 
 local defaults = {
-    version = 5,
+    version = 6,
     updateRate = 0.5,
     currentMeterIndex = 1,
     window = {
@@ -48,6 +48,10 @@ local defaults = {
             key = "healing_breakdown",
             enabled = true,
         },
+        {
+            key = "deaths",
+            enabled = true,
+        }
     },
 }
 

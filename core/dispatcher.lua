@@ -33,6 +33,7 @@ function dispatcher:shouldDispatch(e)
 	return e:IsSourceFriendly()
 		or e:IsAbsorb()
 		or e:IsSpellReflect()
+		or e:IsFriendlyDeath()
 end
 
 function dispatcher:HandleCombatEntered()
