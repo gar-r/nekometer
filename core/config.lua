@@ -50,7 +50,7 @@ local defaults = {
         },
         {
             key = "deaths",
-            enabled = true,
+            enabled = false,
         }
     },
 }
