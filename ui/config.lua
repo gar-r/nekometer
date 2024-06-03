@@ -85,6 +85,9 @@ damageBreakdownCheckbox:SetPoint("TOPLEFT", damageCheckbox, "TOPRIGHT", 100, 0)
 local healingBreakdownCheckbox = frame:CreateCheckbox("Healing Breakdown")
 healingBreakdownCheckbox:SetPoint("TOPLEFT", dpsCurrentCheckbox, "TOPRIGHT", 100, 0)
 
+local deathsCheckbox = frame:CreateCheckbox("Deaths")
+deathsCheckbox:SetPoint("TOPLEFT", damageBreakdownCheckbox, "TOPRIGHT", 150, 0)
+
 local catAdvanced = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 catAdvanced:SetPoint("TOPLEFT", healingCheckbox, "BOTTOMLEFT", 0, -16)
 catAdvanced:SetText("Advanced options")
@@ -117,8 +120,9 @@ function frame:OnRefresh()
     dpsCurrentCheckbox:SetChecked(self:GetMeterConfig("dps_current").enabled)
     dpsCombatCheckbox:SetChecked(self:GetMeterConfig("dps_combat").enabled)
     healingCheckbox:SetChecked(self:GetMeterConfig("healing").enabled)
-    damageBreakdownCheckbox:SetChecked(self:GetMeterConfig("damage_breakdown"))
-    healingBreakdownCheckbox:SetChecked(self:GetMeterConfig("healing_breakdown"))
+    deathsCheckbox:SetChecked(self:GetMeterConfig("deaths").enabled)
+    damageBreakdownCheckbox:SetChecked(self:GetMeterConfig("damage_breakdown").enabled)
+    healingBreakdownCheckbox:SetChecked(self:GetMeterConfig("healing_breakdown").enabled)
     windowSlider:SetValue(self:GetMeterConfig("dps_current").window)
     smoothingSlider:SetValue(self:GetMeterConfig("dps_current").smoothing)
 end
@@ -140,6 +144,7 @@ function frame:OnCommit()
     self:commitMeter("healing", healingCheckbox:GetChecked())
     self:commitMeter("damage_breakdown", damageBreakdownCheckbox:GetChecked())
     self:commitMeter("healing_breakdown", healingBreakdownCheckbox:GetChecked())
+    self:commitMeter("deaths", deathsCheckbox:GetChecked())
 
     -- reset might be required
     local mergePets = mergePetsCheckbox:GetChecked()
@@ -165,7 +170,8 @@ function frame:allMetersDisabled()
         not dpsCombatCheckbox:GetChecked() and
         not healingCheckbox:GetChecked() and
         not damageBreakdownCheckbox:GetChecked() and
-        not healingBreakdownCheckbox:GetChecked()
+        not healingBreakdownCheckbox:GetChecked() and
+        not deathsCheckbox:GetChecked()
 end
 
 function frame:commitMeter(key, newVal)

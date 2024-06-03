@@ -12,6 +12,7 @@ local spellDamage = "SPELL_DAMAGE"
 local spellMissed = "SPELL_MISSED"
 local spellAbsorb = "SPELL_ABSORBED"
 local reflect = "REFLECT"
+local unitDied = "UNIT_DIED"
 
 function event:new(o, prevSelfHarm)
     o = o or {}
@@ -135,6 +136,11 @@ end
 function event:IsAbsorb()
     return self:GetType() == spellAbsorb
         and filter:IsFriendly(self[#self - 6]) -- caster (!) flags
+end
+
+function event:IsFriendlyDeath()
+    return self:GetType() == unitDied
+        and filter:IsFriendly(self[10])
 end
 
 function event:IsDoneByPlayer()
