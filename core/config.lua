@@ -1,7 +1,7 @@
 local _, nekometer = ...
 
 local defaults = {
-    version = 6,
+    version = 7,
     updateRate = 0.5,
     currentMeterIndex = 1,
     window = {
@@ -50,6 +50,10 @@ local defaults = {
         },
         {
             key = "deaths",
+            enabled = false,
+        },
+        {
+            key = "interrupts",
             enabled = false,
         }
     },

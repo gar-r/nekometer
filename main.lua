@@ -14,8 +14,10 @@ function frame:initMeters()
     for _, cfg in ipairs(NekometerConfig.meters) do
         if cfg.enabled then
             local meter = nekometer.meters[cfg.key]
-            dispatcher:AddMeter(meter, cfg)
-            table.insert(nekometer.enabledMeters, meter)
+            if meter then
+                dispatcher:AddMeter(meter, cfg)
+                table.insert(nekometer.enabledMeters, meter)
+            end
         end
     end
 end
