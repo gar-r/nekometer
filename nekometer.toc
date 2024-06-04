@@ -23,6 +23,7 @@ meters/damage_breakdown.lua
 meters/healing.lua
 meters/healing_breakdown.lua
 meters/deaths.lua
+meters/interrupts.lua
 
 ui/main.lua
 ui/bars.lua

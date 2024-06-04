@@ -143,6 +143,10 @@ function event:IsFriendlyDeath()
         and filter:IsFriendly(self[10])
 end
 
+function event:IsInterrupt()
+    return string.match(self:GetType(), "_INTERRUPT$")
+end
+
 function event:IsDoneByPlayer()
     local source = self:GetSource()
     if source.id and source.id == playerId then
