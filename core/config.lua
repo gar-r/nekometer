@@ -1,7 +1,7 @@
 local _, nekometer = ...
 
 local defaults = {
-    version = 7,
+    version = 8,
     updateRate = 0.5,
     currentMeterIndex = 1,
     window = {
@@ -54,6 +54,10 @@ local defaults = {
         },
         {
             key = "interrupts",
+            enabled = false,
+        },
+        {
+            key = "dispels",
             enabled = false,
         }
     },

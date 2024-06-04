@@ -24,6 +24,7 @@ meters/healing.lua
 meters/healing_breakdown.lua
 meters/deaths.lua
 meters/interrupts.lua
+meters/dispels.lua
 
 ui/main.lua
 ui/bars.lua
