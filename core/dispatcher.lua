@@ -31,6 +31,7 @@ end
 
 function dispatcher:shouldDispatch(e)
 	return e:IsSourceFriendly()
+		-- special cases, for which we cannot use the typical source flags (event[6])
 		or e:IsAbsorb()
 		or e:IsSpellReflect()
 		or e:IsFriendlyDeath()

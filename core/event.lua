@@ -147,6 +147,11 @@ function event:IsInterrupt()
     return string.match(self:GetType(), "_INTERRUPT$")
 end
 
+function event:IsDispel()
+    return string.match(self:GetType(), "_DISPEL$")
+        or string.match(self:GetType(), "_STOLEN$")
+end
+
 function event:IsDoneByPlayer()
     local source = self:GetSource()
     if source.id and source.id == playerId then

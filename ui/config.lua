@@ -91,6 +91,9 @@ deathsCheckbox:SetPoint("TOPLEFT", damageBreakdownCheckbox, "TOPRIGHT", 150, 0)
 local interruptsCheckbox = frame:CreateCheckbox("Interrupts")
 interruptsCheckbox:SetPoint("TOPLEFT", deathsCheckbox, "BOTTOMLEFT", 0, -8)
 
+local dispelsCheckbox = frame:CreateCheckbox("Dispels")
+dispelsCheckbox:SetPoint("TOPLEFT", interruptsCheckbox, "BOTTOMLEFT", 0, -8)
+
 local catAdvanced = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 catAdvanced:SetPoint("TOPLEFT", healingCheckbox, "BOTTOMLEFT", 0, -16)
 catAdvanced:SetText("Advanced options")
@@ -125,6 +128,7 @@ function frame:OnRefresh()
     healingCheckbox:SetChecked(self:GetMeterConfig("healing").enabled)
     deathsCheckbox:SetChecked(self:GetMeterConfig("deaths").enabled)
     interruptsCheckbox:SetChecked(self:GetMeterConfig("interrupts").enabled)
+    dispelsCheckbox:SetChecked(self:GetMeterConfig("dispels").enabled)
     damageBreakdownCheckbox:SetChecked(self:GetMeterConfig("damage_breakdown").enabled)
     healingBreakdownCheckbox:SetChecked(self:GetMeterConfig("healing_breakdown").enabled)
     windowSlider:SetValue(self:GetMeterConfig("dps_current").window)
@@ -150,6 +154,7 @@ function frame:OnCommit()
     self:commitMeter("healing_breakdown", healingBreakdownCheckbox:GetChecked())
     self:commitMeter("deaths", deathsCheckbox:GetChecked())
     self:commitMeter("interrupts", interruptsCheckbox:GetChecked())
+    self:commitMeter("dispels", dispelsCheckbox:GetChecked())
 
     -- reset might be required
     local mergePets = mergePetsCheckbox:GetChecked()
@@ -177,7 +182,8 @@ function frame:allMetersDisabled()
         not damageBreakdownCheckbox:GetChecked() and
         not healingBreakdownCheckbox:GetChecked() and
         not deathsCheckbox:GetChecked() and
-        not interruptsCheckbox:GetChecked()
+        not interruptsCheckbox:GetChecked() and
+        not dispelsCheckbox:GetChecked()
 end
 
 function frame:commitMeter(key, newVal)
