@@ -62,4 +62,4 @@ function meter:Reset()
 end
 
 nekometer.meters = nekometer.meters or {}
-nekometer.meters.dps_combat = meter
+nekometer.meters.dpsCombat = meter

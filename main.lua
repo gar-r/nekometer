@@ -11,11 +11,11 @@ end
 
 function frame:initMeters()
     nekometer.enabledMeters = {}
-    for _, cfg in ipairs(NekometerConfig.meters) do
-        if cfg.enabled then
-            local meter = nekometer.meters[cfg.key]
+    for _, key in ipairs(nekometer.meters) do
+        if nekometer.isMeterEnabled(key) then
+            local meter = nekometer.meters[key]
             if meter then
-                dispatcher:AddMeter(meter, cfg)
+                dispatcher:AddMeter(meter, NekometerConfig)
                 table.insert(nekometer.enabledMeters, meter)
             end
         end

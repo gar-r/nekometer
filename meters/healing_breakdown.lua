@@ -30,4 +30,4 @@ function meter:Reset()
 end
 
 nekometer.meters = nekometer.meters or {}
-nekometer.meters.healing_breakdown = meter
+nekometer.meters.healingBreakdown = meter

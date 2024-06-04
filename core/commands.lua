@@ -1,12 +1,12 @@
 SLASH_NEKOMETER1 = "/nm"
 SLASH_NEKOMETER2 = "/nekometer"
 
-local _, nekometer = ...
+local addonName, nekometer = ...
 
 local commands = {}
 
 function commands:config(_)
-    Settings.OpenToCategory("Nekometer")
+    Settings.OpenToCategory(addonName)
 end
 
 function commands:wipe(_)
@@ -18,8 +18,8 @@ function commands:reset(_)
 end
 
 function commands:toggle(_)
-    local shown = not NekometerConfig.window.shown
-    NekometerConfig.window.shown = shown
+    local shown = not NekometerConfig.windowShown
+    NekometerConfig.windowShown = shown
     local main = nekometer.frames.main
     if main then
         main:SetShown(shown)
