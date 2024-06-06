@@ -3,6 +3,7 @@
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
+## AddonCompartmentFunc: OnAddonCompartmentClick
 ## IconTexture: Interface/ICONS/Ability_Druid_Cower.PNG
 ## Author: garric
 
@@ -27,6 +28,7 @@ meters/interrupts.lua
 meters/dispels.lua
 
 ui/main.lua
+ui/minimap.lua
 ui/bars.lua
 ui/titlebar.lua
 ui/config.lua
