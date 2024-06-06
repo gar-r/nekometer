@@ -9,15 +9,15 @@ local frame = CreateFrame("Frame", nil, mainFrame, "BackdropTemplate")
 local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
 function frame:Init()
-    self:SetWidth(NekometerConfig.window.width)
-    self:SetHeight(NekometerConfig.titleBar.height)
+    self:SetWidth(NekometerConfig.windowWidth)
+    self:SetHeight(NekometerConfig.titleBarHeight)
     frame:SetPoint("TOPLEFT")
     frame:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
         tile = true,
         tileSize = 16,
     })
-    local c = NekometerConfig.titleBar.color
+    local c = NekometerConfig.titleBarColor
     frame:SetBackdropColor(c.r, c.g, c.b, c.a)
     titleText:SetText(mainFrame:GetCurrentMeter().title)
 end
@@ -33,6 +33,10 @@ frame:SetScript("OnMouseUp", function(_, button)
         mainFrame:StopMovingOrSizing()
     end
 end)
+
+function frame:RefreshTitle()
+    titleText:SetText(mainFrame:GetCurrentMeter().title)
+end
 
 local function CreateTitleButtonTexture(button, path, drawLayer, coord)
     local texture = button:CreateTexture(nil, drawLayer)
@@ -55,7 +59,7 @@ end
 local prevButton = CreateTitleBarButton("Interface\\CHATFRAME\\ChatFrameExpandArrow",
     function()
         mainFrame:PrevMeter()
-        titleText:SetText(mainFrame:GetCurrentMeter().title)
+        frame:RefreshTitle()
     end,
     { left = 1, right = 0, up = 0, down = 1 })
 prevButton:SetPoint("LEFT", frame, "LEFT", 5, 0)
@@ -63,7 +67,7 @@ prevButton:SetPoint("LEFT", frame, "LEFT", 5, 0)
 local nextButton = CreateTitleBarButton("Interface\\CHATFRAME\\ChatFrameExpandArrow",
     function()
         mainFrame:NextMeter()
-        titleText:SetText(mainFrame:GetCurrentMeter().title)
+        frame:RefreshTitle()
     end)
 nextButton:SetPoint("LEFT", prevButton, "RIGHT", -3, 0)
 

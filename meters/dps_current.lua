@@ -51,8 +51,8 @@ function meter:ticker()
 end
 
 function meter:Init(cfg)
-    self.window = cfg.window
-    self.smoothing = cfg.smoothing
+    self.window = cfg.dpsCurrentWindowSize
+    self.smoothing = cfg.dpsCurrentSmoothing
     self:ticker()
 end
 
@@ -66,4 +66,4 @@ function meter:Reset()
 end
 
 nekometer.meters = nekometer.meters or {}
-nekometer.meters.dps_current = meter
+nekometer.meters.dpsCurrent = meter

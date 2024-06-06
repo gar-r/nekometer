@@ -1,212 +1,123 @@
-local _, nekometer = ...
+local addonName, nekometer = ...
 
----@class frame
-local frame = CreateFrame("Frame", "NekometerConfig")
+local defaults = nekometer.defaults
 
-function frame:CreateSlider(min, max, step, format)
-    local slider = CreateFrame("Slider", nil, self, "OptionsSliderTemplate")
-    slider:SetWidth(350)
-    slider:SetMinMaxValues(min, max)
-    slider:SetValueStep(step)
-    slider:SetObeyStepOnDrag(true)
-    slider.tooltipText = slider:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    slider.tooltipText:SetPoint("BOTTOM", slider, "BOTTOM", 0, -8)
-    slider:SetScript("OnValueChanged", function(s, value)
-        local v = value
-        if format then
-            v = string.format(format, v)
-        end
-        s.tooltipText:SetText(v)
+local config = {
+    needsReset = false,     -- need to reset meter data after the changes are applied
+    needsReload = false,    -- need to reload the ui after the changes are applied
+}
+
+function config:Init()
+    self.category, self.layout = Settings.RegisterVerticalLayoutCategory("Nekometer Settings")
+    self.category.ID = addonName
+
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Global Options"))
+    self:CreateProxiedSlider("Number of bars", "How many bars the Nekometer window will display", 1, 40, 1, "barCount")
+    self:CreateProxiedCheckBox("Merge pets with their owners", "Enable to combine pet data with their owner", "mergePets")
+    self:CreateProxiedCheckBox("Use class colors for bars", "Enable to color bars with respective class colors", "classColors")
+
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Meters"))
+    self:CreateProxiedCheckBox("Damage", "Shows total damage since last reset", "damageEnabled")
+    self:CreateProxiedCheckBox("Dps (combat)", "Shows damage per second for the current combat", "dpsCombatEnabled")
+    self:CreateProxiedCheckBox("Dps (current)", "Shows damage per second using a sliding time window", "dpsCurrentEnabled")
+    self:CreateProxiedCheckBox("Healing", "Shows total healing since last reset", "healingEnabled")
+    self:CreateProxiedCheckBox("Damage Breakdown", "Shows damage breakdown by ability for your character", "damageBreakdownEnabled")
+    self:CreateProxiedCheckBox("Healing Breakdown", "Shows healing breakdown by ability for your character", "healingBreakdownEnabled")
+    self:CreateProxiedCheckBox("Deaths", "Shows the number of deaths since last reset", "deathsEnabled")
+    self:CreateProxiedCheckBox("Interrupts", "Shows the number of successful interrupts since last reset", "interruptsEnabled")
+    self:CreateProxiedCheckBox("Dispels", "Shows the number of successful dispels or spell-steals since last reset", "dispelsEnabled")
+
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Advanced Options"))
+    self:CreateProxiedSlider("Data window size", "The sliding window size for the dps(current) meter", 1, 10, 1, "dpsCurrentWindowSize")
+    self:CreateProxiedSlider("Smoothing factor", "The smoothing factor for the dps(current) meter", 0.1, 0.9, 0.1, "dpsCurrentSmoothing")
+
+    SettingsPanel:SetScript("OnHide", function () self:OnSettingsClosed() end)
+    Settings.RegisterAddOnCategory(self.category)
+end
+
+function config:CreateProxiedSlider(name, tooltip, min, max, step, variable)
+    local sliderOptions = Settings.CreateSliderOptions(min, max, step)
+    if step < 1 then
+        sliderOptions:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right,
+            function(v)
+                return string.format("%.1f", v)
+            end)
+    else
+        sliderOptions:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
+    end
+    local setting = Settings.RegisterAddOnSetting(self.category, name, variable,
+        Settings.VarType.Number, defaults[variable])
+    setting:SetValue(NekometerConfig[variable])
+    Settings.CreateSlider(self.category, setting, sliderOptions, tooltip)
+    Settings.SetOnValueChangedCallback(variable, function(_, s, v)
+        self:OnSettingChanged(_, s, v)
     end)
-    return slider
 end
 
-function frame:CreateButton(text)
-    local button = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
-    button:SetSize(125, 25)
-    button:SetText(text)
-    return button
+function config:CreateProxiedCheckBox(name, tooltip, variable)
+    local setting = Settings.RegisterAddOnSetting(self.category, name, variable,
+        Settings.VarType.Boolean, defaults[variable])
+    setting:SetValue(NekometerConfig[variable])
+    Settings.CreateCheckBox(self.category, setting, tooltip)
+    Settings.SetOnValueChangedCallback(variable, function(_, s, v)
+        self:OnSettingChanged(_, s, v)
+    end)
 end
 
-function frame:CreateCheckbox(text)
-    local checkbox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    checkbox["text"]:SetText(text)
-    return checkbox
+function config:OnSettingChanged(_, setting, value)
+    local variable = setting:GetVariable()
+    NekometerConfig[variable] = value
+    self:updateResetNeeded(variable)
+    self:updateReloadNeeded(variable)
 end
 
-function frame:GetMeterConfig(key)
-    for _, cfg in ipairs(NekometerConfig.meters) do
-        if cfg.key == key then
-            return cfg
+function config:OnSettingsClosed()
+    -- at least one meter should be enabled
+    if self:allMetersDisabled() then
+        NekometerConfig.damageEnabled = true
+        self.needsReload = true
+    end
+
+    -- add a small delay to avoid our static popups to draw over game frames
+    C_Timer.After(1, function ()
+        if self.needsReload then
+            self.needsReload = false
+            self.needsReinit = false
+            self.needsReset = false
+            NekometerConfig.currentMeterIndex = 1
+            StaticPopup_Show("NEKOMETER_RELOAD")
+        elseif self.needsReset then
+                self.needsReset = false
+                StaticPopup_Show("NEKOMETER_RESET")
+        end
+    end)
+end
+
+function config:updateResetNeeded(changedVariable)
+    self.needsReset = changedVariable == "mergePets"
+end
+
+function config:updateReloadNeeded(changedVariable)
+    if changedVariable == "barCount" then
+        self.needsReload = true
+        return
+    end
+    for _, meter in ipairs(nekometer.meters) do
+        local meterEnabledVariable = meter .. "Enabled"
+        if changedVariable == meterEnabledVariable then
+            self.needsReload = true
+            return
         end
     end
 end
 
-local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-title:SetPoint("TOPLEFT", 16, -16)
-title:SetText("Nekometer Settings")
-
-local catGlobal = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-catGlobal:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -16)
-catGlobal:SetText("Global options")
-
-local barCountSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-barCountSliderText:SetPoint("TOPLEFT", catGlobal, "BOTTOMLEFT", 0, -16)
-barCountSliderText:SetText("Number of bars displayed")
-
-local barCountSlider = frame:CreateSlider(1, 40, 1)
-barCountSlider:SetPoint("TOPLEFT", barCountSliderText, "BOTTOMLEFT", 0, -8)
-
-local mergePetsCheckbox = frame:CreateCheckbox("Merge Pets with their owners")
-mergePetsCheckbox:SetPoint("TOPLEFT", barCountSlider, "BOTTOMLEFT", 0, -16)
-
-local classColorsCheckbox = frame:CreateCheckbox("Use class colors for bars")
-classColorsCheckbox:SetPoint("TOPLEFT", mergePetsCheckbox, "BOTTOMLEFT", 0, -8)
-
-local catMeters = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-catMeters:SetPoint("TOPLEFT", classColorsCheckbox, "BOTTOMLEFT", 0, -16)
-catMeters:SetText("Enabled meters")
-
-local damageCheckbox = frame:CreateCheckbox("Damage")
-damageCheckbox:SetPoint("TOPLEFT", catMeters, "BOTTOMLEFT", 0, -8)
-
-local dpsCurrentCheckbox = frame:CreateCheckbox("Dps (current)")
-dpsCurrentCheckbox:SetPoint("TOPLEFT", damageCheckbox, "BOTTOMLEFT", 0, -8)
-
-local dpsCombatCheckbox = frame:CreateCheckbox("Dps (combat)")
-dpsCombatCheckbox:SetPoint("TOPLEFT", dpsCurrentCheckbox, "BOTTOMLEFT", 0, -8)
-
-local healingCheckbox = frame:CreateCheckbox("Healing")
-healingCheckbox:SetPoint("TOPLEFT", dpsCombatCheckbox, "BOTTOMLEFT", 0, -8)
-
-local damageBreakdownCheckbox = frame:CreateCheckbox("Damage Breakdown")
-damageBreakdownCheckbox:SetPoint("TOPLEFT", damageCheckbox, "TOPRIGHT", 100, 0)
-
-local healingBreakdownCheckbox = frame:CreateCheckbox("Healing Breakdown")
-healingBreakdownCheckbox:SetPoint("TOPLEFT", dpsCurrentCheckbox, "TOPRIGHT", 100, 0)
-
-local deathsCheckbox = frame:CreateCheckbox("Deaths")
-deathsCheckbox:SetPoint("TOPLEFT", damageBreakdownCheckbox, "TOPRIGHT", 150, 0)
-
-local interruptsCheckbox = frame:CreateCheckbox("Interrupts")
-interruptsCheckbox:SetPoint("TOPLEFT", deathsCheckbox, "BOTTOMLEFT", 0, -8)
-
-local dispelsCheckbox = frame:CreateCheckbox("Dispels")
-dispelsCheckbox:SetPoint("TOPLEFT", interruptsCheckbox, "BOTTOMLEFT", 0, -8)
-
-local catAdvanced = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-catAdvanced:SetPoint("TOPLEFT", healingCheckbox, "BOTTOMLEFT", 0, -16)
-catAdvanced:SetText("Advanced options")
-
-local windowSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-windowSliderText:SetPoint("TOPLEFT", catAdvanced, "BOTTOMLEFT", 0, -16)
-windowSliderText:SetText("Data window size")
-
-local windowSlider = frame:CreateSlider(1, 10, 1)
-windowSlider:SetPoint("TOPLEFT", windowSliderText, "BOTTOMLEFT", 0, -8)
-
-local smoothingSliderText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-smoothingSliderText:SetPoint("TOPLEFT", windowSlider, "BOTTOMLEFT", 0, -16)
-smoothingSliderText:SetText("Smoothing factor")
-
-local smoothingSlider = frame:CreateSlider(0.1, 0.9, 0.1, "%.1f")
-smoothingSlider:SetPoint("TOPLEFT", smoothingSliderText, "BOTTOMLEFT", 0, -8)
-
-local resetButton = frame:CreateButton("Defaults")
-resetButton:SetPoint("BOTTOM", 0, 10)
-resetButton:SetScript("OnClick", function()
-    StaticPopup_Show("NEKOMETER_RESET_SETTINGS")
-end)
-
-function frame:OnRefresh()
-    barCountSlider:SetValue(NekometerConfig.window.bars)
-    mergePetsCheckbox:SetChecked(NekometerConfig.mergePets)
-    classColorsCheckbox:SetChecked(NekometerConfig.classColors)
-    damageCheckbox:SetChecked(self:GetMeterConfig("damage").enabled)
-    dpsCurrentCheckbox:SetChecked(self:GetMeterConfig("dps_current").enabled)
-    dpsCombatCheckbox:SetChecked(self:GetMeterConfig("dps_combat").enabled)
-    healingCheckbox:SetChecked(self:GetMeterConfig("healing").enabled)
-    deathsCheckbox:SetChecked(self:GetMeterConfig("deaths").enabled)
-    interruptsCheckbox:SetChecked(self:GetMeterConfig("interrupts").enabled)
-    dispelsCheckbox:SetChecked(self:GetMeterConfig("dispels").enabled)
-    damageBreakdownCheckbox:SetChecked(self:GetMeterConfig("damage_breakdown").enabled)
-    healingBreakdownCheckbox:SetChecked(self:GetMeterConfig("healing_breakdown").enabled)
-    windowSlider:SetValue(self:GetMeterConfig("dps_current").window)
-    smoothingSlider:SetValue(self:GetMeterConfig("dps_current").smoothing)
-end
-
-function frame:OnCommit()
-    if self:allMetersDisabled() then
-        damageCheckbox:SetChecked(true)
+function config:allMetersDisabled()
+    for _, meter in ipairs(nekometer.meters) do
+        if nekometer.isMeterEnabled(meter) then
+            return false
+        end
     end
-
-    -- reload might be required
-    local barCount = barCountSlider:GetValue()
-    if barCount ~= NekometerConfig.window.bars then
-        NekometerConfig.window.bars = barCount
-        nekometer.reloadRequired = true
-    end
-    self:commitMeter("damage", damageCheckbox:GetChecked())
-    self:commitMeter("dps_current", dpsCurrentCheckbox:GetChecked())
-    self:commitMeter("dps_combat", dpsCombatCheckbox:GetChecked())
-    self:commitMeter("healing", healingCheckbox:GetChecked())
-    self:commitMeter("damage_breakdown", damageBreakdownCheckbox:GetChecked())
-    self:commitMeter("healing_breakdown", healingBreakdownCheckbox:GetChecked())
-    self:commitMeter("deaths", deathsCheckbox:GetChecked())
-    self:commitMeter("interrupts", interruptsCheckbox:GetChecked())
-    self:commitMeter("dispels", dispelsCheckbox:GetChecked())
-
-    -- reset might be required
-    local mergePets = mergePetsCheckbox:GetChecked()
-    if NekometerConfig.mergePets ~= mergePets then
-        NekometerConfig.mergePets = mergePets
-        nekometer.resetRequired = true
-    end
-    local classColors = classColorsCheckbox:GetChecked()
-    if NekometerConfig.classColors ~= classColors then
-        NekometerConfig.classColors = classColors
-        nekometer.resetRequired = true
-    end
-
-    -- no reload or reset required
-    local dpsCurrentCfg = frame:GetMeterConfig("dps_current")
-    dpsCurrentCfg.window = windowSlider:GetValue()
-    dpsCurrentCfg.smoothing = smoothingSlider:GetValue()
+    return true
 end
 
-function frame:allMetersDisabled()
-    return not damageCheckbox:GetChecked() and
-        not dpsCurrentCheckbox:GetChecked() and
-        not dpsCombatCheckbox:GetChecked() and
-        not healingCheckbox:GetChecked() and
-        not damageBreakdownCheckbox:GetChecked() and
-        not healingBreakdownCheckbox:GetChecked() and
-        not deathsCheckbox:GetChecked() and
-        not interruptsCheckbox:GetChecked() and
-        not dispelsCheckbox:GetChecked()
-end
-
-function frame:commitMeter(key, newVal)
-    local cfg = frame:GetMeterConfig(key)
-    if cfg.enabled ~= newVal then
-        cfg.enabled = newVal
-        NekometerConfig.currentMeterIndex = 1
-        nekometer.reloadRequired = true
-    end
-end
-
-function frame:OnDefault()
-    self:ResetSettings()
-end
-
-function frame:ResetSettings()
-    nekometer.wipe()
-    self:OnRefresh()
-end
-
-local settings = Settings.RegisterCanvasLayoutCategory(frame, "Nekometer")
-settings.ID = "Nekometer"
-Settings.RegisterAddOnCategory(settings)
-
-nekometer.frames = nekometer.frames or {}
-nekometer.frames.config = frame
+nekometer.frames.config = config
