@@ -1,5 +1,5 @@
 ## Interface: 100207
-## Version: 2.1.0
+## Version: 2.1.1
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer

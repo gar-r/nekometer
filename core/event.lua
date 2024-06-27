@@ -57,9 +57,6 @@ function event:GetSource()
             if owner then
                 sourceId = owner.id
                 sourceName = owner.name
-            else
-                -- unable to determine owner
-                sourceId = sourceName
             end
         end
     end
