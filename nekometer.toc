@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110002
 ## Version: 2.1.1
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
