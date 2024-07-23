@@ -5,15 +5,17 @@ local meter = {
     data = {},
 }
 
-function meter:Accept(e)
-    if e:isDamage() then
+function meter:CombatEvent(e)
+    if e:IsDamage() or e:IsSpellReflect() then
+        local source = e:GetSource()
+        local amount = e:GetAmount()
         local data = self.data
-        if data[e.sourceId] then
-            data[e.sourceId].value = data[e.sourceId].value + e.amount
+        if data[source.id] then
+            data[source.id].value = data[source.id].value + amount
         else
-            data[e.sourceId] = {
-                name = e.sourceName,
-                value = e.amount,
+            data[source.id] = {
+                name = source.name,
+                value = amount,
             }
         end
     end
@@ -30,7 +32,7 @@ end
 
 function meter:Report()
     if not self.combatStart then
-        return {}   -- no combat since start 
+        return {} -- no combat since start
     end
     local duration
     if self.combatEnd then
@@ -38,9 +40,6 @@ function meter:Report()
     else
         -- still in combat, so we use the current time
         duration = GetTime() - self.combatStart
-    end
-    if duration < 0 then
-        print("duration", duration)
     end
     local dps = {}
     for k, v in pairs(self.data) do
@@ -63,4 +62,4 @@ function meter:Reset()
 end
 
 nekometer.meters = nekometer.meters or {}
-nekometer.meters.dps_combat = meter
+nekometer.meters.dpsCombat = meter

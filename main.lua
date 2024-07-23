@@ -11,11 +11,13 @@ end
 
 function frame:initMeters()
     nekometer.enabledMeters = {}
-    for _, cfg in ipairs(NekometerConfig.meters) do
-        if cfg.enabled then
-            local meter = nekometer.meters[cfg.key]
-            dispatcher:AddMeter(meter, cfg)
-            table.insert(nekometer.enabledMeters, meter)
+    for _, key in ipairs(nekometer.meters) do
+        if nekometer.isMeterEnabled(key) then
+            local meter = nekometer.meters[key]
+            if meter then
+                dispatcher:AddMeter(meter, NekometerConfig)
+                table.insert(nekometer.enabledMeters, meter)
+            end
         end
     end
 end
@@ -45,11 +47,11 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function frame:PLAYER_REGEN_DISABLED()
-    dispatcher:CombatEntered()
+    dispatcher:HandleCombatEntered()
 end
 
 function frame:PLAYER_REGEN_ENABLED()
-    dispatcher:CombatExited()
+    dispatcher:HandleCombatExited()
 end
 
 frame:RegisterEvent("ADDON_LOADED")

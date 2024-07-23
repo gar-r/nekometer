@@ -5,15 +5,17 @@ local meter = {
     data = {},
 }
 
-function meter:Accept(e)
-    if e:isDamage() and e:isDoneByPlayer(e) then
+function meter:CombatEvent(e)
+    if e:IsDoneByPlayer() and (e:IsDamage() or e:IsSpellReflect()) then
+        local ability = e:GetAbilityName()
+        local amount = e:GetAmount()
         local data = self.data
-        if data[e.ability] then
-            data[e.ability].value = data[e.ability].value + e.amount
+        if data[ability] then
+            data[ability].value = data[ability].value + amount
         else
-            data[e.ability] = {
-                name = e.ability,
-                value = e.amount,
+            data[ability] = {
+                name = ability,
+                value = amount,
             }
         end
     end
@@ -28,4 +30,4 @@ function meter:Reset()
 end
 
 nekometer.meters = nekometer.meters or {}
-nekometer.meters.damage_breakdown = meter
+nekometer.meters.damageBreakdown = meter

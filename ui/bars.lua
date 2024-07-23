@@ -5,7 +5,7 @@ local mainFrame = nekometer.frames.main
 local bars = {}
 
 function bars:Init()
-    for i=1, NekometerConfig.window.bars do
+    for i=1, NekometerConfig.barCount do
         local bar = self:createBar(i)
         table.insert(self, bar)
     end
@@ -51,30 +51,38 @@ function bars:setData(bar, item, maxValue)
     bar.text:SetText(item.name)
     bar.value:SetText(AbbreviateNumbers(item.value))
     local c
-    if item.class then
+    if NekometerConfig.classColors and item.class then
         c = C_ClassColor.GetClassColor(item.class)
-        c.a = 0.7
+        c.a = 0.6
     else
-        c = NekometerConfig.bars.neutralColor
+        c = NekometerConfig.barNeutralColor
     end
     bar:SetColorFill(c.r, c.g, c.b, c.a)
 end
 
 function bars:createBar(index)
     local bar = CreateFrame("StatusBar", nil, mainFrame)
-    local offset = NekometerConfig.titleBar.height
-    local height = NekometerConfig.bars.height
-    bar:SetWidth(NekometerConfig.window.width)
+    local offset = NekometerConfig.titleBarHeight
+    local height = NekometerConfig.barHeight
+    bar:SetWidth(NekometerConfig.windowWidth)
     bar:SetHeight(height)
     bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
     bar:SetPoint("TOPLEFT", 0, -offset - (index-1) * height)
-    local text = bar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    text:SetPoint("LEFT", bar, "LEFT", 5, 0)
-    bar["text"] = text
-    local val = bar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    val:SetPoint("RIGHT", bar, "RIGHT", -5, 0)
-    bar["value"] = val
+    bar["text"] = self:createFontString(bar, "LEFT")
+    bar["value"] = self:createFontString(bar, "RIGHT")
     return bar
+end
+
+function bars:createFontString(frame, align)
+    local fontString = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    local color = NekometerConfig.barTextColor
+    fontString:SetTextColor(color.r, color.g, color.b)
+    local offset = 5
+    if align == "RIGHT" then
+        offset = -5
+    end
+    fontString:SetPoint(align, frame, align, offset, 0)
+    return fontString
 end
 
 nekometer.frames.bars = bars

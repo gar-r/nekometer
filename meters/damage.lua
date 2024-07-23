@@ -5,15 +5,17 @@ local meter = {
     data = {},
 }
 
-function meter:Accept(e)
-    if e:isDamage() then
+function meter:CombatEvent(e)
+    if e:IsDamage() or e:IsSpellReflect() then
+        local source = e:GetSource()
+        local amount = e:GetAmount()
         local data = self.data
-        if data[e.sourceId] then
-            data[e.sourceId].value = data[e.sourceId].value + e.amount
+        if data[source.id] then
+            data[source.id].value = data[source.id].value + amount
         else
-            data[e.sourceId] = {
-                name = e.sourceName,
-                value = e.amount,
+            data[source.id] = {
+                name = source.name,
+                value = amount,
             }
         end
     end
