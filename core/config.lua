@@ -14,13 +14,19 @@ nekometer.meters = {
 
 nekometer.defaults = {
     -- version (increment to force wipe on init)
-    configVersion = 9,
+    configVersion = 10,
 
     -- general
     updateRate = 0.5,
     currentMeterIndex = 1,
     mergePets = true,
     classColors = true,
+
+    -- auto hide
+    autoHide = false,
+    autoHideDelay = 5,
+    autoHideDisabledInInstances = true,
+    autoHideDisabledInGroups = true,
 
     -- window
     windowShown = true,

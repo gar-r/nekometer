@@ -1,6 +1,7 @@
 local addonName, nekometer = ...
 
 local dispatcher = nekometer.dispatcher
+local autohide = nekometer.autohide
 
 ---@class Frame
 local frame = CreateFrame("Frame", "NekometerMain")
@@ -47,10 +48,12 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function frame:PLAYER_REGEN_DISABLED()
+    autohide:HandleCombatEntered()
     dispatcher:HandleCombatEntered()
 end
 
 function frame:PLAYER_REGEN_ENABLED()
+    autohide:HandleCombatExited()
     dispatcher:HandleCombatExited()
 end
 
