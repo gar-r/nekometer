@@ -68,7 +68,9 @@ end
 
 -- Gets the amount encapsulated in the event, adjusted with overkill,  overheal, etc.
 function event:GetAmount()
-    if self:GetType() == swingDamage then
+    if self:IsSpellReflect() then
+        return self.prevSelfHarm or 0
+    elseif self:GetType() == swingDamage then
         return self:calcEffectiveAmount(12, 13)
     elseif self:IsDamage() or self:IsHeal() then
         return self:calcEffectiveAmount(15, 16)
@@ -76,8 +78,6 @@ function event:GetAmount()
         -- the absorb event arr has a variable size, but the amount
         -- will always be at position len-1
         return self[#self - 1]
-    elseif self:IsSpellReflect() then
-        return self.prevSelfHarm or 0
     else
         return 0
     end
@@ -118,8 +118,7 @@ end
 
 -- a special spell effect that damages oneself
 function event:IsSelfHarm()
-    return self:GetType() == spellDamage
-        and self[4] == self[8] -- source and dest are the same
+    return self[4] == self[8] -- source and dest are the same
 end
 
 function event:IsSpellReflect()
