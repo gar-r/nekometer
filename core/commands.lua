@@ -20,6 +20,10 @@ end
 function commands:toggle(_)
     local shown = not NekometerConfig.windowShown
     NekometerConfig.windowShown = shown
+    self:show(shown)
+end
+
+function commands:show(shown)
     local main = nekometer.frames.main
     if main then
         main:SetShown(shown)

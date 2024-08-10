@@ -1,6 +1,7 @@
 local addonName, nekometer = ...
 
 local defaults = nekometer.defaults
+local commands = nekometer.commands
 
 local config = {
     needsReset = false,     -- need to reset meter data after the changes are applied
@@ -15,6 +16,13 @@ function config:Init()
     self:CreateProxiedSlider("Number of bars", "How many bars the Nekometer window will display", 1, 40, 1, "barCount")
     self:CreateProxiedCheckBox("Merge pets with their owners", "Enable to combine pet data with their owner", "mergePets")
     self:CreateProxiedCheckBox("Use class colors for bars", "Enable to color bars with respective class colors", "classColors")
+
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Auto Hide"))
+    self:CreateProxiedCheckBox("Hide when not in combat", "Hide Nekometer when not in combat, allowing more immersion", "autoHide")
+    self:CreateProxiedSlider("Auto hide delay", "Wait this amount of seconds before hiding Nekometer", 0, 10, 1, "autoHideDelay")
+    self:CreateProxiedCheckBox("Always show in instances", "Auto hide is disabled when the player is instanced", "autoHideDisabledInInstances")
+    self:CreateProxiedCheckBox("Always show in groups", "Auto hide is disabled when the player is in a group", "autoHideDisabledInGroups")
+    
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Meters"))
     self:CreateProxiedCheckBox("Damage", "Shows total damage since last reset", "damageEnabled")
@@ -78,6 +86,9 @@ function config:OnSettingsClosed()
         self.needsReload = true
     end
 
+    -- display main window based on auto hide setting and user state
+    commands:show(NekometerConfig.windowShown and not NekometerConfig.autoHide)
+    
     -- add a small delay to avoid our static popups to draw over game frames
     C_Timer.After(1, function ()
         if self.needsReload then
