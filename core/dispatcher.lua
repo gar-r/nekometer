@@ -22,9 +22,12 @@ end
 function dispatcher:HandleCombatEvent()
 	local raw = { CombatLogGetCurrentEventInfo() }
 	local e = event:new(raw, self.prevSelfHarm)
-	if self:shouldDispatch(e) then
+	if e:IsSelfHarm() then
+		-- self harm events are not dispatched, but we store the damage
+		-- in order to be able to track special effects, like spell reflect
+		self.prevSelfHarm = e[15]
+	elseif self:shouldDispatch(e) then
 		self:notifyMeters("CombatEvent", e)
-	elseif e:IsSelfHarm() then
 		self.prevSelfHarm = 0
 	end
 end
