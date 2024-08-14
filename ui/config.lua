@@ -53,9 +53,8 @@ function config:CreateProxiedSlider(name, tooltip, min, max, step, variable)
     else
         sliderOptions:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
     end
-    local setting = Settings.RegisterAddOnSetting(self.category, name, variable,
-        Settings.VarType.Number, defaults[variable])
-    setting:SetValue(NekometerConfig[variable])
+    local setting = Settings.RegisterAddOnSetting(self.category, variable, variable, NekometerConfig,
+        Settings.VarType.Number, name, defaults[variable])
     Settings.CreateSlider(self.category, setting, sliderOptions, tooltip)
     Settings.SetOnValueChangedCallback(variable, function(_, s, v)
         self:OnSettingChanged(_, s, v)
@@ -63,8 +62,8 @@ function config:CreateProxiedSlider(name, tooltip, min, max, step, variable)
 end
 
 function config:CreateProxiedCheckBox(name, tooltip, variable)
-    local setting = Settings.RegisterAddOnSetting(self.category, name, variable,
-        Settings.VarType.Boolean, defaults[variable])
+    local setting = Settings.RegisterAddOnSetting(self.category, variable, variable, NekometerConfig,
+        Settings.VarType.Boolean, name, defaults[variable])
     setting:SetValue(NekometerConfig[variable])
     Settings.CreateCheckbox(self.category, setting, tooltip)
     Settings.SetOnValueChangedCallback(variable, function(_, s, v)

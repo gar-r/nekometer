@@ -24,10 +24,8 @@ end
 function pets:queryTooltipInfo(id)
     local ttip = C_TooltipInfo.GetHyperlink("unit:" .. id)
     if ttip then
-        TooltipUtil.SurfaceArgs(ttip)
         local line = ttip.lines[2]
         if line then
-            TooltipUtil.SurfaceArgs(line)
             local owner = self:matchTooltipText(line.leftText)
             if owner then
                 return owner
