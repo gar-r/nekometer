@@ -1,5 +1,5 @@
 ## Interface: 110002
-## Version: 2.2.0
+## Version: 2.2.1
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
@@ -32,6 +32,7 @@ ui/main.lua
 ui/minimap.lua
 ui/bars.lua
 ui/titlebar.lua
+ui/resize.lua
 ui/config.lua
 ui/dialogs.lua
 

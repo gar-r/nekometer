@@ -9,9 +9,9 @@ local frame = CreateFrame("Frame", nil, mainFrame, "BackdropTemplate")
 local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
 function frame:Init()
-    self:SetWidth(NekometerConfig.windowWidth)
     self:SetHeight(NekometerConfig.titleBarHeight)
-    frame:SetPoint("TOPLEFT")
+    self:SetPoint("TOPLEFT", mainFrame, "TOPLEFT", 0, 0)
+    self:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", 0, 0)
     frame:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
         tile = true,

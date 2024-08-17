@@ -14,7 +14,7 @@ nekometer.meters = {
 
 nekometer.defaults = {
     -- version (increment to force wipe on init)
-    configVersion = 10,
+    configVersion = 11,
 
     -- general
     updateRate = 0.5,
@@ -30,7 +30,8 @@ nekometer.defaults = {
 
     -- window
     windowShown = true,
-    windowWidth = 215,
+    windowMinWidth = 235,
+    windowMinHeight = 80,
     windowColor = {
         r = 0,
         g = 0,
@@ -48,7 +49,6 @@ nekometer.defaults = {
     },
 
     -- bars
-    barCount = 6,
     barHeight = 20,
     barNeutralColor = {
         r = 0.3,

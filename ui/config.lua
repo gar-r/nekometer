@@ -13,7 +13,6 @@ function config:Init()
     self.category.ID = addonName
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Global Options"))
-    self:CreateProxiedSlider("Number of bars", "How many bars the Nekometer window will display", 1, 40, 1, "barCount")
     self:CreateProxiedCheckBox("Merge pets with their owners", "Enable to combine pet data with their owner", "mergePets")
     self:CreateProxiedCheckBox("Use class colors for bars", "Enable to color bars with respective class colors", "classColors")
 
@@ -108,10 +107,6 @@ function config:updateResetNeeded(changedVariable)
 end
 
 function config:updateReloadNeeded(changedVariable)
-    if changedVariable == "barCount" then
-        self.needsReload = true
-        return
-    end
     for _, meter in ipairs(nekometer.meters) do
         local meterEnabledVariable = meter .. "Enabled"
         if changedVariable == meterEnabledVariable then
