@@ -2,23 +2,37 @@ local _, nekometer = ...
 
 local mainFrame = nekometer.frames.main
 
-local bars = {}
+local bars = {
+    maxBars = 40,
+    scrollOffset = 0,
+    report = {},
+}
 
 function bars:Init()
-    for i=1, NekometerConfig.barCount do
+    for i=1, self.maxBars do
         local bar = self:createBar(i)
         table.insert(self, bar)
     end
 end
 
-function bars:Display(report, offset)
-    offset = self:boundOffset(report, offset)
-    local maxValue = self:calcMaxValue(report)
+function bars:Display(report)
+    self.report = report
+    self:Redraw()
+end
+
+function bars:Redraw()
+    self:UpdateData()
+    self:UpdateVisibility()
+end
+
+function bars:UpdateVisibility()
+    local numVisible = self:getVisibleBarCount()
+    local numReport = #self.report
+    if numVisible > numReport then
+        numVisible = numReport
+    end
     for i, bar in ipairs(self) do
-        local item = report[i + offset]
-        -- value very rarely comes as inf, causing the bar to error
-        if item and item.value and item.value < math.huge then
-            self:setData(bar, item, maxValue)
+        if i <= numVisible then
             bar:Show()
         else
             bar:Hide()
@@ -26,21 +40,48 @@ function bars:Display(report, offset)
     end
 end
 
-function bars:boundOffset(report, offset)
-    local maxOffset = #report - #self
-    if maxOffset < 0 then
-        maxOffset = 0
+function bars:UpdateData()
+    local maxValue = self:getMaxValue()
+    for i in ipairs(self.report) do
+        local item = self.report[i + self.scrollOffset]
+        if item and item.value and item.value < math.huge then
+            self:setData(self[i], item, maxValue)
+        end
     end
-    if offset > maxOffset then
-        offset = maxOffset
-    end
-    return offset
 end
 
-function bars:calcMaxValue(report)
+function bars:ScrollUp()
+    if self.scrollOffset > 0 then
+        self.scrollOffset = self.scrollOffset - 1
+        self:Redraw()
+    end
+end
+
+function bars:ScrollDown()
+    local numBars = self:getVisibleBarCount()
+    local numData = #self.report
+    local clippedBars = numData - numBars
+    if clippedBars > 0 and self.scrollOffset < clippedBars then
+        self.scrollOffset = self.scrollOffset + 1
+        self:Redraw()
+    end
+end
+
+function bars:ScrollToTop()
+    self.scrollOffset = 0
+    self:Redraw()
+end
+
+function bars:getVisibleBarCount()
+    local offset = NekometerConfig.titleBarHeight
+    local _, height = mainFrame:GetSize()
+    return math.floor((height - offset) / NekometerConfig.barHeight)
+end
+
+function bars:getMaxValue()
     local maxValue = 0
-    if #report > 0 and report[1].value < math.huge then
-        maxValue = report[1].value
+    if #self.report > 0 and self.report[1].value < math.huge then
+        maxValue = self.report[1].value
     end
     return maxValue
 end
@@ -62,12 +103,12 @@ end
 
 function bars:createBar(index)
     local bar = CreateFrame("StatusBar", nil, mainFrame)
-    local offset = NekometerConfig.titleBarHeight
     local height = NekometerConfig.barHeight
-    bar:SetWidth(NekometerConfig.windowWidth)
+    local offset = NekometerConfig.titleBarHeight + (index-1) * height
     bar:SetHeight(height)
+    bar:SetPoint("TOPLEFT", mainFrame, "TOPLEFT", 0, -offset)
+    bar:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", 0, -offset)
     bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-    bar:SetPoint("TOPLEFT", 0, -offset - (index-1) * height)
     bar["text"] = self:createFontString(bar, "LEFT")
     bar["value"] = self:createFontString(bar, "RIGHT")
     return bar
