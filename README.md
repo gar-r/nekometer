@@ -39,6 +39,7 @@ You can use the following commands from the chat window:
 *   /nm config: open the settings window (you can also use the game menu)
 *   /nm toggle: show/hide the nekometer window
 *   /nm reset: reset the meters (you can also use the reset button on the nekometer toolbar)
+*   /nm center: reposition the main window to the center of the screen
 *   /nm wipe: reset all nekometer settings to the default
 
 ### Meters

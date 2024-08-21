@@ -30,6 +30,15 @@ function commands:show(shown)
     end
 end
 
+function commands:center(_)
+    local main = nekometer.frames.main
+    if main then
+        main:ClearAllPoints()
+        main:SetPoint("CENTER")
+        main:SetShown(true)
+    end
+end
+
 function commands:report(_)
     local frame = nekometer.frames.main
     if frame then
