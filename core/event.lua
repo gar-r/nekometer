@@ -122,7 +122,8 @@ end
 
 -- a special spell effect that damages oneself
 function event:IsSelfHarm()
-    return self[4] == self[8] -- source and dest are the same
+    return self:IsDamage()
+        and self[4] == self[8] -- source and dest are the same
 end
 
 function event:IsSpellReflect()
