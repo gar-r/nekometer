@@ -2,31 +2,27 @@ local _, nekometer = ...
 
 local meter = {
     title = "Overhealing",
-    data = {},
+    aggregator = nekometer.aggregator:new(),
 }
 
 function meter:CombatEvent(e)
     if e:IsHeal() then
         local source = e:GetSource()
-        local amount = e[16]
-        local data = self.data
-        if data[source.id] then
-            data[source.id].value = data[source.id].value + amount
-        else
-            data[source.id] = {
-                name = source.name,
-                value = amount,
-            }
-        end
+        self.aggregator:Add({
+            key = source.id,
+            name = source.name,
+            value = e[16],
+        })
     end
 end
 
 function meter:Report()
-    return nekometer.CreateReport(self.data)
+    local data = self.aggregator:GetData()
+    return nekometer.CreateReport(data)
 end
 
 function meter:Reset()
-    self.data = {}
+    self.aggregator:Clear()
 end
 
 nekometer.meters = nekometer.meters or {}

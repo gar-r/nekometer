@@ -2,7 +2,7 @@ local _, nekometer = ...
 
 local meter = {
     title = "Deaths",
-    data = {},
+    aggregator = nekometer.aggregator:new(),
 }
 
 local filter = nekometer.filter
@@ -13,24 +13,21 @@ function meter:CombatEvent(e)
             id = e[8],
             name = e[9],
         }
-        local data = self.data
-        if data[dest.id] then
-            data[dest.id].value = data[dest.id].value + 1
-        else
-            data[dest.id] = {
-                name  = dest.name,
-                value = 1,
-            }
-        end
+        self.aggregator:Add({
+            key = dest.id,
+            name = dest.name,
+            value = 1,
+        })
     end
 end
 
 function meter:Report()
-    return nekometer.CreateReport(self.data)
+    local data = self.aggregator:GetData()
+    return nekometer.CreateReport(data)
 end
 
 function meter:Reset()
-    self.data = {}
+    self.aggregator:Clear()
 end
 
 nekometer.meters = nekometer.meters or {}
