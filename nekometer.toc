@@ -11,6 +11,7 @@ core/util.lua
 core/commands.lua
 core/autohide.lua
 core/config.lua
+core/aggregator.lua
 core/cache.lua
 core/pets.lua
 core/filter.lua

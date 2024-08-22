@@ -2,7 +2,7 @@ local _, nekometer = ...
 
 local meter = {
     title = "Dps (current)",
-    data = {},
+    aggregator = nekometer.aggregator:new(),
     dps = {},
 }
 
@@ -10,15 +10,11 @@ function meter:CombatEvent(e)
     if e:IsDamage() or e:IsSpellReflect() then
         local source = e:GetSource()
         local amount = e:GetAmount()
-        local data = self.data
-        if data[source.id] then
-            data[source.id].value = data[source.id].value + amount
-        else
-            data[source.id] = {
-                name = source.name,
-                value = amount,
-            }
-        end
+        self.aggregator:Add({
+            key = source.id,
+            name = source.name,
+            value = amount,
+        })
     end
 end
 
@@ -27,8 +23,9 @@ function meter:CombatExited()
 end
 
 function meter:Refresh()
-    for id, d in pairs(self.data) do
-        -- also apply exponential smoothing while recording the data
+    local data = self.aggregator:GetData()
+    for id, d in pairs(data) do
+        -- apply exponential smoothing while recording the data
         local next = math.floor(self.smoothing * d.value / self.window)
         if self.dps[id] then
             local rec = self.dps[id]
@@ -61,7 +58,7 @@ function meter:Report()
 end
 
 function meter:Reset()
-    self.data = {}
+    self.aggregator:Clear()
     self.dps = {}
 end
 

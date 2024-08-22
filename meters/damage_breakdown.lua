@@ -2,31 +2,28 @@ local _, nekometer = ...
 
 local meter = {
     title = "Damage Breakdown",
-    data = {},
+    aggregator = nekometer.aggregator:new(),
 }
 
 function meter:CombatEvent(e)
     if e:IsDoneByPlayer() and (e:IsDamage() or e:IsSpellReflect()) then
         local ability = e:GetAbilityName()
         local amount = e:GetAmount()
-        local data = self.data
-        if data[ability] then
-            data[ability].value = data[ability].value + amount
-        else
-            data[ability] = {
-                name = ability,
-                value = amount,
-            }
-        end
+        self.aggregator:Add({
+            key = ability,
+            name = ability,
+            value = amount,
+        })
     end
 end
 
 function meter:Report()
-    return nekometer.CreateReport(self.data, false)
+    local data = self.aggregator:GetData()
+    return nekometer.CreateReport(data, false)
 end
 
 function meter:Reset()
-    self.data = {}
+    self.aggregator:Clear()
 end
 
 nekometer.meters = nekometer.meters or {}

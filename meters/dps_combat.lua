@@ -2,22 +2,18 @@ local _, nekometer = ...
 
 local meter = {
     title = "Dps (combat)",
-    data = {},
+    aggregator = nekometer.aggregator:new(),
 }
 
 function meter:CombatEvent(e)
     if e:IsDamage() or e:IsSpellReflect() then
         local source = e:GetSource()
         local amount = e:GetAmount()
-        local data = self.data
-        if data[source.id] then
-            data[source.id].value = data[source.id].value + amount
-        else
-            data[source.id] = {
-                name = source.name,
-                value = amount,
-            }
-        end
+        self.aggregator:Add({
+            key = source.id,
+            name = source.name,
+            value = amount,
+        })
     end
 end
 
@@ -42,7 +38,8 @@ function meter:Report()
         duration = GetTime() - self.combatStart
     end
     local dps = {}
-    for k, v in pairs(self.data) do
+    local data = self.aggregator:GetData()
+    for k, v in pairs(data) do
         dps[k] = {
             name = v.name,
             value = math.floor(v.value / duration)
@@ -52,7 +49,7 @@ function meter:Report()
 end
 
 function meter:Reset()
-    self.data = {}
+    self.aggregator:Clear()
     if self.combatStart and not self.combatEnd then
         self.combatStart = GetTime()
     else
