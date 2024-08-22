@@ -33,6 +33,7 @@ function config:Init()
     self:CreateProxiedCheckBox("Deaths", "Shows the number of deaths since last reset", "deathsEnabled")
     self:CreateProxiedCheckBox("Interrupts", "Shows the number of successful interrupts since last reset", "interruptsEnabled")
     self:CreateProxiedCheckBox("Dispels", "Shows the number of successful dispels or spell-steals since last reset", "dispelsEnabled")
+    self:CreateProxiedCheckBox("Overhealing", "Shows the amount of overhealing done", "overhealEnabled")
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Advanced Options"))
     self:CreateProxiedSlider("Data window size", "The sliding window size for the dps(current) meter", 1, 10, 1, "dpsCurrentWindowSize")
