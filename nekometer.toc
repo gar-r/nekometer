@@ -27,6 +27,7 @@ meters/healing_breakdown.lua
 meters/deaths.lua
 meters/interrupts.lua
 meters/dispels.lua
+meters/overheal.lua
 
 ui/main.lua
 ui/minimap.lua

@@ -10,6 +10,7 @@ nekometer.meters = {
     "deaths",
     "interrupts",
     "dispels",
+    "overheal",
 }
 
 nekometer.defaults = {
@@ -72,6 +73,7 @@ nekometer.defaults = {
     deathsEnabled = false,
     interruptsEnabled = false,
     dispelsEnabled = false,
+    overhealEnabled = false,
 
     -- meter specific
     dpsCurrentWindowSize = 3,
