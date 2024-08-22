@@ -21,13 +21,17 @@ function cache:Lookup(key)
         item.ts = GetTime()
         return item.value
     else
-        item = {
-            value = self.loadfn(key),
-            ts = GetTime(),
-        }
-        self.items[key] = item
-        return item.value
+        local value = self.loadfn(key)
+        self:Set(key, value)
+        return value
     end
+end
+
+function cache:Set(key, value)
+    self.items[key] = {
+        value = value,
+        ts = GetTime(),
+    }
 end
 
 function cache:evict()

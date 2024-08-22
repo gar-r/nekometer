@@ -2,12 +2,11 @@ local _, nekometer = ...
 
 local pets = {}
 
-nekometer.pets = nekometer.cache:new(21600, function (key)
+nekometer.pets = nekometer.cache:new(1800, function (key)
     if key and key ~= "" then
         return pets:queryOwner(key)
     end
 end)
-
 
 function pets:queryOwner(id)
     local playerPetId = UnitGUID("pet")
@@ -17,6 +16,8 @@ function pets:queryOwner(id)
             name = UnitName("player")
         }
     else
+        -- in case the creature is not the player's pet, and dispatcher didn't
+        -- witness the summoning event, we fall back to using the tooltip
         return self:queryTooltipInfo(id)
     end
 end
