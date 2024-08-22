@@ -116,6 +116,10 @@ function event:IsHeal()
     return string.match(self:GetType(), "_HEAL$")
 end
 
+function event:IsSummon()
+    return string.match(self:GetType(), "_SUMMON$")
+end
+
 -- a special spell effect that damages oneself
 function event:IsSelfHarm()
     return self[4] == self[8] -- source and dest are the same
