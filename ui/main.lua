@@ -5,6 +5,8 @@ local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemp
 
 function frame:Init()
     self:SetPoint("CENTER")
+    self:SetWidth(NekometerConfig.windowMinWidth)
+    self:SetHeight(NekometerConfig.windowMinHeight)
     self:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
         tile = true,
