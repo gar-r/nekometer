@@ -1,5 +1,5 @@
 ## Interface: 110002
-## Version: 2.2.3
+## Version: 2.3.0
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
@@ -10,6 +10,7 @@
 core/util.lua
 core/commands.lua
 core/autohide.lua
+core/autoreset.lua
 core/config.lua
 core/aggregator.lua
 core/cache.lua

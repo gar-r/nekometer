@@ -2,6 +2,7 @@ local addonName, nekometer = ...
 
 local dispatcher = nekometer.dispatcher
 local autohide = nekometer.autohide
+local autoreset = nekometer.autoreset
 
 ---@class Frame
 local frame = CreateFrame("Frame", "NekometerMain")
@@ -57,8 +58,22 @@ function frame:PLAYER_REGEN_ENABLED()
     dispatcher:HandleCombatExited()
 end
 
+function frame:PLAYER_ENTERING_WORLD(_, isLogin, isReload)
+    if isLogin or isReload then
+        return
+    else
+        autoreset:HandleZoneChange()
+    end
+end
+
+function frame:WALK_IN_DATA_UPDATE()
+    autoreset:HandleDelveUpdate()
+end
+
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:RegisterEvent("WALK_IN_DATA_UPDATE")
 frame:SetScript("OnEvent", frame.OnEvent)

@@ -29,6 +29,11 @@ nekometer.defaults = {
     autoHideDisabledInInstances = true,
     autoHideDisabledInGroups = true,
 
+    -- auto reset
+    autoResetConfirmation = false,
+    autoResetOnEnterInstance = false,
+    autoResetOnEnterDelve = false,
+
     -- window
     windowShown = true,
     windowMinWidth = 235,

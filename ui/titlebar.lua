@@ -88,7 +88,7 @@ settingsButton:SetPoint("RIGHT", closeButton, "LEFT", -3, 0)
 
 local resetButton = CreateTitleBarButton("Interface\\Buttons\\UI-RefreshButton",
     function()
-        commands:reset()
+        commands:resetWithConfirmation()
     end)
 resetButton:SetPoint("RIGHT", settingsButton, "LEFT", -3, 0)
 
