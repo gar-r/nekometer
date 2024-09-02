@@ -14,6 +14,13 @@ function commands:wipe(_)
 end
 
 function commands:reset(_)
+    local main = nekometer.frames.main
+    if main then
+        main:ResetEnabledMeters()
+    end
+end
+
+function commands:resetWithConfirmation(_)
     StaticPopup_Show("NEKOMETER_RESET")
 end
 

@@ -1,14 +1,14 @@
 local _, nekometer = ...
 
-local mainFrame = nekometer.frames.main
 local configFrame = nekometer.frames.config
+local commands = nekometer.commands
 
 local resetDialog = {
     text = "Reset Nekometer data?",
     button1 = "Yes",
     button2 = "No",
     OnAccept = function ()
-        mainFrame:ResetEnabledMeters()
+        commands:reset()
     end,
     timeout = 0,
     whileDead = true,

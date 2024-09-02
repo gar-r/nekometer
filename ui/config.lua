@@ -21,7 +21,11 @@ function config:Init()
     self:CreateProxiedSlider("Auto hide delay", "Wait this amount of seconds before hiding Nekometer", 0, 10, 1, "autoHideDelay")
     self:CreateProxiedCheckBox("Always show in instances", "Auto hide is disabled when the player is instanced", "autoHideDisabledInInstances")
     self:CreateProxiedCheckBox("Always show in groups", "Auto hide is disabled when the player is in a group", "autoHideDisabledInGroups")
-    
+
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Auto Reset"))
+    self:CreateProxiedCheckBox("Ask for confirmation", "Ask for confirmation before automatic data reset", "autoResetConfirmation")
+    self:CreateProxiedCheckBox("Reset on entering instances", "Automatically reset when entering an instance", "autoResetOnEnterInstance")
+    self:CreateProxiedCheckBox("Reset on entering delves", "Automatically reset when entering a delve", "autoResetOnEnterDelve")
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Meters"))
     self:CreateProxiedCheckBox("Damage", "Shows total damage since last reset", "damageEnabled")
