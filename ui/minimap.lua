@@ -2,6 +2,6 @@ local _, nekometer = ...
 
 local commands = nekometer.commands
 
-function OnAddonCompartmentClick()
+function Nekometer_OnAddonCompartmentClick()
     commands:toggle()
 end

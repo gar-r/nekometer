@@ -1,9 +1,9 @@
 ## Interface: 110002
-## Version: 2.2.2
+## Version: 2.2.3
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
-## AddonCompartmentFunc: OnAddonCompartmentClick
+## AddonCompartmentFunc: Nekometer_OnAddonCompartmentClick
 ## IconTexture: Interface/ICONS/Ability_Druid_Cower.PNG
 ## Author: garric
 
