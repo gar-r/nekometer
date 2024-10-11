@@ -1,13 +1,13 @@
 local _, nekometer = ...
 
 local mainFrame = nekometer.frames.main
-local bars = nekometer.frames.bars
+local barContainer = nekometer.frames.barContainer
 
-local resizer = CreateFrame("Button", nil, mainFrame)
+local resizer = CreateFrame("Button", nil, barContainer.frame)
 
 function resizer:Init()
     self:SetSize(16, 16)
-    self:SetPoint("BOTTOMRIGHT", mainFrame, "BOTTOMRIGHT", -2, 2)
+    self:SetPoint("BOTTOMRIGHT", barContainer.frame, "BOTTOMRIGHT", -2, 2)
     self:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
     self:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
     self:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
@@ -19,7 +19,7 @@ function resizer:Init()
     self:SetScript("OnMouseUp", function(_, button)
         if button == "LeftButton" then
             mainFrame:StopMovingOrSizing()
-            bars:ScrollToTop()
+            barContainer:ScrollToTop()
         end
     end)
 end

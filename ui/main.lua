@@ -56,9 +56,9 @@ end
 
 function frame:UpdateBars()
     if nekometer.enabledMeters then
-        local bars = nekometer.frames.bars
+        local barContainer = nekometer.frames.barContainer
         local meter = self:GetCurrentMeter()
-        bars:Display(meter:Report())
+        barContainer:Display(meter:Report())
     end
 end
 
@@ -71,11 +71,11 @@ function frame:OnUpdate(elapsed)
 end
 
 function frame:OnMouseWheel(delta)
-    local bars = nekometer.frames.bars
+    local barContainer = nekometer.frames.barContainer
     if delta > 0 then
-        bars:ScrollUp()
+        barContainer:ScrollUp()
     else
-        bars:ScrollDown()
+        barContainer:ScrollDown()
     end
 end
 
