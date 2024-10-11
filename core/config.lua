@@ -57,10 +57,10 @@ nekometer.defaults = {
     -- bars
     barHeight = 20,
     barNeutralColor = {
-        r = 0.3,
-        g = 0.3,
-        b = 0.3,
-        a = 0.7
+        r = 0.2,
+        g = 0.2,
+        b = 0.2,
+        a = 0.85
     },
     barTextColor = {
         r = 1,
