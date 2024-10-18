@@ -24,6 +24,7 @@ function bar:new(index)
 end
 
 function bar:SetData(data)
+    data.position = self.index
     self:setColor(data.class)
     self.frame:SetMinMaxValues(0, data.maxValue)
     self.frame:SetValue(data.value)

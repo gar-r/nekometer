@@ -4,8 +4,8 @@ local defaults = nekometer.defaults
 local commands = nekometer.commands
 
 local config = {
-    needsReset = false,     -- need to reset meter data after the changes are applied
-    needsReload = false,    -- need to reload the ui after the changes are applied
+    needsReset = false,  -- need to reset meter data after the changes are applied
+    needsReload = false, -- need to reload the ui after the changes are applied
 }
 
 function config:Init()
@@ -27,6 +27,9 @@ function config:Init()
     self:CreateProxiedCheckBox("Reset on entering instances", "Automatically reset when entering an instance", "autoResetOnEnterInstance")
     self:CreateProxiedCheckBox("Reset on entering delves", "Automatically reset when entering a delve", "autoResetOnEnterDelve")
 
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Bar Options"))
+    self:CreateProxiedCheckBox("Display position", "Display a number for each bar, indicating the position", "barPositionDisplayEnabled")
+
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Meters"))
     self:CreateProxiedCheckBox("Damage", "Shows total damage since last reset", "damageEnabled")
     self:CreateProxiedCheckBox("Dps (combat)", "Shows damage per second for the current combat", "dpsCombatEnabled")
@@ -43,7 +46,7 @@ function config:Init()
     self:CreateProxiedSlider("Data window size", "The sliding window size for the dps(current) meter", 1, 10, 1, "dpsCurrentWindowSize")
     self:CreateProxiedSlider("Smoothing factor", "The smoothing factor for the dps(current) meter", 0.1, 0.9, 0.1, "dpsCurrentSmoothing")
 
-    SettingsPanel:SetScript("OnHide", function () self:OnSettingsClosed() end)
+    SettingsPanel:SetScript("OnHide", function() self:OnSettingsClosed() end)
     Settings.RegisterAddOnCategory(self.category)
 end
 
@@ -91,9 +94,9 @@ function config:OnSettingsClosed()
 
     -- display main window based on auto hide setting and user state
     commands:show(NekometerConfig.windowShown and not NekometerConfig.autoHide)
-    
+
     -- add a small delay to avoid our static popups to draw over game frames
-    C_Timer.After(1, function ()
+    C_Timer.After(1, function()
         if self.needsReload then
             self.needsReload = false
             self.needsReinit = false
@@ -101,8 +104,8 @@ function config:OnSettingsClosed()
             NekometerConfig.currentMeterIndex = 1
             StaticPopup_Show("NEKOMETER_RELOAD")
         elseif self.needsReset then
-                self.needsReset = false
-                StaticPopup_Show("NEKOMETER_RESET")
+            self.needsReset = false
+            StaticPopup_Show("NEKOMETER_RESET")
         end
     end)
 end
@@ -118,6 +121,9 @@ function config:updateReloadNeeded(changedVariable)
             self.needsReload = true
             return
         end
+    end
+    if changedVariable == "barPositionDisplayEnabled" then
+        self.needsReload = true
     end
 end
 
