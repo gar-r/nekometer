@@ -1,16 +1,16 @@
 local _, nekometer = ...
 
 local mainFrame = nekometer.frames.main
-local bar = nekometer.frames.bar
+local bar = nekometer.bars.bar
 
-local barContainer = {
+local container = {
     frame = CreateFrame("Frame", nil, mainFrame),
     maxBars = 40,
     scrollOffset = 0,
     report = {},
 }
 
-function barContainer:Init()
+function container:Init()
     self.frame:SetPoint("TOPLEFT", mainFrame, "TOPLEFT", 0, -NekometerConfig.titleBarHeight)
     self.frame:SetPoint("BOTTOMRIGHT", mainFrame, "BOTTOMRIGHT", 0, 0)
     for i=1, self.maxBars do
@@ -18,17 +18,17 @@ function barContainer:Init()
     end
 end
 
-function barContainer:Display(report)
+function container:Display(report)
     self.report = report
     self:Redraw()
 end
 
-function barContainer:Redraw()
+function container:Redraw()
     self:UpdateData()
     self:UpdateVisibility()
 end
 
-function barContainer:UpdateVisibility()
+function container:UpdateVisibility()
     local numVisible = self:getVisibleBarCount()
     local numReport = #self.report
     if numVisible > numReport then
@@ -43,7 +43,7 @@ function barContainer:UpdateVisibility()
     end
 end
 
-function barContainer:UpdateData()
+function container:UpdateData()
     local maxValue = self:getMaxValue()
     for i in ipairs(self.report) do
         local item = self.report[i + self.scrollOffset]
@@ -54,14 +54,14 @@ function barContainer:UpdateData()
     end
 end
 
-function barContainer:ScrollUp()
+function container:ScrollUp()
     if self.scrollOffset > 0 then
         self.scrollOffset = self.scrollOffset - 1
         self:Redraw()
     end
 end
 
-function barContainer:ScrollDown()
+function container:ScrollDown()
     local numBars = self:getVisibleBarCount()
     local numData = #self.report
     local clippedBars = numData - numBars
@@ -71,17 +71,17 @@ function barContainer:ScrollDown()
     end
 end
 
-function barContainer:ScrollToTop()
+function container:ScrollToTop()
     self.scrollOffset = 0
     self:Redraw()
 end
 
-function barContainer:getVisibleBarCount()
+function container:getVisibleBarCount()
     local _, height = self.frame:GetSize()
     return math.floor(height / NekometerConfig.barHeight)
 end
 
-function barContainer:getMaxValue()
+function container:getMaxValue()
     local maxValue = 0
     if #self.report > 0 and self.report[1].value < math.huge then
         maxValue = self.report[1].value
@@ -89,4 +89,4 @@ function barContainer:getMaxValue()
     return maxValue
 end
 
-nekometer.frames.barContainer = barContainer
+nekometer.frames.barContainer = container
