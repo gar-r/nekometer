@@ -33,6 +33,7 @@ meters/overheal.lua
 
 ui/main.lua
 ui/minimap.lua
+ui/bar_template.lua
 ui/bar.lua
 ui/bar_container.lua
 ui/titlebar.lua
