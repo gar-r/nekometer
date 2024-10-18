@@ -1,9 +1,7 @@
 local _, nekometer = ...
 
-local bar = {
-    left = {},
-    right = {},
-}
+local bar = {}
+local barTemplate = nekometer.frames.barTemplate
 
 function bar:new(index)
     local container = nekometer.frames.barContainer.frame
@@ -16,8 +14,8 @@ function bar:new(index)
     frame:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
     local o = {
         frame = frame,
-        text = self:createFontString(frame, "LEFT"),
-        value = self:createFontString(frame, "RIGHT"),
+        index = index,
+        widgets = barTemplate:createWidgets(frame),
     }
     setmetatable(o, self)
     self.__index = self
@@ -28,8 +26,9 @@ function bar:SetData(data)
     self:setColor(data.class)
     self.frame:SetMinMaxValues(0, data.maxValue)
     self.frame:SetValue(data.value)
-    self.text:SetText(data.name)
-    self.value:SetText(AbbreviateNumbers(data.value))
+    for _, widget in ipairs(self.widgets) do
+        widget:update(data)
+    end
 end
 
 function bar:Show()
@@ -51,16 +50,5 @@ function bar:setColor(class)
     self.frame:SetColorFill(c.r, c.g, c.b, c.a)
 end
 
-function bar:createFontString(frame, align)
-    local fontString = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    local color = NekometerConfig.barTextColor
-    fontString:SetTextColor(color.r, color.g, color.b)
-    local offset = 5
-    if align == "RIGHT" then
-        offset = -5
-    end
-    fontString:SetPoint(align, frame, align, offset, 0)
-    return fontString
-end
 
 nekometer.frames.bar = bar
