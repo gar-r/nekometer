@@ -5,10 +5,17 @@ local template = {
         {
             type = nekometer.bars.textWidget,
             selector = function(data)
+                return data.position .. ". "
+            end,
+            offset = 3,
+            config = "barPositionDisplayEnabled",
+        },
+        {
+            type = nekometer.bars.textWidget,
+            selector = function(data)
                 return data.name
             end,
             offset = 5,
-            enabled = true,
         }
     },
     RIGHT = {
@@ -18,7 +25,6 @@ local template = {
                 return AbbreviateNumbers(data.value)
             end,
             offset = -5,
-            enabled = true,
         }
     },
 }
@@ -28,7 +34,7 @@ function template:createWidgets(parent)
     for _, align in ipairs({ "LEFT", "RIGHT" }) do
         local neighbor = parent
         for _, widgetDef in ipairs(self[align]) do
-            if widgetDef.enabled then
+            if self:isWidgetEnabled(widgetDef) then
                 local widget = widgetDef.type:create({
                     widgetDef = widgetDef,
                     align = align,
@@ -36,11 +42,15 @@ function template:createWidgets(parent)
                     neighbor = neighbor,
                 })
                 table.insert(widgets, widget)
-                neighbor = widget
+                neighbor = widget.frame
             end
         end
     end
     return widgets
+end
+
+function template:isWidgetEnabled(widgetDef)
+    return not widgetDef.config or NekometerConfig[widgetDef.config]
 end
 
 nekometer.bars = nekometer.bars or {}
