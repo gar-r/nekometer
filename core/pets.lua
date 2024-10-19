@@ -3,9 +3,10 @@ local _, nekometer = ...
 local pets = {}
 
 nekometer.pets = nekometer.cache:new(1800, function (key)
-    if key and key ~= "" then
-        return pets:queryOwner(key)
+    if not key or key == "" then
+        return nil, false
     end
+    return pets:queryOwner(key), true
 end)
 
 function pets:queryOwner(id)

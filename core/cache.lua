@@ -1,12 +1,14 @@
 local _, nekometer = ...
 
+local NIL_VALUE = {}
+
 local cache = {}
 
 function cache:new(ttl, loadfn)
     local o = {
         items = {},
         ttl = ttl,
-        cleanup = 300,
+        cleanup = ttl / 5,
         loadfn = loadfn,
     }
     setmetatable(o, self)
@@ -17,13 +19,28 @@ end
 
 function cache:Lookup(key)
     local item = self.items[key]
-    if item then
-        item.ts = GetTime()
-        return item.value
+    if not item then
+        -- cache miss
+        local value, success = self.loadfn(key)
+        if success then
+            if value == nil then
+                self:Set(key, NIL_VALUE)
+                return nil
+            else
+                self:Set(key, value)
+                return value
+            end
+        else
+            -- loadfn failed, return nil and don't cache
+            return nil
+        end
     else
-        local value = self.loadfn(key)
-        self:Set(key, value)
-        return value
+        -- cache hit
+        if item.value == NIL_VALUE then
+            return nil
+        else
+            return item.value
+        end
     end
 end
 
@@ -37,16 +54,16 @@ end
 function cache:evict()
     local now = GetTime()
     for key, item in pairs(self.items) do
-        if now - item.ts > self.ttl then
+        if now - item.ts >= self.ttl then
             table[key] = nil
         end
     end
-    self:scheduleNextCleanup()
 end
 
 function cache:scheduleNextCleanup()
-    C_Timer.After(self.cleanup, function ()
+    C_Timer.After(self.cleanup, function()
         self:evict()
+        self:scheduleNextCleanup()
     end)
 end
 

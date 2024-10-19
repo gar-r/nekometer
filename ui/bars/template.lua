@@ -1,7 +1,22 @@
 local _, nekometer = ...
 
+local main = nekometer.frames.main
+
 local template = {
     LEFT = {
+        {
+            type = nekometer.bars.iconWidget,
+            selector = function(data)
+                local meter = main:GetCurrentMeter()
+                if meter.reportsAbilities then
+                    return nekometer.abilityIcons:Lookup(data.id)
+                else
+                    return nekometer.classIcons:Lookup(data.id)
+                end
+            end,
+            offset = 0,
+            config = "barIconsDisplayEnabled",
+        },
         {
             type = nekometer.bars.textWidget,
             selector = function(data)

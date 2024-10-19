@@ -1,5 +1,5 @@
 ## Interface: 110005
-## Version: 2.3.1
+## Version: 2.4.0
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
@@ -14,6 +14,7 @@ core/autoreset.lua
 core/config.lua
 core/aggregator.lua
 core/cache.lua
+core/specs.lua
 core/pets.lua
 core/filter.lua
 core/event.lua
@@ -33,6 +34,7 @@ meters/overheal.lua
 
 ui/main.lua
 ui/minimap.lua
+ui/bars/caches.lua
 ui/bars/widget.lua
 ui/bars/template.lua
 ui/bars/bar.lua

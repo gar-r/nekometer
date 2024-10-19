@@ -45,11 +45,13 @@ end
 
 function container:UpdateData(numVisible)
     local maxValue = self:getMaxValue()
+    local source = self.report.source
     for i=1, numVisible do
         local item = self.report[i + self.scrollOffset]
         local bar = self[i]
         if item and item.value and item.value < math.huge then
             item.maxValue = maxValue
+            item.source = source
             item.position = i + self.scrollOffset
             bar:SetData(item)
         end

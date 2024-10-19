@@ -10,4 +10,11 @@ function util:RemoveRealmInfo(playerName)
     end
 end
 
+function util:GetSpellTexture(id)
+    local info = C_Spell.GetSpellInfo(id)
+    if info then
+        return info.iconID
+    end
+end
+
 nekometer.util = util

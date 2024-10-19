@@ -23,7 +23,7 @@ end
 
 function meter:Report()
     local data = self.aggregator:GetData()
-    return nekometer.CreateReport(data)
+    return nekometer.CreateReport(data, self)
 end
 
 function meter:Reset()

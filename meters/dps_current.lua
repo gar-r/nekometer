@@ -54,7 +54,7 @@ function meter:Init(cfg)
 end
 
 function meter:Report()
-    return nekometer.CreateReport(self.dps)
+    return nekometer.CreateReport(self.dps, self)
 end
 
 function meter:Reset()

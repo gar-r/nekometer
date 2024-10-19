@@ -30,6 +30,7 @@ function config:Init()
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Bar Options"))
     self:CreateProxiedCheckBox("Display position", "Display a number for each bar, indicating the position", "barPositionDisplayEnabled")
+    self:CreateProxiedCheckBox("Display icons", "Display icons for class specializations, and abilities on each bar", "barIconsDisplayEnabled")
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Meters"))
     self:CreateProxiedCheckBox("Damage", "Shows total damage since last reset", "damageEnabled")
@@ -123,7 +124,8 @@ function config:updateReloadNeeded(changedVariable)
             return
         end
     end
-    if changedVariable == "barPositionDisplayEnabled" then
+    if changedVariable == "barPositionDisplayEnabled"
+    or changedVariable == "barIconsDisplayEnabled" then
         self.needsReload = true
     end
 end

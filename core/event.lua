@@ -89,18 +89,18 @@ function event:calcEffectiveAmount(totalIdx, overkillIdx)
     return total - overkill
 end
 
-function event:GetAbilityName()
+function event:GetAbility()
     local type = self:GetType()
     if type == swingDamage then
-        return "Melee"
+        return { id = 260421, name = "Melee" }
     elseif self:IsSpellReflect() then
-        return "Spell Reflect"
+        return { id = 69901, name = "Spell Reflect" }
     elseif self:IsAbsorb() then
         -- the absorb event arr has a variable size, but the spell name
         -- will always be at position len-3
-        return self[#self - 3]
+        return { id = self[#self - 4], name = self[#self - 3] }
     else
-        return self[13]
+        return { id = self[12], name = self[13] }
     end
 end
 
