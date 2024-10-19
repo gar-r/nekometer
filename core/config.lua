@@ -68,6 +68,7 @@ nekometer.defaults = {
         b = 0.85
     },
     barPositionDisplayEnabled = false,
+    barIconsDisplayEnabled = false,
 
     -- enabled meters
     damageEnabled = true,

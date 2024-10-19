@@ -3,6 +3,7 @@ local addonName, nekometer = ...
 local dispatcher = nekometer.dispatcher
 local autohide = nekometer.autohide
 local autoreset = nekometer.autoreset
+local specs = nekometer.specs
 
 ---@class Frame
 local frame = CreateFrame("Frame", "NekometerMain")
@@ -70,10 +71,15 @@ function frame:WALK_IN_DATA_UPDATE()
     autoreset:HandleDelveUpdate()
 end
 
+function frame:INSPECT_READY(_, inspectee)
+    specs:HandleInspectReady(inspectee)
+end
+
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:RegisterEvent("WALK_IN_DATA_UPDATE")
+frame:RegisterEvent("INSPECT_READY")
 frame:SetScript("OnEvent", frame.OnEvent)

@@ -1,60 +1,49 @@
 local _, nekometer = ...
 
-nekometer.classes = nekometer.cache:new(21600, function (key)
-    local success, class = pcall(function ()
-        local _, className = GetPlayerInfoByGUID(key)
-        return className
-    end)
-    if success then
-        return class
-    end
-end)
+nekometer.ReportTypes = {
+    PLAYERS = "players",
+    ABILITIES = "abilities",
+}
 
 --[[
-    Transforms the meter data into a report that the UI can
-    interpret and display as bars.
-    
-    The "meterData" argument is expected to be an associative table 
-    in the following format:
-    { 
-        key: {
+    Flattens the meter data into a single ordered (descending) table.
+    For example, for the following meter data:
+    {
+        "player-0123": {
             name": "foo",
             value: 12345,
-        }, 
+        },
     }
-
-    Elements in the resulting indexed table are sorted 
-    by value in descending order, and have the following schema:
+    The resulting table would be:
     {
-        name: "foo",
-        value: 12345,
-        class: "Shaman",
+        {
+            id: "player-0123",    
+            name: "foo",
+            value: 12345,
+        },
     }
-    Note: the "class" attribute is only populated when lookupClass is true
 ]]
-nekometer.CreateReport = function (meterData, lookupClass)
-    lookupClass = lookupClass or NekometerConfig.classColors
+nekometer.CreateReport = function(meterData, source)
     local sortedIds = {}
     for id in pairs(meterData) do
         table.insert(sortedIds, id)
     end
-    table.sort(sortedIds, function (a, b)
+    table.sort(sortedIds, function(a, b)
         return meterData[a].value > meterData[b].value
     end)
-    local sortedValues = {}
+    local report = {}
     for _, id in ipairs(sortedIds) do
         local data = meterData[id]
-        if lookupClass then
-            data.class = nekometer.classes:Lookup(id)
-        end
-        table.insert(sortedValues, data)
+        data.id = id
+        table.insert(report, data)
     end
-    return sortedValues
+    report.source = source
+    return report
 end
 
 -- Outputs the report to the console.
 -- Mostly used for debugging.
-nekometer.PrintReport = function (report)
+nekometer.PrintReport = function(report)
     for i, data in ipairs(report) do
         if data.name and data.value then
             print(string.format("%2d: %s (%s)", i, data.name, data.value))
