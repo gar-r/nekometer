@@ -49,7 +49,9 @@ function container:UpdateData()
         local item = self.report[i + self.scrollOffset]
         if item and item.value and item.value < math.huge then
             item.maxValue = maxValue
-            self[i]:SetData(item)
+            if self[i] then
+                self[i]:SetData(item)
+            end
         end
     end
 end
