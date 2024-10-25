@@ -24,12 +24,12 @@ function container:Display(report)
 end
 
 function container:Redraw()
-    self:UpdateData()
-    self:UpdateVisibility()
+    local numVisible = self:getVisibleBarCount()
+    self:UpdateData(numVisible)
+    self:UpdateVisibility(numVisible)
 end
 
-function container:UpdateVisibility()
-    local numVisible = self:getVisibleBarCount()
+function container:UpdateVisibility(numVisible)
     local numReport = #self.report
     if numVisible > numReport then
         numVisible = numReport
@@ -43,15 +43,15 @@ function container:UpdateVisibility()
     end
 end
 
-function container:UpdateData()
+function container:UpdateData(numVisible)
     local maxValue = self:getMaxValue()
-    for i in ipairs(self.report) do
+    for i=1, numVisible do
         local item = self.report[i + self.scrollOffset]
+        local bar = self[i]
         if item and item.value and item.value < math.huge then
             item.maxValue = maxValue
-            if self[i] then
-                self[i]:SetData(item)
-            end
+            item.position = i + self.scrollOffset
+            bar:SetData(item)
         end
     end
 end
