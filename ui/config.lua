@@ -13,6 +13,7 @@ function config:Init()
     self.category.ID = addonName
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Global Options"))
+    self:CreateProxiedCheckBox("Lock window", "Prevent the window from being moved or resized", "windowLocked")
     self:CreateProxiedCheckBox("Merge pets with their owners", "Enable to combine pet data with their owner", "mergePets")
     self:CreateProxiedCheckBox("Use class colors for bars", "Enable to color bars with respective class colors", "classColors")
 

@@ -36,6 +36,7 @@ nekometer.defaults = {
 
     -- window
     windowShown = true,
+    windowLocked = false,
     windowMinWidth = 235,
     windowMinHeight = 80,
     windowColor = {
