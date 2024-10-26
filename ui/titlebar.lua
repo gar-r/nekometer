@@ -23,7 +23,10 @@ function frame:Init()
 end
 
 frame:SetScript("OnMouseDown", function(_, button)
-    if button == "LeftButton" and mainFrame:IsMovable() then
+    if not NekometerConfig.windowLocked
+        and button == "LeftButton"
+        and mainFrame:IsMovable()
+    then
         mainFrame:StartMoving()
     end
 end)

@@ -12,7 +12,7 @@ function resizer:Init()
     self:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
     self:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
     self:SetScript("OnMouseDown", function(_, button)
-        if button == "LeftButton" then
+        if not NekometerConfig.windowLocked and button == "LeftButton" then
             mainFrame:StartSizing("BOTTOMRIGHT")
         end
     end)
