@@ -5,6 +5,7 @@ local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemp
 
 function frame:Init()
     self:SetPoint("CENTER")
+    self:SetClampedToScreen(true)
     self:SetWidth(NekometerConfig.windowMinWidth)
     self:SetHeight(NekometerConfig.windowMinHeight)
     self:SetBackdrop({
