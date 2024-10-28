@@ -56,3 +56,5 @@ function pets:matchTooltipText(s)
         index = index + 1
     until g == nil
 end
+
+nekometer.pets_obj = pets

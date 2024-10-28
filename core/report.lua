@@ -9,7 +9,7 @@ nekometer.ReportTypes = {
     Flattens the meter data into a single ordered (descending) table.
     For example, for the following meter data:
     {
-        "player-0123": {
+        "key-0123": {
             name": "foo",
             value: 12345,
         },
@@ -17,7 +17,7 @@ nekometer.ReportTypes = {
     The resulting table would be:
     {
         {
-            id: "player-0123",    
+            id: "key-0123",    
             name: "foo",
             value: 12345,
         },
@@ -35,6 +35,7 @@ nekometer.CreateReport = function(meterData, source)
     for _, id in ipairs(sortedIds) do
         local data = meterData[id]
         data.id = id
+        data.key = nil
         table.insert(report, data)
     end
     report.source = source

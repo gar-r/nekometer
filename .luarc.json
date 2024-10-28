@@ -29,6 +29,8 @@
         "C_TooltipInfo",
         "TooltipUtil",
         "format",
-        "GetPlayerInfoByGUID"
+        "GetPlayerInfoByGUID",
+        "require",
+        "loadfile"
     ]
 }

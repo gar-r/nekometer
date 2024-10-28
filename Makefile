@@ -11,7 +11,12 @@ uninstall:
 
 release: clean
 	mkdir -p dist/$(ADDON_NAME)
-	rsync -av --exclude=".*" --exclude="assets/" --exclude="dist" . dist/$(ADDON_NAME)
+	rsync -av \
+		--exclude=".*" \
+		--exclude="*_test.lua" \
+		--exclude="assets/" \
+		--exclude="dist" \
+		. dist/$(ADDON_NAME)
 	cd dist && zip -r $(ADDON_NAME)_v$(ADDON_VERSION).zip $(ADDON_NAME)/*
 	
 clean:

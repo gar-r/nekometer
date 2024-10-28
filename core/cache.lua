@@ -45,6 +45,9 @@ function cache:Lookup(key)
 end
 
 function cache:Set(key, value)
+    if value == nil then
+        value = NIL_VALUE
+    end
     self.items[key] = {
         value = value,
         ts = GetTime(),
@@ -55,7 +58,7 @@ function cache:evict()
     local now = GetTime()
     for key, item in pairs(self.items) do
         if now - item.ts >= self.ttl then
-            table[key] = nil
+            self.items[key] = nil
         end
     end
 end

@@ -6,12 +6,14 @@ local specs = {
 
 function specs:HandleInspectReady(id)
     local unit = self.inProgress[id]
+    self.inProgress[id] = nil
     if not unit then
         return
     end
     local icon = self:getSpecIcon(unit)
-    nekometer.classIcons:Set(id, icon)
-    self.inProgress[id] = nil
+    if icon then
+        nekometer.classIcons:Set(id, icon)
+    end
 end
 
 function specs:GetSpecializationByID(id)
