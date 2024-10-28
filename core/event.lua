@@ -86,6 +86,9 @@ end
 function event:calcEffectiveAmount(totalIdx, overkillIdx)
     local total = self[totalIdx] or 0
     local overkill = self[overkillIdx] or 0
+    if overkill < 0 then
+        overkill = 0
+    end
     return total - overkill
 end
 
@@ -109,15 +112,15 @@ function event:IsSourceFriendly()
 end
 
 function event:IsDamage()
-    return string.match(self:GetType(), "_DAMAGE$")
+    return string.match(self:GetType(), "_DAMAGE$") ~= nil
 end
 
 function event:IsHeal()
-    return string.match(self:GetType(), "_HEAL$")
+    return string.match(self:GetType(), "_HEAL$") ~= nil
 end
 
 function event:IsSummon()
-    return string.match(self:GetType(), "_SUMMON$")
+    return string.match(self:GetType(), "_SUMMON$") ~= nil
 end
 
 -- a special spell effect that damages oneself
@@ -145,12 +148,12 @@ function event:IsFriendlyDeath()
 end
 
 function event:IsInterrupt()
-    return string.match(self:GetType(), "_INTERRUPT$")
+    return string.match(self:GetType(), "_INTERRUPT$") ~= nil
 end
 
 function event:IsDispel()
-    return string.match(self:GetType(), "_DISPEL$")
-        or string.match(self:GetType(), "_STOLEN$")
+    return string.match(self:GetType(), "_DISPEL$") ~= nil
+        or string.match(self:GetType(), "_STOLEN$") ~= nil
 end
 
 function event:IsDoneByPlayer()
