@@ -1,6 +1,7 @@
 local _, nekometer = ...
 
 local main = nekometer.frames.main
+local util = nekometer.util
 
 local template = {
     LEFT = {
@@ -11,7 +12,15 @@ local template = {
                 if meter.reportsAbilities then
                     return nekometer.abilityIcons:Lookup(data.id)
                 else
-                    return nekometer.classIcons:Lookup(data.id)
+                    local icon = nekometer.classIcons:Lookup(data.id)
+                    if icon ~= nil then
+                        return icon
+                    end
+                    -- spec icon not loaded yet, fallback to the base icon
+                    local class = nekometer.classes:Lookup(data.id)
+                    if class then
+                        return util:GetClassTexture(class)
+                    end
                 end
             end,
             offset = 0,

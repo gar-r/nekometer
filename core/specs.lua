@@ -1,31 +1,52 @@
 local _, nekometer = ...
 
 local specs = {
-    inProgress = {},
+    pendingInspect = {},
+    inProgress = nil,
 }
 
-function specs:HandleInspectReady(id)
-    local unit = self.inProgress[id]
-    self.inProgress[id] = nil
+function specs:GetSpecializationByID(id)
+    if self.pendingInspect[id] then
+        return
+    end
+    local unit = self:getUnit(id)
     if not unit then
         return
     end
-    local icon = self:getSpecIcon(unit)
-    if icon then
-        nekometer.classIcons:Set(id, icon)
+    self:pushPending(id, unit)
+    if not self.inProgress then
+        self:InspectNext()
     end
 end
 
-function specs:GetSpecializationByID(id)
-    local unit = specs:getUnit(id)
-    if not unit
-        or not CanInspect(unit)
-        or self.inProgress[id]
-    then
-        return
+function specs:InspectNext()
+    local item = self:popPending()
+    if item then
+        self.inProgress = item
+        NotifyInspect(item.unit)
+        C_Timer.After(3, function()
+            -- if the inspect hasn't completed in 3 seconds, we'll just move on;
+            -- this can happen if the api is rate limited
+            if self.inProgress == item then
+                self.inProgress = nil
+                self:InspectNext()
+            end
+        end)
     end
-    NotifyInspect(unit)
-    self.inProgress[id] = unit
+end
+
+function specs:HandleInspectReady(id)
+    local item = self.inProgress
+    if item == nil or id ~= item.id then
+        return -- different unit, ignore
+    end
+    local icon = self:getSpecIcon(item.unit)
+    if icon then
+        nekometer.classIcons:Set(item.id, icon)
+    end
+    self.inProgress = nil
+    ClearInspectPlayer()
+    self:InspectNext()
 end
 
 function specs:getSpecIcon(unit)
@@ -48,6 +69,22 @@ function specs:getUnit(id)
             return unit
         end
     end
+end
+
+function specs:pushPending(id, unit)
+    self.pendingInspect[id] = unit
+    table.insert(self.pendingInspect, {
+        id = id,
+        unit = unit
+    })
+end
+
+function specs:popPending()
+    local item = table.remove(self.pendingInspect)
+    if item then
+        self.pendingInspect[item.id] = nil
+    end
+    return item
 end
 
 nekometer.specs = specs

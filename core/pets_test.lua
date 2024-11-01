@@ -6,22 +6,6 @@ local nekometer = {
     }
 }
 
-UnitGUID = function(unit)
-    if unit == "pet" then
-        return "petId"
-    elseif unit == "player" then
-        return "playerId"
-    elseif unit == "FooBar" then
-        return "foobarId"
-    end
-end
-
-UnitName = function(unit)
-    if unit == "player" then
-        return "playerName"
-    end
-end
-
 _G["UNITNAME_SUMMON_TITLE1"] = "%s's Totem"
 _G["UNITNAME_SUMMON_TITLE2"] = "%s's Guardian"
 
@@ -43,6 +27,23 @@ format = string.format
 loadfile("core/pets.lua")("test", nekometer)
 
 TestPets = {}
+
+function TestPets:setUp()
+    UnitGUID = function(unit)
+        if unit == "pet" then
+            return "petId"
+        elseif unit == "player" then
+            return "playerId"
+        elseif unit == "FooBar" then
+            return "foobarId"
+        end
+    end
+    UnitName = function(unit)
+        if unit == "player" then
+            return "playerName"
+        end
+    end
+end
 
 function TestPets:test_query_player_pet()
     local expected = { id = "playerId", name = "playerName" }
