@@ -55,16 +55,20 @@ Currently the following meters can be enabled/disabled:
    * deaths
    * interrupts
    * dispels
+   * overhealing
 
 ### Settings
 
-Here are some of the most important features that you can toggle in the addon's settings:
+Here are some of the most useful features that you can tweak in the addon's settings:
 
-   * Enable disable individual meters (disabled meters don't consume any resources)
-   * Number of bars displayed: this essentially controls how tall the main window is. You can still scroll through the bars that don't fit in the window using the mouse wheel.
-   * Merge pets with their owners
+   * Enable/disable individual meters (disabled meters don't consume any resources)
+   * Lock window (prevents move & resize)
    * Use class colors for bars
-   * Auto hide settings
+   * Merge pets with their owners
+   * Auto hide
+   * Auto reset
+   * Show/hide position
+   * Show/hide class and ability icons
    
 
 # Feedback
