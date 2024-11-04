@@ -37,8 +37,10 @@ function dispatcher:HandleCombatEvent()
 end
 
 function dispatcher:shouldDispatch(e)
+	if e:IsSourceMissing() then
+		return false
+	end
 	return e:IsSourceFriendly()
-		-- special cases, for which we cannot use the typical source flags (e[6])
 		or e:IsAbsorb()
 		or e:IsSpellReflect()
 		or e:IsFriendlyDeath()

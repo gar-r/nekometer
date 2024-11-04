@@ -76,6 +76,13 @@ function TestDispatcher:test_dispatch_combat_event_friendly_death()
     end)
 end
 
+function TestDispatcher:test_dispatch_skipped_if_source_missing()
+    mockEvent.isSourceMissing = true
+    self:verifyEventDispatched("CombatEvent", function()
+        nekometer.dispatcher:HandleCombatEvent()
+    end, false)
+end
+
 function TestDispatcher:test_register_self_harm_event()
     mockEvent.isSelfHarm = true
     mockEvent[15] = 100
@@ -96,7 +103,7 @@ function TestDispatcher:test_register_summon_event()
     lu.assertEquals(mockPets["pet"], "owner")
 end
 
-function TestDispatcher:verifyEventDispatched(event, action)
+function TestDispatcher:verifyEventDispatched(event, action, expected)
     local dispatched = false
     local meter = {
         [event] = function()
@@ -105,7 +112,10 @@ function TestDispatcher:verifyEventDispatched(event, action)
     }
     nekometer.dispatcher:AddMeter(meter)
     action()
-    lu.assertTrue(dispatched)
+    if expected == nil then
+        expected = true
+    end
+    lu.assertEquals(dispatched, expected)
 end
 
 function mockEvent:new()
@@ -136,6 +146,10 @@ function mockEvent:IsFriendlyDeath()
     return self.isFriendlyDeath
 end
 
+function mockEvent:IsSourceMissing()
+    return self.isSourceMissing
+end
+
 function mockEvent:resetMock()
     self.isSelfHarm = false
     self.isSummon = false
@@ -143,4 +157,5 @@ function mockEvent:resetMock()
     self.isAbsorb = false
     self.isSpellReflect = false
     self.isFriendlyDeath = false
+    self.isSourceMissing = false
 end
