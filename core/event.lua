@@ -170,4 +170,12 @@ function event:IsDoneByPlayer()
     return false
 end
 
+function event:IsSourceMissing()
+    local source = self:GetSource()
+    return not source.id
+        or source.id == ""
+        or not source.name
+        or source.name == ""
+end
+
 nekometer.event = event
