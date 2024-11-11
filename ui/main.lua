@@ -55,6 +55,19 @@ function frame:PrevMeter()
     self:UpdateBars()
 end
 
+function frame:ToggleMode()
+    local meter = self:GetCurrentMeter()
+    local currentMode = nekometer.getMode(meter.key)
+    local newMode
+    if currentMode == "total" then
+        newMode = "combat"
+    else
+        newMode = "total"
+    end
+    nekometer.setMode(meter.key, newMode)
+    self:UpdateBars()
+end
+
 function frame:UpdateBars()
     if nekometer.enabledMeters then
         local barContainer = nekometer.frames.barContainer

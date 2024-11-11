@@ -2,8 +2,7 @@ local _, nekometer = ...
 
 nekometer.meters = {
     "damage",
-    "dpsCombat",
-    "dpsCurrent",
+    "dps",
     "healing",
     "damageBreakdown",
     "healingBreakdown",
@@ -15,7 +14,7 @@ nekometer.meters = {
 
 nekometer.defaults = {
     -- version (increment to force wipe on init)
-    configVersion = 11,
+    configVersion = 12,
 
     -- general
     updateRate = 0.5,
@@ -71,21 +70,25 @@ nekometer.defaults = {
     barPositionDisplayEnabled = false,
     barIconsDisplayEnabled = false,
 
-    -- enabled meters
+    -- meters
     damageEnabled = true,
-    dpsCombatEnabled = true,
-    dpsCurrentEnabled = true,
+    damageMode = "total",
+    dpsEnabled = true,
+    dpsMode = "combat",
     healingEnabled = true,
+    healingMode = "total",
     damageBreakdownEnabled = true,
+    damageBreakdownMode = "combat",
     healingBreakdownEnabled = true,
+    healingBreakdownMode = "combat",
     deathsEnabled = false,
+    deathsMode = "total",
     interruptsEnabled = false,
+    interruptsMode = "total",
     dispelsEnabled = false,
+    dispelsMode = "total",
     overhealEnabled = false,
-
-    -- meter specific
-    dpsCurrentWindowSize = 3,
-    dpsCurrentSmoothing = 0.7,
+    overhealMode = "total",
 }
 
 local function needsWipe()
@@ -106,4 +109,12 @@ end
 
 nekometer.isMeterEnabled = function(key)
     return NekometerConfig[key .. "Enabled"]
+end
+
+nekometer.getMode = function (key)
+    return NekometerConfig[key .. "Mode"] or "total"
+end
+
+nekometer.setMode = function (key, mode)
+    NekometerConfig[key .. "Mode"] = mode
 end

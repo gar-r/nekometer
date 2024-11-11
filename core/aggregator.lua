@@ -16,15 +16,16 @@ function aggregator:new()
 end
 
 function aggregator:Add(item)
-    local key = item.key
-    if key then
-        local value = item.value or 0
-        local data = self.data
-        if data[key] then
-            data[key].value = data[key].value + value
-        else
-            data[key] = item
-        end
+    if not item.key then
+        return
+    end
+    local i = self:copy(item)
+    i.value = i.value or 0
+    local d = self.data[i.key]
+    if not d then
+        self.data[i.key] = i
+    else
+        d.value = d.value + i.value
     end
 end
 
@@ -34,6 +35,15 @@ end
 
 function aggregator:Clear()
     self.data = {}
+end
+
+-- create a shallow copy of the item
+function aggregator:copy(item)
+    local res = {}
+    for k, v in pairs(item) do
+        res[k] = v
+    end
+    return res
 end
 
 nekometer.aggregator = aggregator
