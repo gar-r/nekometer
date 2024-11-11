@@ -47,8 +47,7 @@ You can use the following commands from the chat window:
 Currently the following meters can be enabled/disabled:
 
    * damage
-   * dps (combat)
-   * dps (current)
+   * dps
    * healing
    * damage breakdown
    * healing breakdown

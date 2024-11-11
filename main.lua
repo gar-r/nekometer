@@ -18,6 +18,7 @@ function frame:initMeters()
         if nekometer.isMeterEnabled(key) then
             local meter = nekometer.meters[key]
             if meter then
+                meter.key = key
                 dispatcher:AddMeter(meter, NekometerConfig)
                 table.insert(nekometer.enabledMeters, meter)
             end

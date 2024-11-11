@@ -21,8 +21,8 @@ core/event.lua
 core/dispatcher.lua
 core/report.lua
 
-meters/dps_current.lua
-meters/dps_combat.lua
+meters/base_meter.lua
+meters/dps.lua
 meters/damage.lua
 meters/damage_breakdown.lua
 meters/healing.lua

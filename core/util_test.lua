@@ -1,8 +1,8 @@
-local lu = require('luaunit')
+local lu = require("luaunit")
 
 local nekometer = {}
 
-loadfile('core/util.lua')("test", nekometer)
+loadfile("core/util.lua")("test", nekometer)
 
 TestUtil = {}
 
