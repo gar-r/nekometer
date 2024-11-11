@@ -6,41 +6,6 @@ local commands = nekometer.commands
 ---@class BackdropTemplate:Frame
 local frame = CreateFrame("Frame", nil, mainFrame, "BackdropTemplate")
 
-local titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-
-function frame:Init()
-    self:SetHeight(NekometerConfig.titleBarHeight)
-    self:SetPoint("TOPLEFT", mainFrame, "TOPLEFT", 0, 0)
-    self:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", 0, 0)
-    frame:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        tile = true,
-        tileSize = 16,
-    })
-    local c = NekometerConfig.titleBarColor
-    frame:SetBackdropColor(c.r, c.g, c.b, c.a)
-    titleText:SetText(mainFrame:GetCurrentMeter().title)
-end
-
-frame:SetScript("OnMouseDown", function(_, button)
-    if not NekometerConfig.windowLocked
-        and button == "LeftButton"
-        and mainFrame:IsMovable()
-    then
-        mainFrame:StartMoving()
-    end
-end)
-
-frame:SetScript("OnMouseUp", function(_, button)
-    if button == "LeftButton" then
-        mainFrame:StopMovingOrSizing()
-    end
-end)
-
-function frame:RefreshTitle()
-    titleText:SetText(mainFrame:GetCurrentMeter().title)
-end
-
 local function CreateTitleButtonTexture(button, path, drawLayer, coord)
     local texture = button:CreateTexture(nil, drawLayer)
     texture:SetTexture(path)
@@ -59,40 +24,99 @@ local function CreateTitleBarButton(texturePath, onClick, texCoord)
     return button
 end
 
-local prevButton = CreateTitleBarButton("Interface\\CHATFRAME\\ChatFrameExpandArrow",
+function frame:Init()
+    self:SetHeight(NekometerConfig.titleBarHeight)
+    self:SetPoint("TOPLEFT", mainFrame, "TOPLEFT", 0, 0)
+    self:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", 0, 0)
+    frame:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        tile = true,
+        tileSize = 16,
+    })
+    local c = NekometerConfig.titleBarColor
+    frame:SetBackdropColor(c.r, c.g, c.b, c.a)
+    frame:Update()
+end
+
+frame:SetScript("OnMouseDown", function(_, button)
+    if not NekometerConfig.windowLocked
+        and button == "LeftButton"
+        and mainFrame:IsMovable()
+    then
+        mainFrame:StartMoving()
+    end
+end)
+
+frame:SetScript("OnMouseUp", function(_, button)
+    if button == "LeftButton" then
+        mainFrame:StopMovingOrSizing()
+    end
+end)
+
+function frame:Update()
+    local meter = mainFrame:GetCurrentMeter()
+    frame.titleText:SetText(meter.title)
+    local mode = nekometer.getMode(meter.key)
+    frame:UpdateModeButton(mode)
+end
+
+
+-- icon texture will be set dynamically for this button
+frame.modeButton = CreateTitleBarButton(nil, function()
+    mainFrame:ToggleMode()
+    frame:Update()
+end)
+frame.modeButton:SetPoint("LEFT", frame, "LEFT", 5, 0)
+
+local modeTotalIcon = "Interface/GROUPFRAME/UI-GROUP-MAINTANKICON"
+local modeCombatIcon = "Interface/GROUPFRAME/UI-GROUP-MAINASSISTICON"
+function frame:UpdateModeButton(mode)
+    local icon
+    if mode == "total" then
+        icon = modeTotalIcon
+    else
+        icon = modeCombatIcon
+    end
+    local modeButton = self.modeButton
+    modeButton:SetNormalTexture(CreateTitleButtonTexture(modeButton, icon, "BACKGROUND"))
+    modeButton:SetHighlightTexture(CreateTitleButtonTexture(modeButton, icon, "HIGHLIGHT"))
+end
+
+frame.prevButton = CreateTitleBarButton("Interface/CHATFRAME/ChatFrameExpandArrow",
     function()
         mainFrame:PrevMeter()
-        frame:RefreshTitle()
+        frame:Update()
     end,
     { left = 1, right = 0, up = 0, down = 1 })
-prevButton:SetPoint("LEFT", frame, "LEFT", 5, 0)
+frame.prevButton:SetPoint("LEFT", frame.modeButton, "RIGHT", 5, 0)
 
-local nextButton = CreateTitleBarButton("Interface\\CHATFRAME\\ChatFrameExpandArrow",
+frame.nextButton = CreateTitleBarButton("Interface/CHATFRAME/ChatFrameExpandArrow",
     function()
         mainFrame:NextMeter()
-        frame:RefreshTitle()
+        frame:Update()
     end)
-nextButton:SetPoint("LEFT", prevButton, "RIGHT", -3, 0)
+frame.nextButton:SetPoint("LEFT", frame.prevButton, "RIGHT", -3, 0)
 
-titleText:SetPoint("LEFT", nextButton, "RIGHT", 5, 0)
-titleText:SetText("Damage")
+frame.titleText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+frame.titleText:SetPoint("LEFT", frame.nextButton, "RIGHT", 5, 0)
+frame.titleText:SetText("Damage")
 
-local closeButton = CreateTitleBarButton("Interface\\Buttons\\UI-StopButton",
+frame.closeButton = CreateTitleBarButton("Interface/Buttons/UI-StopButton",
     function()
         commands:toggle()
     end)
-closeButton:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
+    frame.closeButton:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
 
-local settingsButton = CreateTitleBarButton("Interface\\Buttons\\UI-OptionsButton",
+frame.settingsButton = CreateTitleBarButton("Interface/Buttons/UI-OptionsButton",
     function()
         commands:config()
     end)
-settingsButton:SetPoint("RIGHT", closeButton, "LEFT", -3, 0)
+    frame.settingsButton:SetPoint("RIGHT", frame.closeButton, "LEFT", -3, 0)
 
-local resetButton = CreateTitleBarButton("Interface\\Buttons\\UI-RefreshButton",
+frame.resetButton = CreateTitleBarButton("Interface/Buttons/UI-RefreshButton",
     function()
         commands:resetWithConfirmation()
     end)
-resetButton:SetPoint("RIGHT", settingsButton, "LEFT", -3, 0)
+frame.resetButton:SetPoint("RIGHT", frame.settingsButton, "LEFT", -3, 0)
 
 nekometer.frames.titleBar = frame
