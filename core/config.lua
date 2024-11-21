@@ -14,7 +14,7 @@ nekometer.meters = {
 
 nekometer.defaults = {
     -- version (increment to force wipe on init)
-    configVersion = 12,
+    configVersion = 13,
 
     -- general
     updateRate = 0.5,
@@ -38,6 +38,14 @@ nekometer.defaults = {
     windowLocked = false,
     windowMinWidth = 235,
     windowMinHeight = 80,
+    windowLayout = {
+        point = "CENTER",
+        relativePoint = "CENTER",
+        x = 0,
+        y = 0,
+        w = 260,
+        h = 80,
+    },
     windowColor = {
         r = 0,
         g = 0,

@@ -50,14 +50,15 @@ end)
 frame:SetScript("OnMouseUp", function(_, button)
     if button == "LeftButton" then
         mainFrame:StopMovingOrSizing()
+        mainFrame:SaveLayout()
     end
 end)
 
 function frame:Update()
     local meter = mainFrame:GetCurrentMeter()
-    frame.titleText:SetText(meter.title)
     local mode = nekometer.getMode(meter.key)
-    frame:UpdateModeButton(mode)
+    self.titleText:SetText(meter.title)
+    self:UpdateModeButton(mode)
 end
 
 
