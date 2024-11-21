@@ -4,23 +4,9 @@ local _, nekometer = ...
 local frame = CreateFrame("Frame", "NekometerMainFrame", UIParent, "BackdropTemplate")
 
 function frame:Init()
-    self:SetPoint("CENTER")
-    self:SetClampedToScreen(true)
-    self:SetWidth(NekometerConfig.windowMinWidth)
-    self:SetHeight(NekometerConfig.windowMinHeight)
-    self:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        tile = true,
-        tileSize = 16,
-    })
-    local c = NekometerConfig.windowColor
-    self:SetBackdropColor(c.r, c.g, c.b, c.a)
-    self:EnableMouse(true)
-    self:SetMovable(true)
-    self:SetResizable(true)
-    self:SetResizeBounds(NekometerConfig.windowMinWidth, NekometerConfig.windowMinHeight)
-    self:SetScript("OnUpdate", self.OnUpdate)
-    self:SetScript("OnMouseWheel", self.OnMouseWheel)
+    self:RestoreLayout()
+    self:EnableMoveAndResize()
+    self:SetBackground()
     self:SetShown(NekometerConfig.windowShown and not NekometerConfig.autoHide)
 end
 
@@ -91,6 +77,47 @@ function frame:OnMouseWheel(delta)
     else
         barContainer:ScrollDown()
     end
+end
+
+function frame:SaveLayout()
+    local point, _, relativePoint, x, y = frame:GetPoint()
+    local w = frame:GetWidth()
+    local h = frame:GetHeight()
+    NekometerConfig.windowLayout = {
+        point = point,
+        relativePoint = relativePoint,
+        x = x,
+        y = y,
+        w = w,
+        h = h,
+    }
+end
+
+function frame:RestoreLayout()
+    local layout = NekometerConfig.windowLayout
+    self:SetPoint(layout.point, nil, layout.relativePoint, layout.x, layout.y)
+    self:SetSize(layout.w, layout.h)
+end
+
+function frame:EnableMoveAndResize()
+    self:SetClampedToScreen(true)
+    self:RegisterForDrag("LeftButton")
+    self:SetMovable(true)
+    self:EnableMouse(true)
+    self:SetResizable(true)
+    self:SetResizeBounds(NekometerConfig.windowMinWidth, NekometerConfig.windowMinHeight)
+    self:SetScript("OnUpdate", self.OnUpdate)
+    self:SetScript("OnMouseWheel", self.OnMouseWheel)
+end
+
+function frame:SetBackground()
+    local c = NekometerConfig.windowColor
+    frame:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        tile = true,
+        tileSize = 16,
+    })
+    frame:SetBackdropColor(c.r, c.g, c.b, c.a)
 end
 
 nekometer.frames = nekometer.frames or {}
