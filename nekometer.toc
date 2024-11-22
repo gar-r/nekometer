@@ -43,5 +43,6 @@ ui/titlebar.lua
 ui/resize.lua
 ui/config.lua
 ui/dialogs.lua
+ui/tutorial.lua
 
 main.lua

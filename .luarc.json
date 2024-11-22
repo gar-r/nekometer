@@ -31,6 +31,8 @@
         "format",
         "GetPlayerInfoByGUID",
         "require",
-        "loadfile"
+        "loadfile",
+        "ActionButton_ShowOverlayGlow",
+        "ActionButton_HideOverlayGlow"
     ]
 }

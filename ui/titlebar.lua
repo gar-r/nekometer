@@ -61,7 +61,6 @@ function frame:Update()
     self:UpdateModeButton(mode)
 end
 
-
 -- icon texture will be set dynamically for this button
 frame.modeButton = CreateTitleBarButton(nil, function()
     mainFrame:ToggleMode()
@@ -69,23 +68,38 @@ frame.modeButton = CreateTitleBarButton(nil, function()
 end)
 frame.modeButton:SetPoint("LEFT", frame, "LEFT", 5, 0)
 
-local modeTotalIcon = "Interface/GROUPFRAME/UI-GROUP-MAINTANKICON"
-local modeCombatIcon = "Interface/GROUPFRAME/UI-GROUP-MAINASSISTICON"
+local modeButtonAssets = {
+    ["total"] = {
+        icon = "Interface/MINIMAP/TRACKING/WildBattlePet",
+        texCoord = { left = 0, right = 0.65, up = 0, down = 0.65, },
+    },
+    ["combat"] = {
+        icon = "Interface/GROUPFRAME/UI-GROUP-MAINASSISTICON",
+        texCoord = nil,
+    }
+}
 function frame:UpdateModeButton(mode)
-    local icon
-    if mode == "total" then
-        icon = modeTotalIcon
-    else
-        icon = modeCombatIcon
-    end
     local modeButton = self.modeButton
-    modeButton:SetNormalTexture(CreateTitleButtonTexture(modeButton, icon, "BACKGROUND"))
-    modeButton:SetHighlightTexture(CreateTitleButtonTexture(modeButton, icon, "HIGHLIGHT"))
+    local icon = modeButtonAssets[mode].icon
+    local texCoord = modeButtonAssets[mode].texCoord
+    modeButton:SetNormalTexture(
+        CreateTitleButtonTexture(modeButton, icon, "BACKGROUND", texCoord))
+    modeButton:SetHighlightTexture(
+        CreateTitleButtonTexture(modeButton, icon, "HIGHLIGHT", texCoord))
+end
+
+local function showToggleModeTutorial()
+    if not NekometerConfig.toggleModeTutorialDisplayed then
+        NekometerConfig.toggleModeTutorialDisplayed = true
+        nekometer.frames.tutorial:Show(frame.modeButton,
+            "Toggle between total and combat mode by clicking this button.")
+    end
 end
 
 frame.prevButton = CreateTitleBarButton("Interface/CHATFRAME/ChatFrameExpandArrow",
     function()
         mainFrame:PrevMeter()
+        showToggleModeTutorial()
         frame:Update()
     end,
     { left = 1, right = 0, up = 0, down = 1 })
@@ -94,6 +108,7 @@ frame.prevButton:SetPoint("LEFT", frame.modeButton, "RIGHT", 5, 0)
 frame.nextButton = CreateTitleBarButton("Interface/CHATFRAME/ChatFrameExpandArrow",
     function()
         mainFrame:NextMeter()
+        showToggleModeTutorial()
         frame:Update()
     end)
 frame.nextButton:SetPoint("LEFT", frame.prevButton, "RIGHT", -3, 0)
@@ -106,13 +121,13 @@ frame.closeButton = CreateTitleBarButton("Interface/Buttons/UI-StopButton",
     function()
         commands:toggle()
     end)
-    frame.closeButton:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
+frame.closeButton:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
 
 frame.settingsButton = CreateTitleBarButton("Interface/Buttons/UI-OptionsButton",
     function()
         commands:config()
     end)
-    frame.settingsButton:SetPoint("RIGHT", frame.closeButton, "LEFT", -3, 0)
+frame.settingsButton:SetPoint("RIGHT", frame.closeButton, "LEFT", -3, 0)
 
 frame.resetButton = CreateTitleBarButton("Interface/Buttons/UI-RefreshButton",
     function()
