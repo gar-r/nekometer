@@ -97,6 +97,9 @@ nekometer.defaults = {
     dispelsMode = "total",
     overhealEnabled = false,
     overhealMode = "total",
+
+    -- tutorials
+    toggleModeTutorialDisplayed = false,
 }
 
 local function needsWipe()
