@@ -92,6 +92,10 @@ function config:OnSettingsClosed()
     -- display main window based on auto hide setting and user state
     commands:show(NekometerConfig.windowShown and not NekometerConfig.autoHide)
 
+    -- display the resizer based on the windowLocked setting
+    local resizer = nekometer.frames.resizer
+    resizer:SetShown(not NekometerConfig.windowLocked)
+
     -- add a small delay to avoid our static popups to draw over game frames
     C_Timer.After(1, function()
         if self.needsReload then
