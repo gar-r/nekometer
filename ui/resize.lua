@@ -19,6 +19,7 @@ function resizer:Init()
     self:SetScript("OnMouseUp", function(_, button)
         if button == "LeftButton" then
             mainFrame:StopMovingOrSizing()
+            mainFrame:SaveLayout()
             barContainer:ScrollToTop()
         end
     end)
