@@ -22,7 +22,7 @@ function TestHealingBreakdown:test_combat_event()
         {
             IsDoneByPlayer = function() return true end,
             IsHeal = function() return false end,
-            IsAbsorb = function() return true end,
+            IsFriendlyAbsorb = function() return true end,
             GetAbility = function() return { id = 2, name = "ability2" } end,
             GetAmount = function() return 500 end,
         },

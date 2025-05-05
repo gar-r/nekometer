@@ -6,61 +6,61 @@ local _, nekometer = ...
     are forwarded to the meters.
 ]]
 local dispatcher = {
-	meters = {},
-	prevSelfHarm = 0,
+    meters = {},
+    prevSelfHarm = 0,
 }
 
 local event = nekometer.event
 local pets = nekometer.pets
 
 function dispatcher:AddMeter(meter, cfg)
-	if meter.Init then
-		meter:Init(cfg)
-	end
-	table.insert(self.meters, meter)
+    if meter.Init then
+        meter:Init(cfg)
+    end
+    table.insert(self.meters, meter)
 end
 
 function dispatcher:HandleCombatEvent()
-	local raw = { CombatLogGetCurrentEventInfo() }
-	local e = event:new(raw, self.prevSelfHarm)
-	if e:IsSelfHarm() then
-		-- self harm events are not dispatched, but we store the damage
-		-- in order to be able to track special effects, like spell reflect
-		self.prevSelfHarm = e[15]
-	elseif e:IsSummon() then
-		-- summon events are not dispatched, but we cache the owner details
-		pets:Set(e[8], e:GetSource())
-	elseif self:shouldDispatch(e) then
-		self:notifyMeters("CombatEvent", e)
-		self.prevSelfHarm = 0
-	end
+    local raw = { CombatLogGetCurrentEventInfo() }
+    local e = event:new(raw, self.prevSelfHarm)
+    if e:IsSelfHarm() then
+        -- self harm events are not dispatched, but we store the damage
+        -- in order to be able to track special effects, like spell reflect
+        self.prevSelfHarm = e[15]
+    elseif e:IsSummon() then
+        -- summon events are not dispatched, but we cache the owner details
+        pets:Set(e[8], e:GetSource())
+    elseif self:shouldDispatch(e) then
+        self:notifyMeters("CombatEvent", e)
+        self.prevSelfHarm = 0
+    end
 end
 
 function dispatcher:shouldDispatch(e)
-	if e:IsSourceMissing() then
-		return false
-	end
-	return e:IsSourceFriendly()
-		or e:IsAbsorb()
-		or e:IsSpellReflect()
-		or e:IsFriendlyDeath()
+    if e:IsSourceMissing() then
+        return false
+    end
+    return e:IsSourceFriendly()
+        or e:IsFriendlyAbsorb()
+        or e:IsSpellReflect()
+        or e:IsFriendlyDeath()
 end
 
 function dispatcher:HandleCombatEntered()
-	self:notifyMeters("CombatEntered")
+    self:notifyMeters("CombatEntered")
 end
 
 function dispatcher:HandleCombatExited()
-	self:notifyMeters("CombatExited")
+    self:notifyMeters("CombatExited")
 end
 
 function dispatcher:notifyMeters(fname, e)
-	for _, meter in ipairs(self.meters) do
-		local fn = meter[fname]
-		if fn then
-			fn(meter, e)
-		end
-	end
+    for _, meter in ipairs(self.meters) do
+        local fn = meter[fname]
+        if fn then
+            fn(meter, e)
+        end
+    end
 end
 
 nekometer.dispatcher = dispatcher
