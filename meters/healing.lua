@@ -4,7 +4,7 @@ local meter = nekometer.baseMeter:new()
 meter.title = "Healing"
 
 function meter:CombatEvent(e)
-    if e:IsHeal() or e:IsAbsorb() then
+    if e:IsHeal() or e:IsFriendlyAbsorb() then
         local source = e:GetSource()
         local amount = e:GetAmount()
         self:RecordData({

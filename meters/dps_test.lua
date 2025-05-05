@@ -41,6 +41,16 @@ local events = {
     {
         IsDamage = function() return false end,
         IsSpellReflect = function() return false end,
+        IsAbsorb = function() return true end,
+        IsSourceFriendly = function() return true end,
+        GetSource = function() return { id = 2, name = "unit2" } end,
+        GetAmount = function() return 150 end,
+    },
+    {
+        IsDamage = function() return false end,
+        IsSpellReflect = function() return false end,
+        IsAbsorb = function() return false end,
+        IsSourceFriendly = function() return false end,
     },
 }
 
@@ -56,7 +66,7 @@ function TestDps:test_meter_time_frame_combat_mode()
     meter:CombatExited()
     local report = meter:Report()
     lu.assertEquals(report, {
-        { id = 2, name = "unit2", value = 65 },
+        { id = 2, name = "unit2", value = 80 },
         { id = 1, name = "unit1", value = 45 },
         source = meter,
     })
@@ -86,12 +96,11 @@ function TestDps:test_meter_time_frame_total_mode()
     -- segment 1 and 2 combined: 10 seconds each, same dps value
     local report = meter:Report()
     lu.assertEquals(report, {
-        { id = 2, name = "unit2", value = 65 },
+        { id = 2, name = "unit2", value = 80 },
         { id = 1, name = "unit1", value = 45 },
         source = meter,
     })
 end
-
 
 function TestDps:test_meter_reset_during_combat()
     GetTime = function() return 0 end

@@ -10,7 +10,8 @@ local meter = {
 }
 
 function meter:CombatEvent(e)
-    if e:IsDamage() or e:IsSpellReflect() then
+    if e:IsDamage() or e:IsSpellReflect() or
+        e:IsAbsorb() and e:IsSourceFriendly() then
         local source = e:GetSource()
         local amount = e:GetAmount()
         self.current:Add({

@@ -5,7 +5,7 @@ meter.title = "Healing Breakdown"
 meter.reportsAbilities = true
 
 function meter:CombatEvent(e)
-    if e:IsDoneByPlayer() and (e:IsHeal() or e:IsAbsorb()) then
+    if e:IsDoneByPlayer() and (e:IsHeal() or e:IsFriendlyAbsorb()) then
         local ability = e:GetAbility()
         local amount = e:GetAmount()
         self:RecordData({

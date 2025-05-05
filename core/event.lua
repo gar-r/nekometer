@@ -39,7 +39,7 @@ function event:GetSource()
         sourceId = self[8]
         sourceName = self[9]
         sourceFlags = self[10]
-    elseif self:IsAbsorb() then
+    elseif self:IsFriendlyAbsorb() then
         -- the absorb event arr has a variable size, but the source
         -- will always be at position len-8..len-6
         sourceId = self[#self - 8]
@@ -98,7 +98,7 @@ function event:GetAbility()
         return { id = 260421, name = "Melee" }
     elseif self:IsSpellReflect() then
         return { id = 69901, name = "Spell Reflect" }
-    elseif self:IsAbsorb() then
+    elseif self:IsFriendlyAbsorb() then
         -- the absorb event arr has a variable size, but the spell name
         -- will always be at position len-3
         return { id = self[#self - 4], name = self[#self - 3] }
@@ -139,6 +139,10 @@ end
 
 function event:IsAbsorb()
     return self:GetType() == spellAbsorb
+end
+
+function event:IsFriendlyAbsorb()
+    return self:IsAbsorb()
         and filter:IsFriendly(self[#self - 6]) -- caster (!) flags
 end
 

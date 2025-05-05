@@ -165,6 +165,7 @@ function TestEvent:test_is_absorb()
     local e = nekometer.event:new(testData.absorb)
     mockFilter.isFriendly = true
     lu.assertTrue(e:IsAbsorb())
+    lu.assertTrue(e:IsFriendlyAbsorb())
     lu.assertTrue(mockFilter.isFriendlyCalled)
     lu.assertEquals(mockFilter.isFriendlyArg, 66833)
 end
