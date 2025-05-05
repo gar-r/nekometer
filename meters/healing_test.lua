@@ -20,13 +20,13 @@ function TestHealing:test_meter()
         },
         {
             IsHeal = function() return false end,
-            IsAbsorb = function() return true end,
+            IsFriendlyAbsorb = function() return true end,
             GetSource = function() return { id = 2, name = "unit2" } end,
             GetAmount = function() return 300 end,
         },
         {
             IsHeal = function() return false end,
-            IsAbsorb = function() return false end,
+            IsFriendlyAbsorb = function() return false end,
         },
     }
     for _, e in ipairs(events) do

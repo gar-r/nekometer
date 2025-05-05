@@ -55,8 +55,24 @@ function TestDispatcher:test_prev_self_harm_cleared_on_dispatch()
     lu.assertEquals(nekometer.dispatcher.prevSelfHarm, 0)
 end
 
-function TestDispatcher:test_dispatch_combat_event_absorb()
+function TestDispatcher:test_dispatcher_absorb_with_friendly_source()
+    mockEvent.isSourceFriendly = true
     mockEvent.isAbsorb = true
+    self:verifyEventDispatched("CombatEvent", function()
+        nekometer.dispatcher:HandleCombatEvent()
+    end)
+end
+
+function TestDispatcher:test_dispatcher_absorb_with_non_friedly_source()
+    mockEvent.isSourceFriendly = false
+    mockEvent.isAbsorb = true
+    self:verifyEventDispatched("CombatEvent", function()
+        nekometer.dispatcher:HandleCombatEvent()
+    end, false)
+end
+
+function TestDispatcher:test_dispatch_combat_event_friendly_absorb()
+    mockEvent.isFriendlyAbsorb = true
     self:verifyEventDispatched("CombatEvent", function()
         nekometer.dispatcher:HandleCombatEvent()
     end)
@@ -138,6 +154,10 @@ function mockEvent:IsAbsorb()
     return self.isAbsorb
 end
 
+function mockEvent:IsFriendlyAbsorb()
+    return self.isFriendlyAbsorb
+end
+
 function mockEvent:IsSpellReflect()
     return self.isSpellReflect
 end
@@ -155,6 +175,7 @@ function mockEvent:resetMock()
     self.isSummon = false
     self.isSourceFriendly = false
     self.isAbsorb = false
+    self.isFriendlyAbsorb = false
     self.isSpellReflect = false
     self.isFriendlyDeath = false
     self.isSourceMissing = false

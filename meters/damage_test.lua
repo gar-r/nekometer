@@ -27,6 +27,15 @@ function TestDamage:test_meter()
         {
             IsDamage = function() return false end,
             IsSpellReflect = function() return false end,
+            IsAbsorb = function() return false end,
+        },
+        {
+            IsDamage = function() return false end,
+            IsSpellReflect = function() return false end,
+            IsAbsorb = function() return true end,
+            IsSourceFriendly = function() return true end,
+            GetSource = function() return { id = 2, name = "unit2" } end,
+            GetAmount = function() return 200 end,
         },
     }
     for _, e in ipairs(events) do
@@ -35,5 +44,6 @@ function TestDamage:test_meter()
     lu.assertEquals(meter.recordedData, {
         { key = 1, name = "unit1", value = 150 },
         { key = 2, name = "unit2", value = 1000 },
+        { key = 2, name = "unit2", value = 200 },
     })
 end

@@ -5,7 +5,11 @@ meter.title = "Damage Breakdown"
 meter.reportsAbilities = true
 
 function meter:CombatEvent(e)
-    if e:IsDoneByPlayer() and (e:IsDamage() or e:IsSpellReflect()) then
+    if not e:IsDoneByPlayer() then
+        return
+    end
+    if e:IsDamage() or e:IsSpellReflect() or
+        e:IsAbsorb() and e:IsSourceFriendly() then
         local ability = e:GetAbility()
         local amount = e:GetAmount()
         self:RecordData({
