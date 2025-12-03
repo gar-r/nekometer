@@ -1,5 +1,5 @@
-## Interface: 110007, 110100, 110105, 110107, 110200, 110205
-## Version: 2.5.8
+## Interface: 110007, 110100, 110105, 110107, 110200, 110205, 110207
+## Version: 2.5.9
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: Nekometer
