@@ -1,5 +1,7 @@
 # What is Nekometer?
 
+> **⚠️ DEPRECATION NOTICE**: This addon is no longer under active development. Users are encouraged to switch to the Blizzard built-in damage meter for future updates and support.
+
 **Nekometer** is an alternative, minimalist damage meter addon. I have originally developed this addon for personal use as a hobby project. After using it for a while, I have decided to share it in case someone else finds it useful.
 
 Why did I develop my own damage meter addon instead of using an existing popular addon from the list of available ones?
