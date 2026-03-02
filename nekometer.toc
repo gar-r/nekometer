@@ -1,11 +1,12 @@
-## Interface: 110007, 110100, 110105, 110107, 110200, 110205, 110207
-## Version: 2.5.9
+## Interface: 50503, 20505, 11508
+## Version: 2.6.0
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
-## Notes: Nekometer
+## Notes: minimalistic damage meter
 ## AddonCompartmentFunc: Nekometer_OnAddonCompartmentClick
 ## IconTexture: Interface/ICONS/Ability_Druid_Cower.PNG
 ## Author: garric
+## X-ClassicAuthor: Roadblock
 
 core/util.lua
 core/commands.lua

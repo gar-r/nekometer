@@ -37,6 +37,13 @@ function commands:show(shown)
     end
 end
 
+function commands:fade(val)
+    local main = nekometer.frames.main
+    if main then
+        main:SetAlpha(val or 1)
+    end
+end
+
 function commands:center(_)
     local main = nekometer.frames.main
     if main then

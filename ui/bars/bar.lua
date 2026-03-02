@@ -1,5 +1,7 @@
 local _, nekometer = ...
 
+local util = nekometer.util
+
 local bar = {}
 
 local main = nekometer.frames.main
@@ -14,6 +16,7 @@ function bar:new(index)
     frame:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, -offset)
     frame:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, -offset)
     frame:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+    frame:Hide()
     local o = {
         frame = frame,
         index = index,
@@ -49,7 +52,7 @@ function bar:setColor(id)
     else
         local class = nekometer.classes:Lookup(id)
         if class then
-            c = C_ClassColor.GetClassColor(class)
+            c = util:GetClassColor(class)
             c.a = 0.6
         else
             c = NekometerConfig.barNeutralColor

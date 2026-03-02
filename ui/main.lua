@@ -7,6 +7,8 @@ function frame:Init()
     self:RestoreLayout()
     self:EnableMoveAndResize()
     self:SetBackground()
+    self:EnableMouseWheel(true)
+    self:SetMouseClickEnabled(false)
     self:SetShown(NekometerConfig.windowShown and not NekometerConfig.autoHide)
 end
 
@@ -91,10 +93,19 @@ function frame:SaveLayout()
         w = w,
         h = h,
     }
+    if nekometer.profileKey then
+        NekometerConfig[nekometer.profileKey] = NekometerConfig[nekometer.profileKey] or {}
+        NekometerConfig[nekometer.profileKey].windowLayout = CopyTable(NekometerConfig.windowLayout)
+    end
 end
 
 function frame:RestoreLayout()
-    local layout = NekometerConfig.windowLayout
+    local layout
+    if nekometer.profileKey and NekometerConfig[nekometer.profileKey] then
+        layout = NekometerConfig[nekometer.profileKey].windowLayout
+    else
+        layout = NekometerConfig.windowLayout
+    end
     self:SetPoint(layout.point, nil, layout.relativePoint, layout.x, layout.y)
     self:SetSize(layout.w, layout.h)
 end

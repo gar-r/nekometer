@@ -11,6 +11,9 @@ function autohide:HandleCombatEntered()
     if NekometerConfig.windowShown then
         commands:show(true)
     end
+    if NekometerConfig.autoFade then
+        commands:fade(NekometerConfig.autoCombatAlpha)
+    end
 end
 
 function autohide:HandleCombatExited()
@@ -20,6 +23,9 @@ function autohide:HandleCombatExited()
             self.cancelTimer = false
         elseif NekometerConfig.windowShown and self:shouldHide() then
             commands:show(false)
+        end
+        if NekometerConfig.autoFade then
+            commands:fade(1)
         end
     end)
 end

@@ -94,8 +94,9 @@ end
 
 function event:GetAbility()
     local type = self:GetType()
+    local classic = util:IsClassic()
     if type == swingDamage then
-        return { id = 260421, name = "Melee" }
+        return { id = classic and 6603 or 260421, name = "Melee" }
     elseif self:IsSpellReflect() then
         return { id = 69901, name = "Spell Reflect" }
     elseif self:IsFriendlyAbsorb() then

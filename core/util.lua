@@ -37,4 +37,32 @@ function util:GetClassTexture(className)
     return baseClassIcons[className]
 end
 
+function util:IsClassic()
+    return WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE, WOW_PROJECT_ID
+end
+
+function util:GetClassColor(class)
+    if C_ClassColor and C_ClassColor.GetClassColor then
+        return C_ClassColor.GetClassColor(class)
+    elseif _G.RAID_CLASS_COLORS then
+        local UNKNOWN_COLOR = CreateColor(.75,.75,.75,1)
+        return (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class] or UNKNOWN_COLOR
+    end
+end
+
+function util:ActionButton_ShowOverlayGlow(frame)
+    if _G.ActionButton_ShowOverlayGlow then
+        return _G.ActionButton_ShowOverlayGlow(frame)
+    elseif ActionButtonSpellAlertManager and ActionButtonSpellAlertManager.ShowAlert then
+        return ActionButtonSpellAlertManager:ShowAlert(frame)
+    end
+end
+function util:ActionButton_HideOverlayGlow(frame)
+    if _G.ActionButton_HideOverlayGlow then
+        return _G.ActionButton_HideOverlayGlow(frame)
+    elseif ActionButtonSpellAlertManager and ActionButtonSpellAlertManager.HideAlert then
+        return ActionButtonSpellAlertManager:HideAlert(frame)
+    end
+end
+
 nekometer.util = util

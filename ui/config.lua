@@ -18,6 +18,8 @@ function config:Init()
     self:CreateProxiedCheckBox("Use class colors for bars", "Enable to color bars with respective class colors", "classColors")
 
     self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Auto Hide"))
+    self:CreateProxiedCheckBox("Combat fade", "Fade Nekometer when in combat", "autoFade")
+    self:CreateProxiedSlider("In-combat alpha", "Set to this alpha when in combat", 0, 1, 0.05, "autoCombatAlpha")
     self:CreateProxiedCheckBox("Hide when not in combat", "Hide Nekometer when not in combat, allowing more immersion", "autoHide")
     self:CreateProxiedSlider("Auto hide delay", "Wait this amount of seconds before hiding Nekometer", 0, 10, 1, "autoHideDelay")
     self:CreateProxiedCheckBox("Always show in instances", "Auto hide is disabled when the player is instanced", "autoHideDisabledInInstances")
@@ -95,6 +97,9 @@ function config:OnSettingsClosed()
     -- display the resizer based on the windowLocked setting
     local resizer = nekometer.frames.resizer
     resizer:SetShown(not NekometerConfig.windowLocked)
+
+    local titlebar = nekometer.frames.titleBar
+    titlebar:Update()
 
     -- add a small delay to avoid our static popups to draw over game frames
     C_Timer.After(1, function()

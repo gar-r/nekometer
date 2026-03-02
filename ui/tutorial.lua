@@ -1,10 +1,12 @@
 local _, nekometer = ...
 
+local util = nekometer.util
+
 local tutorialFrame = {}
 
 function tutorialFrame:Show(target, text)
     self.target = target
-    ActionButton_ShowOverlayGlow(target)
+    util:ActionButton_ShowOverlayGlow(target)
     self.bubbleFrame:SetPoint("BOTTOM", target, "TOP", 0, 0)
     self.textFrame:SetPoint("BOTTOM", self.bubbleFrame, "TOP", 0, 0)
     self.textFrame.text:SetText(text)
@@ -15,7 +17,7 @@ function tutorialFrame:Show(target, text)
 end
 
 function tutorialFrame:Hide()
-    ActionButton_HideOverlayGlow(tutorialFrame.target)
+    util:ActionButton_HideOverlayGlow(tutorialFrame.target)
     self.textFrame:Hide()
     self.bubbleFrame:Hide()
 end

@@ -62,6 +62,7 @@ end
 
 function frame:PLAYER_ENTERING_WORLD(_, isLogin, isReload)
     if isLogin or isReload then
+        nekometer.profileKey = format("%s-%s",(UnitNameUnmodified("player")),(GetNormalizedRealmName()))
         return
     else
         autoreset:HandleZoneChange()
@@ -77,10 +78,14 @@ function frame:INSPECT_READY(_, inspectee)
 end
 
 frame:RegisterEvent("ADDON_LOADED")
-frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+if C_EventUtils.IsEventValid("COMBAT_LOG_EVENT_UNFILTERED") then
+    frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+end
 frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-frame:RegisterEvent("WALK_IN_DATA_UPDATE")
+if C_EventUtils.IsEventValid("WALK_IN_DATA_UPDATE") then
+    frame:RegisterEvent("WALK_IN_DATA_UPDATE")
+end
 frame:RegisterEvent("INSPECT_READY")
 frame:SetScript("OnEvent", frame.OnEvent)

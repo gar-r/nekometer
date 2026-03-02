@@ -24,6 +24,8 @@ nekometer.defaults = {
 
     -- auto hide
     autoHide = false,
+    autoFade = false,
+    autoCombatAlpha = 0.25,
     autoHideDelay = 5,
     autoHideDisabledInInstances = true,
     autoHideDisabledInGroups = true,

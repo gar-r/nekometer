@@ -1,4 +1,4 @@
-local _, nekometer = ...
+local addonName, nekometer = ...
 
 local mainFrame = nekometer.frames.main
 local commands = nekometer.commands
@@ -57,8 +57,10 @@ end)
 function frame:Update()
     local meter = mainFrame:GetCurrentMeter()
     local mode = nekometer.getMode(meter.key)
+    local lock = NekometerConfig.windowLocked and "locked" or "unlocked"
     self.titleText:SetText(meter.title)
     self:UpdateModeButton(mode)
+    self:UpdateLockButton(lock)
 end
 
 -- icon texture will be set dynamically for this button
@@ -134,5 +136,32 @@ frame.resetButton = CreateTitleBarButton("Interface/Buttons/UI-RefreshButton",
         commands:resetWithConfirmation()
     end)
 frame.resetButton:SetPoint("RIGHT", frame.settingsButton, "LEFT", -3, 0)
+
+frame.lockButton = CreateTitleBarButton(nil, function()
+    NekometerConfig.windowLocked = not NekometerConfig.windowLocked
+    local resizer = nekometer.frames.resizer
+    resizer:SetShown(not NekometerConfig.windowLocked)
+    frame:Update()
+end)
+frame.lockButton:SetPoint("RIGHT", frame.resetButton, "LEFT", -3, 0)
+local lockButtonAssets = {
+    ["locked"] = {
+        icon = "Interface/AddOns/"..addonName.."/ui/media/lockicon",
+        texCoord = nil,
+    },
+    ["unlocked"] = {
+        icon = "Interface/AddOns/"..addonName.."/ui/media/unlockicon",
+        texCoord = nil,
+    }
+}
+function frame:UpdateLockButton(lock)
+    local lockButton = self.lockButton
+    local icon = lockButtonAssets[lock].icon
+    local texCoord = lockButtonAssets[lock].texCoord
+    lockButton:SetNormalTexture(
+        CreateTitleButtonTexture(lockButton, icon, "BACKGROUND", texCoord))
+    lockButton:SetHighlightTexture(
+        CreateTitleButtonTexture(lockButton, icon, "HIGHLIGHT", texCoord))
+end
 
 nekometer.frames.titleBar = frame
