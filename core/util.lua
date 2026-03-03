@@ -31,6 +31,7 @@ local baseClassIcons = {
     ["SHAMAN"] = "Interface/Icons/ClassIcon_Shaman",
     ["WARLOCK"] = "Interface/Icons/ClassIcon_Warlock",
     ["WARRIOR"] = "Interface/Icons/ClassIcon_Warrior",
+    ["PET"] = "Interface/Icons/INV_Pet_Maggot",
 }
 
 function util:GetClassTexture(className)

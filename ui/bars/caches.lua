@@ -7,7 +7,8 @@ local util = nekometer.util
 nekometer.classes = nekometer.cache:new(21600, function(key)
     local success, class = pcall(function()
         local _, className = GetPlayerInfoByGUID(key)
-        return className
+        local guidType = strsplit("-",key)
+        return className or (guidType == "Pet" and "PET")
     end)
     return class, success
 end)

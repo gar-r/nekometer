@@ -262,6 +262,10 @@ function mockUtil:RemoveRealmInfo(s)
     return s
 end
 
+function mockUtil:IsClassic()
+    return true, 19
+end
+
 function mockPets:Lookup(arg)
     self.lookupCalled = true
     self.lookupArg = arg

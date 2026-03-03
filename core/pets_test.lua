@@ -3,24 +3,23 @@ local lu = require("luaunit")
 local nekometer = {
     cache = {
         new = function(_, _, _) end
+    },
+    util = {
+        TooltipData = function(_,link)
+            if link == "unit:otherPetId" then
+                return {
+                    lines = {
+                        { leftText = "Mr. Pet" },
+                        { leftText = "FooBar's Guardian" },
+                    },
+                }
+            end
+        end
     }
 }
 
 _G["UNITNAME_SUMMON_TITLE1"] = "%s's Totem"
 _G["UNITNAME_SUMMON_TITLE2"] = "%s's Guardian"
-
-C_TooltipInfo = {
-    GetHyperlink = function(link)
-        if link == "unit:otherPetId" then
-            return {
-                lines = {
-                    { leftText = "Mr. Pet" },
-                    { leftText = "FooBar's Guardian" },
-                },
-            }
-        end
-    end
-}
 
 format = string.format
 
