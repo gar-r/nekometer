@@ -1,5 +1,7 @@
 local _, nekometer = ...
 
+local util = nekometer.util
+
 local pets = {}
 
 nekometer.pets = nekometer.cache:new(1800, function (key)
@@ -24,7 +26,7 @@ function pets:queryOwner(id)
 end
 
 function pets:queryTooltipInfo(id)
-    local ttip = C_TooltipInfo.GetHyperlink("unit:" .. id)
+    local ttip = util:TooltipData("unit:" .. id)
     if ttip then
         local line = ttip.lines[2]
         if line then

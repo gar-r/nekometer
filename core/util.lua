@@ -1,4 +1,4 @@
-local _, nekometer = ...
+local addonName, nekometer = ...
 
 local util = {}
 
@@ -57,11 +57,47 @@ function util:ActionButton_ShowOverlayGlow(frame)
         return ActionButtonSpellAlertManager:ShowAlert(frame)
     end
 end
+
 function util:ActionButton_HideOverlayGlow(frame)
     if _G.ActionButton_HideOverlayGlow then
         return _G.ActionButton_HideOverlayGlow(frame)
     elseif ActionButtonSpellAlertManager and ActionButtonSpellAlertManager.HideAlert then
         return ActionButtonSpellAlertManager:HideAlert(frame)
+    end
+end
+
+function util:TooltipData(linkstr)
+    if C_TooltipInfo and C_TooltipInfo.GetHyperlink then
+        return C_TooltipInfo.GetHyperlink(linkstr)
+    else
+        local tipName = addonName.."ScanTooltip"
+        if not nekometer.scantip then
+            nekometer.scantip = CreateFrame("GameTooltip", tipName, nil, "GameTooltipTemplate")
+        end
+        nekometer.scantip:ClearLines()
+        nekometer.scantip:Hide()
+        if not nekometer.scantip:IsOwned(WorldFrame) then
+            nekometer.scantip:SetOwner(WorldFrame, "ANCHOR_NONE")
+        end
+        nekometer.scantip:SetHyperlink(linkstr)
+        local numlines = nekometer.scantip:NumLines()
+        if numlines > 0 then
+            local tooltipData = {
+                lines = {}
+            }
+            for lineIdx=1, numlines do
+                local fsLeft, fsRight = _G[tipName .. "TextLeft" .. lineIdx], _G[tipName .. "TextRight" .. lineIdx]
+                local leftText = fsLeft and fsLeft:GetText() or nil
+                local rightText = fsRight and fsRight:GetText() or nil
+                tinsert(tooltipData.lines,{
+                    leftText = leftText,
+                    rightText = rightText
+                })
+            end
+            if tooltipData.lines[1] and (tooltipData.lines[1].leftText or tooltipData.lines[1].rightText) then
+                return tooltipData
+            end
+        end
     end
 end
 
