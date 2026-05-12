@@ -92,19 +92,21 @@ end
 
 --[[ Merge source segment data into target segment in proportion to their durations. ]]
 function meter:mergeSegment(source, target)
-    local sourceWeight = source.duration / (source.duration + target.duration)
-    local targetWeight = 1 - sourceWeight
-    local sourceData = source.data
-    local targetData = target.data
-    for k, v in pairs(sourceData) do
-        if targetData[k] then
-            targetData[k].value = targetData[k].value * targetWeight + v.value * sourceWeight
-        else
-            targetData[k] = v
-            targetData[k].value = targetData[k].value * sourceWeight
+    if (source.duration + target.duration) > 0 then
+        local sourceWeight = source.duration / (source.duration + target.duration)
+        local targetWeight = 1 - sourceWeight
+        local sourceData = source.data
+        local targetData = target.data
+        for k, v in pairs(sourceData) do
+            if targetData[k] then
+                targetData[k].value = targetData[k].value * targetWeight + v.value * sourceWeight
+            else
+                targetData[k] = v
+                targetData[k].value = targetData[k].value * sourceWeight
+            end
         end
+        target.duration = target.duration + source.duration
     end
-    target.duration = target.duration + source.duration
 end
 
 nekometer.meters = nekometer.meters or {}

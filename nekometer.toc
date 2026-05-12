@@ -1,10 +1,11 @@
-## Interface: 50503, 20505, 11508
-## Version: 2.6.0
+## Interface: 50503, 20505, 11508, 50504
+## Version: 2.6.1
 ## SavedVariables: NekometerConfig
 ## Title: Nekometer
 ## Notes: minimalistic damage meter
 ## AddonCompartmentFunc: Nekometer_OnAddonCompartmentClick
 ## IconTexture: Interface/ICONS/Ability_Druid_Cower.PNG
+## Category: Combat
 ## Author: garric
 ## X-ClassicAuthor: Roadblock
 

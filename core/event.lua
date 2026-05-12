@@ -42,9 +42,12 @@ function event:GetSource()
     elseif self:IsFriendlyAbsorb() then
         -- the absorb event arr has a variable size, but the source
         -- will always be at position len-8..len-6
-        sourceId = self[#self - 8]
-        sourceName = self[#self - 7]
-        sourceFlags = self[#self - 6]
+        -- 5.5.4 seems to be skipping the critical tail arg if not boolean true
+        -- so the offset has to be recalculated
+        local offset = type(self[#self])=="boolean" and 6 or 5
+        sourceId = self[#self - offset - 2]
+        sourceName = self[#self - offset - 1]
+        sourceFlags = self[#self - offset]
     else
         sourceId = self[4]
         sourceName = self[5]
@@ -77,7 +80,9 @@ function event:GetAmount()
     elseif self:IsAbsorb() then
         -- the absorb event arr has a variable size, but the amount
         -- will always be at position len-1
-        return self[#self - 1]
+        -- 5.5.4 note: tail arg critical seems to be omitted if not boolean true
+        local offset = type(self[#self])=="boolean" and 1 or 0
+        return self[#self - offset]
     else
         return 0
     end
@@ -93,16 +98,18 @@ function event:calcEffectiveAmount(totalIdx, overkillIdx)
 end
 
 function event:GetAbility()
-    local type = self:GetType()
+    local atype = self:GetType()
     local classic = util:IsClassic()
-    if type == swingDamage then
+    if atype == swingDamage then
         return { id = classic and 6603 or 260421, name = "Melee" }
     elseif self:IsSpellReflect() then
         return { id = 69901, name = "Spell Reflect" }
     elseif self:IsFriendlyAbsorb() then
         -- the absorb event arr has a variable size, but the spell name
         -- will always be at position len-3
-        return { id = self[#self - 4], name = self[#self - 3] }
+        -- 5.5.4 tail arg critical seems to be omitted if not boolean true
+        local offset = type(self[#self])=="boolean" and 3 or 2
+        return { id = self[#self - offset - 1], name = self[#self - offset] }
     else
         return { id = self[12], name = self[13] }
     end
@@ -143,8 +150,10 @@ function event:IsAbsorb()
 end
 
 function event:IsFriendlyAbsorb()
+    -- 5.5.4 tail arg critical seems to be omitted if not boolean true (true/nil instead of true/false)
+    local offset = type(self[#self])=="boolean" and 6 or 5
     return self:IsAbsorb()
-        and filter:IsFriendly(self[#self - 6]) -- caster (!) flags
+        and filter:IsFriendly(self[#self - offset]) -- caster (!) flags
 end
 
 function event:IsFriendlyDeath()
