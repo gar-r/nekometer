@@ -40,14 +40,11 @@ function event:GetSource()
         sourceName = self[9]
         sourceFlags = self[10]
     elseif self:IsFriendlyAbsorb() then
-        -- the absorb event arr has a variable size, but the source
-        -- will always be at position len-8..len-6
-        -- 5.5.4 seems to be skipping the critical tail arg if not boolean true
-        -- so the offset has to be recalculated
-        local offset = type(self[#self])=="boolean" and 6 or 5
-        sourceId = self[#self - offset - 2]
-        sourceName = self[#self - offset - 1]
-        sourceFlags = self[#self - offset]
+        -- the absorb event arr has a variable size
+        self:calcAbsorbOffsets()
+        sourceId = self[#self - self._absorbOffsets.source - 2]
+        sourceName = self[#self - self._absorbOffsets.source - 1]
+        sourceFlags = self[#self - self._absorbOffsets.source]
     else
         sourceId = self[4]
         sourceName = self[5]
@@ -78,11 +75,9 @@ function event:GetAmount()
     elseif self:IsDamage() or self:IsHeal() then
         return self:calcEffectiveAmount(15, 16)
     elseif self:IsAbsorb() then
-        -- the absorb event arr has a variable size, but the amount
-        -- will always be at position len-1
-        -- 5.5.4 note: tail arg critical seems to be omitted if not boolean true
-        local offset = type(self[#self])=="boolean" and 1 or 0
-        return self[#self - offset]
+        -- the absorb event arr has a variable size
+        self:calcAbsorbOffsets()
+        return self[#self - self._absorbOffsets.amount]
     else
         return 0
     end
@@ -105,11 +100,9 @@ function event:GetAbility()
     elseif self:IsSpellReflect() then
         return { id = 69901, name = "Spell Reflect" }
     elseif self:IsFriendlyAbsorb() then
-        -- the absorb event arr has a variable size, but the spell name
-        -- will always be at position len-3
-        -- 5.5.4 tail arg critical seems to be omitted if not boolean true
-        local offset = type(self[#self])=="boolean" and 3 or 2
-        return { id = self[#self - offset - 1], name = self[#self - offset] }
+        -- the absorb event arr has a variable size
+        self:calcAbsorbOffsets()
+        return { id = self[#self - self._absorbOffsets.ability - 1], name = self[#self - self._absorbOffsets.ability] }
     else
         return { id = self[12], name = self[13] }
     end
@@ -145,15 +138,28 @@ function event:IsSpellReflect()
         and self[15] == reflect
 end
 
+function event:calcAbsorbOffsets()
+    -- 5.5.4 tail arg critical seems to be omitted if not boolean true (true/nil instead of true/false)
+    -- offset compute becomes dynamic, has to be checked on every event
+    self._absorbOffsets = self._absorbOffsets or {
+        source = 6,
+        amount = 1,
+        ability = 3,
+    }
+    local hasCriticalTail = type(self[#self]) == "boolean"
+    self._absorbOffsets.source = hasCriticalTail and 6 or 5
+    self._absorbOffsets.amount = hasCriticalTail and 1 or 0
+    self._absorbOffsets.ability = hasCriticalTail and 3 or 2
+end
+
 function event:IsAbsorb()
     return self:GetType() == spellAbsorb
 end
 
 function event:IsFriendlyAbsorb()
-    -- 5.5.4 tail arg critical seems to be omitted if not boolean true (true/nil instead of true/false)
-    local offset = type(self[#self])=="boolean" and 6 or 5
+    self:calcAbsorbOffsets()
     return self:IsAbsorb()
-        and filter:IsFriendly(self[#self - offset]) -- caster (!) flags
+        and filter:IsFriendly(self[#self - self._absorbOffsets.source]) -- caster (!) flags
 end
 
 function event:IsFriendlyDeath()
