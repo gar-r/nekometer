@@ -43,11 +43,14 @@ function util:IsClassic()
 end
 
 function util:GetClassColor(class)
-    if C_ClassColor and C_ClassColor.GetClassColor then
-        return C_ClassColor.GetClassColor(class)
-    elseif _G.RAID_CLASS_COLORS then
-        local UNKNOWN_COLOR = CreateColor(.75,.75,.75,1)
-        return (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class] or UNKNOWN_COLOR
+    if class == "PET" then
+        return NekometerConfig.barNeutralColor
+    else
+        if C_ClassColor and C_ClassColor.GetClassColor then
+            return C_ClassColor.GetClassColor(class)
+        elseif _G.RAID_CLASS_COLORS then
+            return (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
+        end
     end
 end
 

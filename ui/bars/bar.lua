@@ -53,12 +53,11 @@ function bar:setColor(id)
         local class = nekometer.classes:Lookup(id)
         if class then
             c = util:GetClassColor(class)
-            c.a = 0.6
         else
             c = NekometerConfig.barNeutralColor
         end
     end
-    self.frame:SetColorFill(c.r, c.g, c.b, c.a)
+    self.frame:SetColorFill(c.r, c.g, c.b, class and 0.6 or c.a)
 end
 
 nekometer.bars = nekometer.bars or {}
